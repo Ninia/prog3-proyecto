@@ -1,19 +1,15 @@
 package sys.monitoring.influxdb;
 
-/* TODO: create http requests
- * TODO: Generate points measuring system usages
- */
 
-import sys.config.InfluxConfig;
 import sys.config.SystemInfo;
 import sys.stats.usage.CPU;
 import sys.stats.usage.Memory;
-import utils.HttpUrlConnection;
 
 import java.util.ArrayList;
 
 public class Log {
 
+    @SuppressWarnings("unchecked")
     public static Point getCPUPoint(){
         Point point = new Point();
         point.setMeasurement("cpu_usage");
@@ -23,7 +19,7 @@ public class Log {
 
         return point;
     }
-
+    @SuppressWarnings("unchecked")
     public static Point getMemPoint(){
         Point point = new Point();
         point.setMeasurement("mem_usage");
@@ -34,6 +30,7 @@ public class Log {
         return point;
     }
 
+    @SuppressWarnings("unchecked")
     public static ArrayList<Point> generatePoints(int n,int s) {
         ArrayList<Point> points = new ArrayList<>();
         for (int i=0; i<n; i++){
