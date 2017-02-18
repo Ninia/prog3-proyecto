@@ -16,7 +16,7 @@ public class InfluxDB {
     }
 
     public static void writePoints(String db, ArrayList<Point> points) {
-        String url = InfluxConfig.getURL() + ":" + InfluxConfig.getPORT() + "/write?db=" + db + "&precision=millis";
+        String url = InfluxConfig.getURL() + ":" + InfluxConfig.getPORT() + "/write?db=" + db + "&precision=ms";
         String payload = "";
         for (Point point: points) {
             payload += point.getMeasurement() + " ";
@@ -31,7 +31,7 @@ public class InfluxDB {
         try {
             HttpUrlConnection.sendPost(url, payload);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Error writing points.");
         }
     }
 }

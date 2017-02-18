@@ -11,11 +11,14 @@ import java.util.ArrayList;
  */
 public class LogStats {
     public static void main(String[] args) {
+        System.out.println("");
         String db = "server_stats";
         InfluxDB.createDataBase(db);
         while (true) {
-            ArrayList<Point> points = Log.generatePoints(10, 5);
+            System.out.println("\rWriting points.    ");
+            ArrayList<Point> points = Log.generatePoints(10, 30);
             InfluxDB.writePoints(db, points);
+            System.out.print("\rWriting points .");
         }
     }
 }
