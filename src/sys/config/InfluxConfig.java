@@ -1,7 +1,7 @@
 package sys.config;
 
 public class InfluxConfig {
-    protected static int PORT = 56786;
+    protected static int PORT = 8086;
     protected static String URL = "http://localhost";
 
     public static int getPORT() {
