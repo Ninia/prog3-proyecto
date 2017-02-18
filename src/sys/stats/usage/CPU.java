@@ -1,9 +1,11 @@
 package sys.stats.usage;
 
+import utils.ShellCommand;
+
 public class CPU {
     public static double getUsage() {
         return Double.parseDouble(
-                ShellCommands.executeCommand("/usr/local/proyectopbd/cpu-usage.sh")
+                ShellCommand.executeCommand("/usr/local/proyectopbd/cpu-usage.sh")
         );
     }
 

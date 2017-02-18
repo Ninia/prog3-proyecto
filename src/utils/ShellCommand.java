@@ -1,9 +1,9 @@
-package sys.stats.usage;
+package utils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-public class ShellCommands {
+public class ShellCommand {
     public static String executeCommand(String command) {
 
         StringBuffer output = new StringBuffer();

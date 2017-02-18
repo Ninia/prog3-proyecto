@@ -1,10 +1,12 @@
 package sys.stats.usage;
 
+import utils.ShellCommand;
+
 public class Memory {
 
     public static long getUsage() {
         return Long.parseLong(
-                ShellCommands.executeCommand("/usr/local/proyectopbd/mem-usage.sh").replace("\n", "")
+                ShellCommand.executeCommand("/usr/local/proyectopbd/mem-usage.sh").replace("\n", "")
         );
     }
 

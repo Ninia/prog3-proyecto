@@ -2,7 +2,7 @@ package sys.config;
 
 public class SystemInfo {
 
-    private static final String SYSNAME = "zireael";
+    private static final String SYSNAME = "ninia server";
     private static final long MAX_RAM_MB = 4000;
     private static final int CORE_NUM = 2;
 

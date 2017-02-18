@@ -15,8 +15,8 @@ public class LogStats {
         String db = "server_stats";
         InfluxDB.createDataBase(db);
         while (true) {
-            System.out.println("\rWriting points.    ");
-            ArrayList<Point> points = Log.generatePoints(10, 30);
+            System.out.print("\rWriting points.    ");
+            ArrayList<Point> points = Log.generatePoints(10, 5);
             InfluxDB.writePoints(db, points);
             System.out.print("\rWriting points .");
         }
