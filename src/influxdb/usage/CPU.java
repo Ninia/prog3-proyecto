@@ -1,4 +1,4 @@
-package sys.stats.usage;
+package influxdb.usage;
 
 import utils.ShellCommand;
 

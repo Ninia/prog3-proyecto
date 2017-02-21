@@ -1,6 +1,6 @@
 package utils;
 
-import sys.config.InfluxConfig;
+import config.InfluxConfig;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;

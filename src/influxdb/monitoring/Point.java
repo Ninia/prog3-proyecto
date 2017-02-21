@@ -1,4 +1,4 @@
-package sys.monitoring.influxdb;
+package influxdb.monitoring;
 
 import java.util.HashMap;
 import java.util.Objects;

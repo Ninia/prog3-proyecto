@@ -1,9 +1,9 @@
-package sys.monitoring.influxdb;
+package influxdb.monitoring;
 
 
-import sys.config.SystemInfo;
-import sys.stats.usage.CPU;
-import sys.stats.usage.Memory;
+import config.SystemInfo;
+import influxdb.usage.CPU;
+import influxdb.usage.Memory;
 
 import java.util.ArrayList;
 

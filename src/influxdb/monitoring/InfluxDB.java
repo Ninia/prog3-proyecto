@@ -1,6 +1,6 @@
-package sys.monitoring.influxdb;
+package influxdb.monitoring;
 
-import sys.config.InfluxConfig;
+import config.InfluxConfig;
 import utils.HttpUrlConnection;
 
 import java.util.ArrayList;

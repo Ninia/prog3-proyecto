@@ -1,4 +1,4 @@
-package sys.config;
+package config;
 
 public class InfluxConfig {
     protected static int PORT = 8086;
