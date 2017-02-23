@@ -1,6 +1,5 @@
 package server;
 
-import config.ServerConfig;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,20 +14,22 @@ import java.net.Socket;
  */
 public class TestServer {
 
-    private int serverPort = ServerConfig.serverPort;
+    private int serverPort = 3379;
     private ServerSocket serverSocket = null;
     private Socket clientSocket = null;
 
-    public TestServer(){
+    public TestServer() {
+
         try {
             serverSocket = new ServerSocket(serverPort);
+            System.out.println("Listening at port: " + serverPort);
         } catch (IOException e) {
             System.err.println("Could not listen on port: " + serverPort);
             System.exit(1);
         }
     }
 
-    public void listen(){
+    public void listen() {
         try {
             clientSocket = serverSocket.accept();
         } catch (IOException e) {

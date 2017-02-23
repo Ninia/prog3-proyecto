@@ -1,1 +1,2 @@
 # prog3.proyecto.server
+Proyecto para el curso de Programación III de la Universidad de Deusto realizado por [Rafael Romón] (https://github.com/RafaelRomon) y [Mikel Solabarrieta] (https://github.com/Mikelsr)
