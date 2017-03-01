@@ -1,4 +1,4 @@
-package utils;
+package ud.main.utils.posix;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

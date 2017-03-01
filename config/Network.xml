@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<network>
+    <influxdb version="1.2.0">
+        <host>[nameserver]</host>
+        <port>[port number]</port>
+    </influxdb>
+</network>

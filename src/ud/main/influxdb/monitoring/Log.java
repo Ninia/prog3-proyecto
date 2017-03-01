@@ -1,29 +1,35 @@
-package influxdb.monitoring;
+package ud.main.influxdb.monitoring;
 
 
-import config.SystemInfo;
-import influxdb.usage.CPU;
-import influxdb.usage.Memory;
+import org.w3c.dom.Document;
+import ud.main.influxdb.usage.CPU;
+import ud.main.influxdb.usage.Memory;
+import ud.main.utils.ReadDocument;
 
 import java.util.ArrayList;
 
 public class Log {
 
+    protected static Document document = ReadDocument.getDoc("config/System.xml");
+    protected static String SYSNAME = Log.document.getElementsByTagName("hostname").item(0).getTextContent();
+
     @SuppressWarnings("unchecked")
     public static Point getCPUPoint(){
+
         Point point = new Point();
         point.setMeasurement("cpu_usage");
-        point.getTags().put("host", "\"" + SystemInfo.getSYSNAME() + "\"");
+        point.getTags().put("host", "\"" + SYSNAME + "\"");
         point.getFields().put("value", CPU.getUsage());
         point.setTime(System.currentTimeMillis());
 
         return point;
     }
+
     @SuppressWarnings("unchecked")
     public static Point getMemPoint(){
         Point point = new Point();
         point.setMeasurement("mem_usage");
-        point.getTags().put("host", "\"" + SystemInfo.getSYSNAME() + "\"");
+        point.getTags().put("host", "\"" + SYSNAME + "\"");
         point.getFields().put("value", Memory.getUsage());
         point.setTime(System.currentTimeMillis());
 

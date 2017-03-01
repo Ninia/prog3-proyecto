@@ -1,8 +1,8 @@
-package influxdb.main;
+package ud.main.influxdb.execs;
 
-import influxdb.monitoring.InfluxDB;
-import influxdb.monitoring.Point;
-import influxdb.monitoring.Log;
+import ud.main.influxdb.monitoring.InfluxDB;
+import ud.main.influxdb.monitoring.Point;
+import ud.main.influxdb.monitoring.Log;
 
 import java.util.ArrayList;
 

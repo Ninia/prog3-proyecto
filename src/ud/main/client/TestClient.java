@@ -1,8 +1,7 @@
-package client;
+package ud.main.client;
 
 
 import config.ClientConfig;
-import config.ServerConfig;
 
 import java.io.*;
 import java.net.*;

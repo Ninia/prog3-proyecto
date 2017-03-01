@@ -1,22 +1,26 @@
-package influxdb.monitoring;
+package ud.main.influxdb.monitoring;
 
-import config.InfluxConfig;
-import utils.HttpUrlConnection;
+import ud.main.utils.network.Requests;
+import ud.main.utils.network.URI;
 
 import java.util.ArrayList;
 
+
 public class InfluxDB {
 
+
     public static void createDataBase(String db) {
+
         try {
-            HttpUrlConnection.sendPost(
-                    InfluxConfig.getURL() + ":" + InfluxConfig.getPORT() + "/query",
+            Requests.httpPOST(
+                    URI.getURI("influxdb") + "/query",
                     "q=CREATE%20DATABASE%20"+ db) ;
         } catch (Exception e) {}
+
     }
 
     public static void writePoints(String db, ArrayList<Point> points) {
-        String url = InfluxConfig.getURL() + ":" + InfluxConfig.getPORT() + "/write?db=" + db + "&precision=ms";
+        String url = URI.getURI("influxdb") + "/write?db=" + db + "&precision=ms";
         String payload = "";
         for (Point point: points) {
             payload += point.getMeasurement() + " ";
@@ -29,9 +33,14 @@ public class InfluxDB {
             payload += " " + point.getTime() + "\n";
         }
         try {
-            HttpUrlConnection.sendPost(url, payload);
+            Requests.httpPOST(url, payload);
         } catch (Exception e) {
             System.out.println("Error writing points.");
         }
+    }
+
+
+    public static void main(String[] args) {
+        System.out.println(URI.getURI("influxdb"));
     }
 }

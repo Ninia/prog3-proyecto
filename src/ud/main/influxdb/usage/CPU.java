@@ -1,6 +1,6 @@
-package influxdb.usage;
+package ud.main.influxdb.usage;
 
-import utils.ShellCommand;
+import ud.main.utils.posix.ShellCommand;
 
 public class CPU {
     public static double getUsage() {

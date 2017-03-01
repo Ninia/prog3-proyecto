@@ -1,7 +1,6 @@
-package influxdb.monitoring;
+package ud.main.influxdb.monitoring;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 public class Point {
     protected long time;
