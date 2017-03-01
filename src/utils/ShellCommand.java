@@ -14,7 +14,8 @@ public class ShellCommand {
             p.waitFor();
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
-            @SuppressWarnings("UnusedAssignment") String line = "";
+            @SuppressWarnings("UnusedAssignment")
+            String line = "";
             while ((line = reader.readLine())!= null) {
                 output.append(line + "\n");
             }
