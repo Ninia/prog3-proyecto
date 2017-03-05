@@ -5,19 +5,63 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
-INSTAL_DIR="/usr/local/proyectopbd"
+INSTALL_DIR="/usr/local/proyectopbd"
 
-echo "Creating directory $INSTAL_DIR..."
-mkdir ${INSTAL_DIR}
-mkdir ${INSTAL_DIR}/tmp
+echo "[i] Creating directory $INSTALL_DIR..."
+mkdir ${INSTALL_DIR}
+mkdir ${INSTALL_DIR}/tmp
 
-echo "Generating CPU usage script..."
-cat scripts/cpu-usage.sh > ${INSTAL_DIR}/cpu-usage.sh
-echo "Generating memory usage script..."
-cat scripts/mem-usage.sh  > ${INSTAL_DIR}/mem-usage.sh
+echo "[i] Generating CPU usage script..."
+cat scripts/cpu-usage.sh > ${INSTALL_DIR}/cpu-usage.sh
+echo "[i] Generating memory usage script..."
+cat scripts/mem-usage.sh  > ${INSTALL_DIR}/mem-usage.sh
 
-echo "Setting up permissions..."
-chmod +755 ${INSTAL_DIR}/*.sh
-chmod +777 ${INSTAL_DIR}/tmp
+echo "[i] Setting up permissions..."
+chmod +755 ${INSTALL_DIR}/*.sh
+chmod +777 ${INSTALL_DIR}/tmp
 
-echo "done! Files can be found at $INSTAL_DIR"
+echo "done! Files can be found at $INSTALL_DIR"
+
+echo "The following dependencies will be installed:"
+echo "   InfluxDB v1.2.0"
+echo "   Grafana"
+
+echo ""
+
+# Ask for dependency installation
+while true; do
+    read -p "Install influxdb? (y/n):  " yn
+    case $yn in
+        [Yy]* )
+            echo "[i] Downloading influxdb..."
+            wget https://dl.influxdata.com/influxdb/releases/influxdb_1.2.0_amd64.deb
+            echo " [i] done."
+
+            echo "[i] Installing influxdb..."
+            dpkg -i influxdb_1.2.0_amd64.deb
+            echo "[i] done."
+            break;;
+        [Nn]* ) echo "[i] Skipping influxdb."; break;;
+        * ) echo "[i] Answer was not understood.";;
+    esac
+done
+
+echo ""
+
+while true; do
+    read -p "Install grafana? (y/n):  " yn
+    case $yn in
+        [Yy]* )
+            echo "[i] Downloading grafana..."
+            wget https://grafanarel.s3.amazonaws.com/builds/grafana_4.1.2-1486989747_amd64.deb
+            echo "[i] done."
+
+            echo "[i] Installing grafana..."
+            dpkg -i grafana_4.1.2-1486989747_amd64.deb
+            echo "[i] done."
+            break;;
+        [Nn]* ) echo "Skipping grafana."; break;;
+        * ) echo "Answer was not understood.";;
+    esac
+done
+

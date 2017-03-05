@@ -1,5 +1,6 @@
 .*
 out
 config
+*.xml
 !.gitignore
 *.iml
