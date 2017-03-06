@@ -24,7 +24,7 @@ echo "done! Files can be found at $INSTALL_DIR"
 
 echo "The following dependencies will be installed:"
 echo "   InfluxDB v1.2.0"
-echo "   Grafana"
+echo "   Grafana v4.1.2"
 
 echo ""
 
