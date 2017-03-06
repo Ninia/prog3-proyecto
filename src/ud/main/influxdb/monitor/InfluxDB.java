@@ -1,6 +1,6 @@
 package ud.main.influxdb.monitor;
 
-import ud.main.utils.network.Requests;
+import ud.main.utils.network.Request;
 import ud.main.utils.network.URI;
 
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ public class InfluxDB {
     public static void createDataBase(String db) {
 
         try {
-            Requests.httpPOST(
+            Request.httpPOST(
                     URI.getURI("influxdb") + "/query",
                     "q=CREATE%20DATABASE%20"+ db) ;
         } catch (Exception e) {}
@@ -33,7 +33,7 @@ public class InfluxDB {
             payload += " " + point.getTime() + "\n";
         }
         try {
-            Requests.httpPOST(url, payload);
+            Request.httpPOST(url, payload);
         } catch (Exception e) {
             System.out.println("Error writing points.");
         }
