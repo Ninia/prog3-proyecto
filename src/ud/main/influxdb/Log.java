@@ -1,9 +1,9 @@
-package ud.main.influxdb.monitor;
+package ud.main.influxdb;
 
 
 import org.w3c.dom.Document;
-import ud.main.influxdb.usage.CPU;
-import ud.main.influxdb.usage.Memory;
+import ud.main.influxdb.monitor.CPU;
+import ud.main.influxdb.monitor.Memory;
 import ud.main.utils.DocumentReader;
 
 import java.util.ArrayList;

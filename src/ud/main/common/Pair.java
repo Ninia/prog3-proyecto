@@ -1,27 +1,27 @@
 package ud.main.common;
 
-public class Pair<k,v> {
+public class Pair<String> {
 
-    private final k left;
-    private final v right;
+    private final String key;
+    private final String value;
 
-    public Pair(k left, v right) {
-        this.left = left;
-        this.right = right;
+    public Pair(String key, String value) {
+        this.key = key;
+        this.value = value;
     }
 
-    public k getKey() { return left; }
-    public v getValue() { return right; }
+    public String getKey() { return key; }
+    public String getValue() { return value; }
 
     @Override
-    public int hashCode() { return left.hashCode() ^ right.hashCode(); }
+    public int hashCode() { return key.hashCode() ^ value.hashCode(); }
 
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Pair)) return false;
         Pair pair = (Pair) o;
-        return this.left.equals(pair.getKey()) &&
-                this.right.equals(pair.getValue());
+        return this.key.equals(pair.getKey()) &&
+                this.value.equals(pair.getValue());
     }
 
 }

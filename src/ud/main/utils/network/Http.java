@@ -3,6 +3,6 @@ package ud.main.utils.network;
 /**
  *  List of supported rest methods
  */
-public enum Requests {
+public enum Http {
     GET, POST
 }

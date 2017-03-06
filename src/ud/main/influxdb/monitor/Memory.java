@@ -1,4 +1,4 @@
-package ud.main.influxdb.usage;
+package ud.main.influxdb.monitor;
 
 import ud.main.utils.posix.ShellCommand;
 

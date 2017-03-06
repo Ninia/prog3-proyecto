@@ -1,4 +1,4 @@
-package ud.main.influxdb.monitor;
+package ud.main.influxdb;
 
 import java.util.HashMap;
 
