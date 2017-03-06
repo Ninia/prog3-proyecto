@@ -1,4 +1,4 @@
-package ud.main.influxdb.monitoring;
+package ud.main.influxdb.monitor;
 
 import ud.main.utils.network.Requests;
 import ud.main.utils.network.URI;

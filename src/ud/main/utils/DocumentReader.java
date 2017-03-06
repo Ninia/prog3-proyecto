@@ -9,7 +9,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-public class ReadDocument {
+public class DocumentReader {
     public static Document getDoc(String path) {
 
         Document document = null;  /*TODO: find a better way to handle this*/

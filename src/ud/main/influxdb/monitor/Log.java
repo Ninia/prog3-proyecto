@@ -1,16 +1,16 @@
-package ud.main.influxdb.monitoring;
+package ud.main.influxdb.monitor;
 
 
 import org.w3c.dom.Document;
 import ud.main.influxdb.usage.CPU;
 import ud.main.influxdb.usage.Memory;
-import ud.main.utils.ReadDocument;
+import ud.main.utils.DocumentReader;
 
 import java.util.ArrayList;
 
 public class Log {
 
-    protected static Document document = ReadDocument.getDoc("config/System.xml");
+    protected static Document document = DocumentReader.getDoc("config/System.xml");
     protected static String SYSNAME = Log.document.getElementsByTagName("hostname").item(0).getTextContent();
 
     @SuppressWarnings("unchecked")

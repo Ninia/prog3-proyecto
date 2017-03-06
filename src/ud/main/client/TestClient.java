@@ -1,7 +1,8 @@
 package ud.main.client;
 
 
-import config.ClientConfig;
+import ud.main.utils.network.*;
+import ud.main.utils.network.URI;
 
 import java.io.*;
 import java.net.*;
@@ -12,8 +13,8 @@ import java.net.*;
  */
 public class TestClient {
 
-    private String hostName = ClientConfig.hostName;
-    private int portNumber = ClientConfig.portNumber;
+    private String hostName = URI.getHost("test-client");
+    private int portNumber = URI.getPort("test-client");
 
     public TestClient() {
 
