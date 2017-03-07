@@ -9,7 +9,7 @@ Self-Hosted Server que almacena documentos y ficheros multimedia se comunica con
 * MongoDB - Documentos.
 * DWH - Analitica (Likes, uso, etc).
 
-![alt tag](https://github.com/Ninia/prog3.proyecto/blob/master/web/planteamiento.png)
+![PLANTEAMIENTO](../web/planteamiento.png)
 
 ## Extras:
 * InfluxDB y Grafana para monitorear el servidor
