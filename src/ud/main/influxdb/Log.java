@@ -14,12 +14,25 @@ public class Log {
     protected static String SYSNAME = Log.document.getElementsByTagName("hostname").item(0).getTextContent();
 
     @SuppressWarnings("unchecked")
-    public static Point getCPUPoint(){
+    public static Point getCPUUsagePoint(){
 
         Point point = new Point();
         point.setMeasurement("cpu_usage");
         point.getTags().put("host", "\"" + SYSNAME + "\"");
         point.getFields().put("value", CPU.getUsage());
+        point.setTime(System.currentTimeMillis());
+
+        return point;
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public static Point getCPUTemperaturePoint(){
+
+        Point point = new Point();
+        point.setMeasurement("cpu_temperature");
+        point.getTags().put("host", "\"" + SYSNAME + "\"");
+        point.getFields().put("value", CPU.getTemperature());
         point.setTime(System.currentTimeMillis());
 
         return point;
@@ -40,7 +53,7 @@ public class Log {
     public static ArrayList<Point> generatePoints(int n,int s) {
         ArrayList<Point> points = new ArrayList<>();
         for (int i=0; i<n; i++){
-            points.add(getCPUPoint());
+            points.add(getCPUUsagePoint());
             points.add(getMemPoint());
             try {
                 Thread.sleep(s * 1000L);

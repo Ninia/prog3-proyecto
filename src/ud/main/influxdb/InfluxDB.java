@@ -15,11 +15,13 @@ public class InfluxDB {
 
         try {
             Request.REST.sendRequest(Http.GET, URI.getHost("influxdb"), URI.getPort("influxdb"),
-                    "/query", new Pair("q", "CREATE%20DATABASE%20"+ db));
+                    "/query", new Pair<>("q", "CREATE%20DATABASE%20"+ db));
         } catch (Exception e) {
             e.printStackTrace();
+
         }
     }
+
 
     public static void writePoints(String db, ArrayList<Point> points) {
 
@@ -36,7 +38,7 @@ public class InfluxDB {
         }
         try {
             Request.REST.sendRequest(Http.POST, URI.getHost("influxdb"), URI.getPort("influxdb"),
-                    "/write", payload, new Pair("db", db), new Pair("precision", "ms"));
+                    "/write", payload, new Pair<>("db", db), new Pair<>("precision", "ms"));
         } catch (Exception e) {
             e.printStackTrace();
         }

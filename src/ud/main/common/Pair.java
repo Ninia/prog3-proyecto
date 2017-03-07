@@ -2,8 +2,8 @@ package ud.main.common;
 
 public class Pair<String> {
 
-    private final String key;
-    private final String value;
+    private String key;
+    private String value;
 
     public Pair(String key, String value) {
         this.key = key;
