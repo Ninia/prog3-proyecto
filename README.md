@@ -4,12 +4,13 @@ Proyecto para el curso de Programación III de la Universidad de Deusto realizad
 ## Descripción:
 Self-Hosted Server que almacena documentos y ficheros multimedia se comunica con un cliente en java que realiza operaciones sobre 3 bases de datos.
 
-
 * Neo4j - Información sobre series y películas
 * MongoDB - Documentos.
 * DWH - Analitica (Likes, uso, etc).
 
-![PLANTEAMIENTO](/web/planteamiento.png)
+<p align="center">
+  <img src="https://github.com/Ninia/prog3.proyecto/blob/master/web/planteamiento.png" alt="Planteamiento"/>
+</p>
 
 ## Extras:
 * InfluxDB y Grafana para monitorear el servidor
