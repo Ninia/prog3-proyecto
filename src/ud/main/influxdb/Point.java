@@ -36,4 +36,36 @@ public class Point {
     public void setTime(long time) {
         this.time = time;
     }
+
+    @Override
+    public String toString() {
+        String out = "";
+        out += "measurement: \"" + measurement + "\",\n";
+        out += "time: " + time + " ms,\n";
+        out += "fields: {\n";
+        short len = (short) fields.size(); /* correct field size shouldn't be too big for short. */
+        short count = 1;
+        for (String field: fields.keySet()) {
+            out += "\t" + field + ": " + fields.get(field);
+            if (len > count){
+                out += ",";
+                count += 1; /* primitives. are. immutable. */
+            }
+            out += "\n";
+        }
+        out += "},\n";
+        out += "tags: {\n";
+        len = (short) tags.size(); /* correct field size shouldn't be too big for short. */
+        count = 1;
+        for (String tag: tags.keySet()) {
+            out += "\t" + tag + ": " + tags.get(tag);
+            if (len > count){
+                out += ",";
+                count += 1; /* primitives. are. immutable. */
+            }
+            out += "\n";
+        }
+        out += "}\n";
+        return out;
+    }
 }

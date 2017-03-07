@@ -39,7 +39,7 @@ public class Log {
     }
 
     @SuppressWarnings("unchecked")
-    public static Point getMemPoint(){
+    public static Point getMemUsagePoint(){
         Point point = new Point();
         point.setMeasurement("mem_usage");
         point.getTags().put("host", "\"" + SYSNAME + "\"");
@@ -54,7 +54,8 @@ public class Log {
         ArrayList<Point> points = new ArrayList<>();
         for (int i=0; i<n; i++){
             points.add(getCPUUsagePoint());
-            points.add(getMemPoint());
+            points.add(getCPUTemperaturePoint());
+            points.add(getMemUsagePoint());
             try {
                 Thread.sleep(s * 1000L);
             } catch (InterruptedException e) {
@@ -68,7 +69,10 @@ public class Log {
     public static void main(String[] args) {
         String db = "server_stats";
         InfluxDB.createDataBase(db);
-        ArrayList<Point> points = generatePoints(2, 0);
+        ArrayList<Point> points = generatePoints(3, 0);
+        for (Point point: points) {
+            System.out.println(point);
+        }
         InfluxDB.writePoints(db, points);
     }
 }
