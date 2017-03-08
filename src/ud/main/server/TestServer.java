@@ -32,13 +32,14 @@ public class TestServer {
     public void listen() {
         try {
             clientSocket = serverSocket.accept();
-        } catch (IOException e) {
             System.err.println("Connection Established.");
+        } catch (IOException e) {
+            System.err.println("Couldn't establish connection");
             System.exit(1);
         }
     }
 
-    public void handshake() throws IOException {
+    public void giveThread() throws IOException {
 
         PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
         BufferedReader in = new BufferedReader(
@@ -46,15 +47,11 @@ public class TestServer {
                         clientSocket.getInputStream()));
         String inputLine, outputLine;
 
-        TestProtocol tProtocol = new TestProtocol();
-
-        outputLine = tProtocol.processInput(null);
-        out.println(outputLine);
+        ThreadConnection threadConnection = new ThreadConnection(serverPort + 1);
+        out.println(serverPort + 1);
 
         while ((inputLine = in.readLine()) != null) {
-            outputLine = tProtocol.processInput(inputLine);
-            out.println(outputLine);
-            if (outputLine.equals("CLOSE"))
+            if (inputLine == "200 OK")
                 break;
         }
 
@@ -73,8 +70,7 @@ public class TestServer {
         TestServer tServer = new TestServer();
 
         tServer.listen();
-        tServer.handshake();
+        tServer.giveThread();
 
-        tServer.close();
     }
 }
