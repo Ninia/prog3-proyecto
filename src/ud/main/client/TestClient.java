@@ -15,7 +15,7 @@ import java.net.UnknownHostException;
  * TestClient based on KnockKnockClient from
  * https://docs.oracle.com/javase/tutorial/networking/sockets/examples/KnockKnockClient.java
  */
-public class TestClient {
+public class TestClient extends Thread {
 
     private String hostName = URI.getHost("test-server");
 
@@ -25,24 +25,47 @@ public class TestClient {
     private ServerSocket clientSocket;
     private Socket serverSocket = null;
 
+
     public TestClient() {
         try {
             clientSocket = new ServerSocket(clientPort);
-            System.out.println("Listening at port: " + clientPort);
+            System.out.println("Client - Listening at port: " + clientPort);
         } catch (IOException e) {
-            System.err.println("Could not listen on port: " + serverPort);
+            System.err.println("Client - Could not listen on port: " + serverPort);
             System.exit(1);
         }
     }
 
+    /**
+     * Constructor for TestClient with custom port
+     *
+     * @param port - Custom port
+     */
+    public TestClient(int port) {
+        try {
+            clientSocket = new ServerSocket(port);
+            System.out.println("Client - Listening at port: " + port);
+        } catch (IOException e) {
+            System.err.println("Client - Could not listen on port: " + port);
+            System.exit(1);
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+
+        TestClient tClient = new TestClient();
+
+        tClient.start();
+
+    }
+
+    /**
+     * Gives port to Server
+     */
     public void givePort() {
         try {
             Socket serverSocket = new Socket(hostName, serverPort);
             PrintWriter out = new PrintWriter(serverSocket.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(
-                            serverSocket.getInputStream()));
-            String inputLine;
 
             out.println(clientPort);
 
@@ -51,16 +74,22 @@ public class TestClient {
         }
     }
 
+    /**
+     * Listens for new connection with Server
+     */
     public void listen() {
         try {
             serverSocket = clientSocket.accept();
-            System.err.println("Connection Established.");
+            System.out.println("Client - Connection Established.");
         } catch (IOException e) {
-            System.err.println("Couldn't establish connection");
+            System.err.println("Client - Couldn't establish connection");
             System.exit(1);
         }
     }
 
+    /**
+     * Handshake method
+     */
     public void handshake() {
         try {
             PrintWriter out = new PrintWriter(serverSocket.getOutputStream(), true);
@@ -70,37 +99,33 @@ public class TestClient {
             String fromUser = "SYN-ACK";
 
             while ((fromServer = in.readLine()) != null) {
-                System.out.println("Server: " + fromServer);
+                System.out.println("Client - Server: " + fromServer);
                 if (fromServer.equals("CLOSE")) {
                     break;
 
                 } else if (fromServer.equals("ACK")) {
                     fromUser = "CLOSE";
-                    System.out.println("Client: " + fromUser);
+                    System.out.println("Client - Client: " + fromUser);
                     out.println(fromUser);
 
                 } else {
-                    System.out.println("Client: " + fromUser);
+                    System.out.println("Client - Client: " + fromUser);
                     out.println(fromUser);
                 }
             }
         } catch (UnknownHostException e) {
-            System.err.println("Invalid host: " + hostName);
+            System.err.println("Client - Invalid host: " + hostName);
             System.exit(1);
         } catch (IOException e) {
-            System.err.println("Couldn't get I/O for the connection to " +
+            System.err.println("Client - Couldn't get I/O for the connection to " +
                     hostName);
             System.exit(1);
         }
     }
 
-    public static void main(String[] args) throws IOException {
-
-        TestClient tClient = new TestClient();
-
-        tClient.givePort();
-        tClient.listen();
-        tClient.handshake();
-
+    public void run() {
+        givePort();
+        listen();
+        handshake();
     }
 }

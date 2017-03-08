@@ -4,21 +4,25 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.Socket;
 
 public class ThreadConnection extends Thread {
 
-    private int connectionPort;
+    private InetAddress clientAddress;
+    private int clientPort;
+
     private Socket clientSocket;
 
-    public ThreadConnection(int port) {
+    public ThreadConnection(InetAddress address, int port) {
 
-        connectionPort = port;
+        clientAddress = address;
+        clientPort = port;
         try {
-            clientSocket = new Socket("127.0.0.1", connectionPort);
-            System.out.println("Thread: established connection: " + connectionPort);
+            clientSocket = new Socket(address, clientPort);
+            System.out.println("Server: Thread - established connection with " + address);
         } catch (IOException e) {
-            System.err.println("Thread: Could not establish connection " + connectionPort);
+            System.err.println("Server: Thread - Could not establish connection to " + address);
             System.exit(1);
         }
     }
