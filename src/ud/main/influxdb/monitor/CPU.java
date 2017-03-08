@@ -1,8 +1,15 @@
-package ud.main.influxdb.usage;
+package ud.main.influxdb.monitor;
 
 import ud.main.utils.posix.ShellCommand;
 
 public class CPU {
+
+    public static double getTemperature() {
+        return Double.parseDouble(
+                ShellCommand.executeCommand("/usr/local/proyectopbd/temperature.sh")
+        );
+    }
+
     public static double getUsage() {
         return Double.parseDouble(
                 ShellCommand.executeCommand("/usr/local/proyectopbd/cpu-usage.sh")

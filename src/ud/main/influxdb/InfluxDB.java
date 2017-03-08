@@ -1,6 +1,8 @@
-package ud.main.influxdb.monitor;
+package ud.main.influxdb;
 
-import ud.main.utils.network.Requests;
+import ud.main.common.Pair;
+import ud.main.utils.network.Http;
+import ud.main.utils.network.Request;
 import ud.main.utils.network.URI;
 
 import java.util.ArrayList;
@@ -12,15 +14,17 @@ public class InfluxDB {
     public static void createDataBase(String db) {
 
         try {
-            Requests.httpPOST(
-                    URI.getURI("influxdb") + "/query",
-                    "q=CREATE%20DATABASE%20"+ db) ;
-        } catch (Exception e) {}
+            Request.REST.sendRequest(Http.GET, URI.getHost("influxdb"), URI.getPort("influxdb"),
+                    "/query", new Pair<>("q", "CREATE%20DATABASE%20"+ db));
+        } catch (Exception e) {
+            e.printStackTrace();
 
+        }
     }
 
+
     public static void writePoints(String db, ArrayList<Point> points) {
-        String url = URI.getURI("influxdb") + "/write?db=" + db + "&precision=ms";
+
         String payload = "";
         for (Point point: points) {
             payload += point.getMeasurement() + " ";
@@ -33,14 +37,15 @@ public class InfluxDB {
             payload += " " + point.getTime() + "\n";
         }
         try {
-            Requests.httpPOST(url, payload);
+            Request.REST.sendRequest(Http.POST, URI.getHost("influxdb"), URI.getPort("influxdb"),
+                    "/write", payload, new Pair<>("db", db), new Pair<>("precision", "ms"));
         } catch (Exception e) {
-            System.out.println("Error writing points.");
+            e.printStackTrace();
         }
     }
 
 
     public static void main(String[] args) {
-        System.out.println(URI.getURI("influxdb"));
+        InfluxDB.createDataBase("test");
     }
 }

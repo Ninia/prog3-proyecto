@@ -38,4 +38,6 @@ public class URI {
         Element network = (Element) networkNode.item(0);
         return network.getElementsByTagName("host").item(0).getTextContent();
     }
+
+
 }
