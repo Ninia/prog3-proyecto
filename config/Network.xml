@@ -5,7 +5,6 @@
         <port>[port number]</port>
     </influxdb>
     <test-client>
-        <host>[nameserver]</host>
         <port>[port number]</port>
     </test-client>
     <test-server>
