@@ -4,29 +4,26 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 public class ThreadConnection extends Thread {
 
     private int connectionPort;
-    private ServerSocket serverSocket;
     private Socket clientSocket;
 
     public ThreadConnection(int port) {
 
         connectionPort = port;
-
         try {
-            serverSocket = new ServerSocket(connectionPort);
-            System.out.println("Thread: Listening at port: " + connectionPort);
+            clientSocket = new Socket("127.0.0.1", connectionPort);
+            System.out.println("Thread: established connection: " + connectionPort);
         } catch (IOException e) {
-            System.err.println("Thread: Could not listen on port: " + connectionPort);
+            System.err.println("Thread: Could not establish connection " + connectionPort);
             System.exit(1);
         }
     }
 
-    public void run() {
+    public void start() {
 
         try {
             handshake();
@@ -63,7 +60,7 @@ public class ThreadConnection extends Thread {
 
     public void close() throws IOException {
         clientSocket.close();
-        serverSocket.close();
+        clientSocket.close();
     }
 }
 

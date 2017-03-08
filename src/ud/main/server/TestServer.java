@@ -1,6 +1,8 @@
 package ud.main.server;
 
 
+import ud.main.utils.network.URI;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,7 +16,9 @@ import java.net.Socket;
  */
 public class TestServer {
 
-    private int serverPort = 3379;
+    private int serverPort = URI.getPort("test-server");
+    private int clientPort;
+
     private ServerSocket serverSocket = null;
     private Socket clientSocket = null;
 
@@ -32,32 +36,27 @@ public class TestServer {
     public void listen() {
         try {
             clientSocket = serverSocket.accept();
-            System.err.println("Connection Established.");
+            System.err.println("Connection established at port: " + serverPort);
+
         } catch (IOException e) {
-            System.err.println("Couldn't establish connection");
+            System.err.println("Couldn't establish connection at port: " + serverPort);
             System.exit(1);
         }
     }
 
-    public void giveThread() throws IOException {
+    public void startThread() throws IOException {
 
         PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(
                         clientSocket.getInputStream()));
-        String inputLine, outputLine;
+        String inputLine;
 
-        ThreadConnection threadConnection = new ThreadConnection(serverPort + 1);
-        out.println(serverPort + 1);
 
-        while ((inputLine = in.readLine()) != null) {
-            if (inputLine == "200 OK")
-                break;
-        }
-
-        out.close();
-        in.close();
-
+        clientPort = Integer.parseInt(in.readLine());
+        System.out.println(clientPort);
+        ThreadConnection threadConnection = new ThreadConnection(clientPort);
+        threadConnection.start();
     }
 
     public void close() throws IOException {
@@ -70,7 +69,8 @@ public class TestServer {
         TestServer tServer = new TestServer();
 
         tServer.listen();
-        tServer.giveThread();
+        tServer.startThread();
+        tServer.close();
 
     }
 }

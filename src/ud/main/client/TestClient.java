@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -16,54 +17,57 @@ import java.net.UnknownHostException;
  */
 public class TestClient {
 
-    private String hostName = URI.getHost("test-main.ud.client");
-    private int portNumber = URI.getPort("test-main.ud.client");
+    private String hostName = URI.getHost("test-server");
+
+    private int serverPort = URI.getPort("test-server");
+    private int clientPort = URI.getPort("test-client");
+
+    private ServerSocket clientSocket;
+    private Socket serverSocket = null;
 
     public TestClient() {
-
+        try {
+            clientSocket = new ServerSocket(clientPort);
+            System.out.println("Listening at port: " + clientPort);
+        } catch (IOException e) {
+            System.err.println("Could not listen on port: " + serverPort);
+            System.exit(1);
+        }
     }
 
-    public void createConnection() {
+    public void givePort() {
         try {
-            Socket serverSocket = new Socket(hostName, portNumber);
+            Socket serverSocket = new Socket(hostName, serverPort);
             PrintWriter out = new PrintWriter(serverSocket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(
-                    new InputStreamReader(serverSocket.getInputStream()));
-            String fromServer;
-            String fromUser = "SYN-ACK";
+                    new InputStreamReader(
+                            serverSocket.getInputStream()));
+            String inputLine;
 
-            while ((fromServer = in.readLine()).equals("SYN")) {
-                try {
-                    int port = Integer.parseInt(fromServer);
-                    Socket connectionSocket = new Socket(hostName, port);
-                } catch (NumberFormatException e) {
+            out.println(clientPort);
 
-                }
-            }
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    public void listen() {
+        try {
+            serverSocket = clientSocket.accept();
+            System.err.println("Connection Established.");
+        } catch (IOException e) {
+            System.err.println("Couldn't establish connection");
+            System.exit(1);
+        }
+    }
+
     public void handshake() {
         try {
-            Socket serverSocket = new Socket(hostName, portNumber);
             PrintWriter out = new PrintWriter(serverSocket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(serverSocket.getInputStream()));
             String fromServer;
             String fromUser = "SYN-ACK";
-
-            while ((fromServer = in.readLine()).equals("SYN")) {
-                try {
-                    int port = Integer.parseInt(fromServer);
-                    Socket connectionSocket = new Socket(hostName, port);
-                } catch (NumberFormatException e) {
-
-                }
-            }
 
             while ((fromServer = in.readLine()) != null) {
                 System.out.println("Server: " + fromServer);
@@ -94,6 +98,8 @@ public class TestClient {
 
         TestClient tClient = new TestClient();
 
+        tClient.givePort();
+        tClient.listen();
         tClient.handshake();
 
     }
