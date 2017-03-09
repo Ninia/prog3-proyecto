@@ -1,4 +1,4 @@
-package ud.main.server.http;
+package ud.main.server.https;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
