@@ -13,6 +13,7 @@ public class Server {
     private HttpServer httpServer;
     private HashMap<String, HttpHandler> contexts = new HashMap<String, HttpHandler>() {{
         put("/test", new HttpHandlers.ServerHandlers.TestHandler());
+        put("/antigravity", new HttpHandlers.ServerHandlers.AntigravityHandler());
     }};
 
 
