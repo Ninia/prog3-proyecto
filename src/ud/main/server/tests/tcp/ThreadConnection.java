@@ -1,44 +1,43 @@
-package ud.main.server;
-
+package ud.main.server.tests.tcp;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
+import java.net.InetAddress;
 import java.net.Socket;
 
-/**
- * TestServer based on KnockKnockServer from
- * https://docs.oracle.com/javase/tutorial/networking/sockets/examples/KnockKnockServer.java
- */
-public class TestServer {
+public class ThreadConnection extends Thread {
 
-    private int serverPort = 3379;
-    private ServerSocket serverSocket = null;
-    private Socket clientSocket = null;
+    private InetAddress clientAddress;
+    private int clientPort;
 
-    public TestServer() {
+    private Socket clientSocket;
 
+    public ThreadConnection(InetAddress address, int port) {
+
+        clientAddress = address;
+        clientPort = port;
         try {
-            serverSocket = new ServerSocket(serverPort);
-            System.out.println("Listening at port: " + serverPort);
+            clientSocket = new Socket(address, clientPort);
+            System.out.println("Server: Thread - established connection with " + address);
         } catch (IOException e) {
-            System.err.println("Could not listen on port: " + serverPort);
+            System.err.println("Server: Thread - Could not establish connection to " + address);
             System.exit(1);
         }
     }
 
-    public void listen() {
+    public void start() {
+
         try {
-            clientSocket = serverSocket.accept();
+            handshake();
+            close();
         } catch (IOException e) {
-            System.err.println("Connection Established.");
-            System.exit(1);
+            e.printStackTrace();
         }
     }
 
-    public void handshake() throws IOException {
+    private void handshake() throws IOException {
 
         PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
         BufferedReader in = new BufferedReader(
@@ -65,16 +64,7 @@ public class TestServer {
 
     public void close() throws IOException {
         clientSocket.close();
-        serverSocket.close();
-    }
-
-    public static void main(String[] args) throws IOException {
-
-        TestServer tServer = new TestServer();
-
-        tServer.listen();
-        tServer.handshake();
-
-        tServer.close();
+        clientSocket.close();
     }
 }
+
