@@ -12,6 +12,11 @@ public class URI {
         return document.getElementsByTagName(service);
     }
 
+    /** Obtain URI of service specified on config/Network.xml
+     *
+     * @param service wanted service
+     * @return string containing URI
+     */
     public static String getURI(String service) {
 
         NodeList networkNode = getService(service);
@@ -23,6 +28,11 @@ public class URI {
 
     }
 
+    /** Obtain port of service specified on config/Network.xml
+     *
+     * @param service wanted service
+     * @return string containing port
+     */
     public static int getPort(String service) {
 
         NodeList networkNode = getService(service);
@@ -32,6 +42,11 @@ public class URI {
         return Integer.parseInt(port);
     }
 
+    /** Obtain ns of service specified on config/Network.xml
+     *
+     * @param service wanted service
+     * @return string containing ns
+     */
     public static String getHost(String service) {
 
         NodeList networkNode = getService(service);

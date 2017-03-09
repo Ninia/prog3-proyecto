@@ -18,7 +18,6 @@ public class InfluxDB {
                     "/query", new Pair<>("q", "CREATE%20DATABASE%20"+ db));
         } catch (Exception e) {
             e.printStackTrace();
-
         }
     }
 
