@@ -1,5 +1,8 @@
 package ud.main.common;
 
+/**
+ *  Create or compare indexed pairs of strings
+ */
 public class Pair<String> {
 
     private String key;

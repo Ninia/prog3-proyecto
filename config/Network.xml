@@ -5,10 +5,10 @@
         <port>[port number]</port>
     </influxdb>
     <test-client>
-        <port>5050</port>
+        <port>[port number]</port>
     </test-client>
     <test-server>
-        <host>127.0.0.1</host>
-        <port>5051</port>
+        <host>[nameserver]</host>
+        <port>[port number]</port>
     </test-server>
 </network>
