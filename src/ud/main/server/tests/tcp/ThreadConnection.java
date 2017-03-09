@@ -1,4 +1,4 @@
-package ud.main.server;
+package ud.main.server.tests.tcp;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class ThreadConnection extends Thread {
         }
     }
 
-    public void handshake() throws IOException {
+    private void handshake() throws IOException {
 
         PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
         BufferedReader in = new BufferedReader(

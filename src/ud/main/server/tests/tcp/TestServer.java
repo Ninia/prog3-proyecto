@@ -1,4 +1,4 @@
-package ud.main.server;
+package ud.main.server.tests.tcp;
 
 
 import ud.main.utils.network.URI;
@@ -6,7 +6,6 @@ import ud.main.utils.network.URI;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -46,7 +45,7 @@ public class TestServer extends Thread {
     /**
      * Listen for incoming Client connections
      */
-    public void listen() {
+    private void listen() {
         try {
             clientSocket = serverSocket.accept();
             System.err.println("Server - Connection established with: " + clientSocket.getInetAddress());
@@ -63,14 +62,11 @@ public class TestServer extends Thread {
      *
      * @throws IOException
      */
-    public void startThread() throws IOException {
+    private void startThread() throws IOException {
 
-        PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(
                         clientSocket.getInputStream()));
-        String inputLine;
-
 
         clientPort = Integer.parseInt(in.readLine());
         clientAddress = clientSocket.getInetAddress();

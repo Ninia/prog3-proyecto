@@ -1,7 +1,7 @@
 package ud.test.server;
 
 import ud.main.client.TestClient;
-import ud.main.server.TestServer;
+import ud.main.server.tests.tcp.TestServer;
 
 public class TestServerTest {
 

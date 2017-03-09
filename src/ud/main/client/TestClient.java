@@ -62,7 +62,7 @@ public class TestClient extends Thread {
     /**
      * Gives port to Server
      */
-    public void givePort() {
+    private void givePort() {
         try {
             Socket serverSocket = new Socket(hostName, serverPort);
             PrintWriter out = new PrintWriter(serverSocket.getOutputStream(), true);
@@ -77,7 +77,7 @@ public class TestClient extends Thread {
     /**
      * Listens for new connection with Server
      */
-    public void listen() {
+    private void listen() {
         try {
             serverSocket = clientSocket.accept();
             System.out.println("Client - Connection Established.");
@@ -90,7 +90,7 @@ public class TestClient extends Thread {
     /**
      * Handshake method
      */
-    public void handshake() {
+    private void handshake() {
         try {
             PrintWriter out = new PrintWriter(serverSocket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(

@@ -1,4 +1,4 @@
-package ud.main.server;
+package ud.main.server.tests.tcp;
 
 /**
  * TestProtocol based on KnockKnockProtocol from
