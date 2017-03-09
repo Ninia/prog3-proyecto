@@ -6,3 +6,4 @@ config
 *.iml
 /config/Network.xml
 /config/System.xml
+/keys/
