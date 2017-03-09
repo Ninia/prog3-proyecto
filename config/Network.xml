@@ -5,8 +5,8 @@
         <port>[port number]</port>
     </influxdb>
     <https-server>
-        <host>localhost</host>
-        <port>8000</port>
+        <host>127.0.0.1</host>
+        <port>8080</port>
         <keyword>changeit</keyword>
     </https-server>
     <test-client>

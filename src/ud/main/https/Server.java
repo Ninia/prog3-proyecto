@@ -1,4 +1,4 @@
-package ud.main.server.https;
+package ud.main.https;
 
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpsConfigurator;
@@ -26,8 +26,8 @@ public class Server {
 
     private HttpsServer httpsServer;
     private HashMap<String, HttpHandler> contexts = new HashMap<String, HttpHandler>() {{
-        put("/test", new HttpHandlers.ServerHandlers.TestHandler());
-        put("/antigravity", new HttpHandlers.ServerHandlers.AntigravityHandler());
+        put("/test", new HttpsHandlers.ServerHandlers.TestHandler());
+        put("/antigravity", new HttpsHandlers.ServerHandlers.AntigravityHandler());
     }};
 
 
@@ -62,8 +62,10 @@ public class Server {
             sslContext.init( kmf.getKeyManagers(), tmf.getTrustManagers(), null);
 
             /* create https server */
-            this.httpsServer = HttpsServer.create(new InetSocketAddress(  URI.getHost("https-server"),
-                    URI.getPort("https-server")), 0);
+            this.httpsServer =  HttpsServer.create(new InetSocketAddress(  URI.getHost("https-server"),
+                                URI.getPort("https-server")), 0);
+
+            System.out.println("Creating HTTPS server in " + URI.getURI("https-server"));
 
             /* set https configurator */
             this.httpsServer.setHttpsConfigurator(new HttpsConfigurator(sslContext) {
@@ -107,10 +109,11 @@ public class Server {
 
     public static void main(String[] args) {
         try {
-            (new Server()).httpsServer.start();
+            Server server = new Server();
+            server.httpsServer.start();
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.printf("Failed to create HTTPS server.");
         }
     }
-
 }
