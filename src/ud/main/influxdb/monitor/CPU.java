@@ -6,7 +6,7 @@ public class CPU {
 
     public static double getTemperature() {
         return Double.parseDouble(
-                ShellCommand.executeCommand("/usr/local/proyectopbd/temperature.sh")
+                ShellCommand.executeCommand("/usr/local/proyectopbd/cpu-temperature.sh")
         );
     }
 
