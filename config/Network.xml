@@ -4,6 +4,9 @@
         <host>[nameserver]</host>
         <port>[port number]</port>
     </influxdb>
+    <http-server>
+        <port>8000</port>
+    </http-server>
     <test-client>
         <port>[port number]</port>
     </test-client>
