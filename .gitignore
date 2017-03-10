@@ -4,5 +4,4 @@ config
 *.xml
 !.gitignore
 *.iml
-/config/Network.xml
-/config/System.xml
+keys
