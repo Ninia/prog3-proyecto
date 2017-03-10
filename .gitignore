@@ -1,5 +1,4 @@
 .*
-out
 config
 *.iml
 keys
@@ -7,3 +6,4 @@ keys
 /config/System.xml
 /keys/
 !.gitignore
+/target/

@@ -9,7 +9,7 @@ Self-Hosted Java Server that stores documents and media files, it communicates w
 * DWH - Analytics (Likes, usage, etc).
 
 <p align="center">
-  <img src="https://github.com/Ninia/prog3.proyecto/blob/master/web/planteamiento.png" alt="Planteamiento"/>
+  <img src="https://github.com/Ninia/prog3.proyecto/blob/master/src/main/resources/web/planteamiento.png" alt="Planteamiento"/>
 </p>
 
 ## Monitoring the Server
