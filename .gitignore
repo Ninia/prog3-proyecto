@@ -1,7 +1,9 @@
 .*
 out
 config
-*.xml
-!.gitignore
 *.iml
 keys
+/config/Network.xml
+/config/System.xml
+/keys/
+!.gitignore

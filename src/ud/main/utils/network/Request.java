@@ -39,7 +39,7 @@ public class Request {
          * @throws RequestTypeException
          * @throws UnsupportedRequestTypeException
          */
-        public static String sendRequest(Http request, String host,
+        public static String sendRequest(HttpMethods request, String host,
                                          int port, String path, ArrayList<Pair> args)
                 throws Exception { /*General exception overrides specific*/
 
@@ -70,7 +70,7 @@ public class Request {
          * @throws RequestTypeException
          * @throws UnsupportedRequestTypeException
          */
-        public static String sendRequest(Http request, String host,
+        public static String sendRequest(HttpMethods request, String host,
                                          int port, String path, Pair... args)
                 throws Exception { /*General exception overrides specific*/
 
@@ -90,7 +90,7 @@ public class Request {
          * @throws RequestTypeException
          * @throws UnsupportedRequestTypeException
          */
-        public static String sendRequest(Http request, String host,
+        public static String sendRequest(HttpMethods request, String host,
                                          int port, String path, String payload, ArrayList<Pair> args)
                 throws Exception { /*General exception overrides specific*/
 
@@ -122,7 +122,7 @@ public class Request {
          * @throws RequestTypeException
          * @throws UnsupportedRequestTypeException
          */
-        public static String sendRequest(Http request, String host,
+        public static String sendRequest(HttpMethods request, String host,
                                          int port, String path, String payload, Pair... args )
                 throws Exception { /*General exception overrides specific*/
 

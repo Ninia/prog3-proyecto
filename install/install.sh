@@ -78,7 +78,7 @@ while true; do
             apt-get install lm-sensors
             echo "[i] Running sensors-detect..."
             sensors-detect
-            "done."
+            echo "done."
             break;;
         [Nn]* ) echo "[i] Skipping lm-sensors."; break;;
         * ) echo "[err] Answer was not understood.";;
