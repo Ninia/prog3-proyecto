@@ -6,13 +6,13 @@ public class CPU {
 
     public static double getTemperature() {
         return Double.parseDouble(
-                ShellCommand.executeCommand("/usr/local/proyectopbd/cpu-temperature.sh")
+                ShellCommand.executeCommand("/usr/local/p3p/cpu-temperature.sh")
         );
     }
 
     public static double getUsage() {
         return Double.parseDouble(
-                ShellCommand.executeCommand("/usr/local/proyectopbd/cpu-usage.sh")
+                ShellCommand.executeCommand("/usr/local/p3p/cpu-usage.sh")
         );
     }
 

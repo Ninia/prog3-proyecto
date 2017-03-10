@@ -6,7 +6,7 @@ public class Memory {
 
     public static long getUsage() {
         return Long.parseLong(
-                ShellCommand.executeCommand("/usr/local/proyectopbd/mem-usage.sh").replace("\n", "")
+                ShellCommand.executeCommand("/usr/local/p3p/mem-usage.sh").replace("\n", "")
         );
     }
 
