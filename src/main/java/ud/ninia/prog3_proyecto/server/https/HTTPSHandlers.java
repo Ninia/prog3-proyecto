@@ -7,7 +7,7 @@ import com.sun.net.httpserver.HttpsExchange;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class HttpsHandlers {
+public class HTTPSHandlers {
 
     static class ServerHandlers {
 

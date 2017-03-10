@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <network>
     <influxdb version="1.2.0">
-        <host>[nameserver]</host>
-        <port>[port number]</port>
+        <host>http://127.0.0.1</host>
+        <port>8086</port>
     </influxdb>
+    <ftp-server>
+        <port>8021</port>
+    </ftp-server>
     <https-server>
         <host>127.0.0.1</host>
         <port>8080</port>

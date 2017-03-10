@@ -22,16 +22,16 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class Server {
+public class HTTPSServer {
 
     private HttpsServer httpsServer;
     private HashMap<String, HttpHandler> contexts = new HashMap<String, HttpHandler>() {{
-        put("/test", new HttpsHandlers.ServerHandlers.TestHandler());
-        put("/antigravity", new HttpsHandlers.ServerHandlers.AntigravityHandler());
+        put("/test", new HTTPSHandlers.ServerHandlers.TestHandler());
+        put("/antigravity", new HTTPSHandlers.ServerHandlers.AntigravityHandler());
     }};
 
 
-    public Server() throws IOException {
+    public HTTPSServer() throws IOException {
 
         try {
 
@@ -48,7 +48,7 @@ public class Server {
 
             /* configure key store */
             KeyStore ks = KeyStore.getInstance("JKS");
-            ks.load( new FileInputStream("keys/test.keystore"), passwd);
+            ks.load( new FileInputStream("keys/httpsserver.jks"), passwd);
 
             /* configure key management factory */
             KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
@@ -109,7 +109,7 @@ public class Server {
 
     public static void main(String[] args) {
         try {
-            Server server = new Server();
+            HTTPSServer server = new HTTPSServer();
             server.httpsServer.start();
         } catch (IOException e) {
             e.printStackTrace();
