@@ -5,7 +5,7 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
-INSTALL_DIR="/usr/local/proyectopbd"
+INSTALL_DIR="/usr/local/p3p"
 
 echo "[i] Creating directory $INSTALL_DIR..."
 mkdir ${INSTALL_DIR}
