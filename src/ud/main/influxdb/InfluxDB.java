@@ -1,7 +1,7 @@
 package ud.main.influxdb;
 
 import ud.main.common.Pair;
-import ud.main.utils.network.Http;
+import ud.main.utils.network.HttpMethods;
 import ud.main.utils.network.Request;
 import ud.main.utils.network.URI;
 
@@ -14,7 +14,7 @@ public class InfluxDB {
     public static void createDataBase(String db) {
 
         try {
-            Request.REST.sendRequest(Http.GET, URI.getHost("influxdb"), URI.getPort("influxdb"),
+            Request.REST.sendRequest(HttpMethods.GET, URI.getHost("influxdb"), URI.getPort("influxdb"),
                     "/query", new Pair<>("q", "CREATE%20DATABASE%20"+ db));
         } catch (Exception e) {
             e.printStackTrace();
@@ -36,7 +36,7 @@ public class InfluxDB {
             payload += " " + point.getTime() + "\n";
         }
         try {
-            Request.REST.sendRequest(Http.POST, URI.getHost("influxdb"), URI.getPort("influxdb"),
+            Request.REST.sendRequest(HttpMethods.POST, URI.getHost("influxdb"), URI.getPort("influxdb"),
                     "/write", payload, new Pair<>("db", db), new Pair<>("precision", "ms"));
         } catch (Exception e) {
             e.printStackTrace();

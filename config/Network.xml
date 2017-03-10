@@ -4,6 +4,11 @@
         <host>[nameserver]</host>
         <port>[port number]</port>
     </influxdb>
+    <https-server>
+        <host>127.0.0.1</host>
+        <port>8080</port>
+        <keyword>changeit</keyword>
+    </https-server>
     <test-client>
         <port>[port number]</port>
     </test-client>
