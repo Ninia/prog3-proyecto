@@ -34,6 +34,14 @@ including industrial sensors, home automation, weather, and process control.
 Official documentation can be accessed [here](
 http://docs.grafana.org/).
 
+## Recommended Installation for Server
+1. Download and install [Vagrant](https://www.vagrantup.com/downloads.html)
+2. Clone [our vagrant repository](
+https://github.com/Ninia/p3p-vagrant) and go to that folder
+3. Run `vagrant up`
+
+**_Hopefully you're good to go!_**
+
 ## License
 This project fall under the GPL 3 license fell free to use it, modify it and let us know of your changes :)
 
