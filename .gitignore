@@ -1,9 +1,9 @@
 .*
-config
+conf
 *.iml
 keys
-/config/Network.xml
-/config/System.xml
-/keys/
+/conf/Network.xml
+/conf/System.xml
 !.gitignore
 /target/
+/src/test/resources/ftpd/

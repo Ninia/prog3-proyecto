@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class Log {
 
     private static String SYSNAME = DocumentReader.getDoc(
-            "config/System.xml").getElementsByTagName("hostname").item(0).getTextContent();
+            "conf/System.xml").getElementsByTagName("hostname").item(0).getTextContent();
 
 
     /** Static method used for obtaining current CPU usage

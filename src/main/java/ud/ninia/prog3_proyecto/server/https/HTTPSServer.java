@@ -37,7 +37,7 @@ public class HTTPSServer {
 
             /* obtain keyword from config xml*/
             Element settings = (Element) DocumentReader.getDoc(
-                         "config/Network.xml").getElementsByTagName("https-server").item(0);
+                         "conf/Network.xml").getElementsByTagName("https-server").item(0);
             String keyword = settings.getElementsByTagName("keyword").item(0).getTextContent();
 
             /* initialize ssl context */
@@ -48,7 +48,7 @@ public class HTTPSServer {
 
             /* configure key store */
             KeyStore ks = KeyStore.getInstance("JKS");
-            ks.load( new FileInputStream("keys/httpsserver.jks"), passwd);
+            ks.load( new FileInputStream("src/test/resources/keys/httpserver.jks"), passwd);
 
             /* configure key management factory */
             KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
