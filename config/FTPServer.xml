@@ -1,0 +1,10 @@
+<server xmlns="http://mina.apache.org/ftpserver/spring/v1"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans/spring-beans.xsd"
+        xsi:schemaLocation="http://mina.apache.org/ftpserver/spring/v1 http://mina.apache.org/ftpserver/ftpserver-1.0.xsd"
+        id="p3p-ftpserver"
+        max-logins="10"
+        anon-enabled="false"
+        max-anon-logins="5"
+        max-login-failures="10"
+        login-failure-delay="300">
+</server>
