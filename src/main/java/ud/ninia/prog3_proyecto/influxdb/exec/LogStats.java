@@ -23,7 +23,7 @@ public class LogStats {
     public static void main(String[] args) {
 
         Element settings = (Element) DocumentReader.getDoc(
-                "config/InfluxDBLog.xml").getElementsByTagName("log").item(0);
+                "conf/InfluxDBLog.xml").getElementsByTagName("log").item(0);
         size = Integer.parseInt(settings.getElementsByTagName("size").item(0).getTextContent());
         time = Integer.parseInt(settings.getElementsByTagName("time").item(0).getTextContent());
 

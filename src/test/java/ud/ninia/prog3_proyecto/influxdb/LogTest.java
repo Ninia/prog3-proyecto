@@ -16,12 +16,4 @@ public class LogTest {
             assertNotNull(Log.getCPUUsagePoint());
         }
     }
-
-    @org.junit.Test
-    public void getMemUsagePoint() throws Exception {
-        if (System.getProperty("os.name").equals("Linux")) {
-            assertNotNull(Log.getCPUUsagePoint());
-        }
-    }
-
 }
