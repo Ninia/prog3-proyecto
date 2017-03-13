@@ -68,11 +68,22 @@ public class Log {
      * @return ArrayList containing the generated points
      */
     public static ArrayList<Point> generatePoints(int n) {
+
+        boolean sensors = false;
+
+        try {
+            if (getCPUTemperaturePoint().getFields().get("value") != null) {
+                sensors = true;
+            }
+        } catch (Exception e) {}
+
         ArrayList<Point> points = new ArrayList<>();
         for (int i=0; i<n; i++){
             points.add(getCPUUsagePoint());
             points.add(getCPUTemperaturePoint());
-            points.add(getMemUsagePoint());
+            if (sensors){
+                points.add(getMemUsagePoint());
+            }
         }
         return points;
     }
