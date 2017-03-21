@@ -26,6 +26,7 @@ public class HTTPSServer {
 
     private HttpsServer httpsServer;
     private HashMap<String, HttpHandler> contexts = new HashMap<String, HttpHandler>() {{
+        put("/", new HTTPSHandlers.ServerHandlers.TestHandler());
         put("/test", new HTTPSHandlers.ServerHandlers.TestHandler());
         put("/antigravity", new HTTPSHandlers.ServerHandlers.AntigravityHandler());
     }};
