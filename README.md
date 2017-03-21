@@ -1,15 +1,15 @@
 # prog3.proyecto
-Proyecto para el curso de Programación III de la Universidad de Deusto realizado por [Rafael Romón](https://github.com/rafaelromon), [Saul Segura](https://github.com/luasaul) y [Mikel Solabarrieta](https://github.com/mikelsr). 
+Student project for Programming III course at Deusto University made by [Rafael Romón](https://github.com/rafaelromon), [Saul Segura](https://github.com/luasaul) and [Mikel Solabarrieta](https://github.com/mikelsr). 
 
-## Descripción:
-Self-Hosted Server que almacena documentos y ficheros multimedia se comunica con un cliente en java que realiza operaciones sobre 3 bases de datos.
+## Description:
+Self-Hosted Java Server that stores documents and media files, it communicates with a Java Client, this Client uses 3 databases: 
 
-* Neo4j - Información sobre series y películas
-* MongoDB - Documentos.
-* DWH - Analitica (Likes, uso, etc).
+* Neo4j - Information about movies, series and music.
+* MongoDB - Documents.
+* DWH - Analytics (Likes, usage, etc).
 
 <p align="center">
-  <img src="https://github.com/Ninia/prog3.proyecto/blob/master/web/planteamiento.png" alt="Planteamiento"/>
+  <img src="https://github.com/Ninia/prog3.proyecto/blob/master/src/main/resources/web/planteamiento.png" alt="Planteamiento"/>
 </p>
 
 ## Monitoring the Server
@@ -33,3 +33,15 @@ including industrial sensors, home automation, weather, and process control.
 
 Official documentation can be accessed [here](
 http://docs.grafana.org/).
+
+## Recommended Installation for Server
+1. Download and install [Vagrant](https://www.vagrantup.com/downloads.html)
+2. Clone [our vagrant repository](
+https://github.com/Ninia/p3p-vagrant) and go to that folder
+3. Run `vagrant up`
+
+**_Hopefully you're good to go!_**
+
+## License
+This project fall under the GPL 3 license fell free to use it, modify it and let us know of your changes :)
+

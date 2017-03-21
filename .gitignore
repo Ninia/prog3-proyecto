@@ -1,9 +1,9 @@
 .*
-out
-config
-*.xml
-!.gitignore
+conf
 *.iml
-/config/Network.xml
-/config/System.xml
-/keys/
+keys
+/conf/Network.xml
+/conf/System.xml
+!.gitignore
+/target/
+/src/test/resources/ftpd/
