@@ -5,7 +5,6 @@ import ud.ninia.prog3_proyecto.utils.network.URI;
 import javax.net.ssl.*;
 import java.io.*;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.security.*;
 import java.security.cert.CertificateException;
 
@@ -53,7 +52,7 @@ public class HTTPSClient {
         SSLContext sslContext = this.createSSLContext();
 
         try {
-            HttpsURLConnection conn = (HttpsURLConnection) new URL("https://localhost:8080").openConnection();
+            HttpsURLConnection conn = (HttpsURLConnection) new URL("https://" + host + ":" + port).openConnection();
             conn.setRequestMethod("GET");
             conn.connect();
             System.out.println("RESPONSE: " + conn.getResponseMessage());
