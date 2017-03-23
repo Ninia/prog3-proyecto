@@ -11,6 +11,22 @@ Self-Hosted Java Server that stores documents and media files, it communicates w
 <p align="center">
   <img src="https://github.com/Ninia/prog3.proyecto/blob/master/src/main/resources/web/planteamiento.png" alt="Planteamiento"/>
 </p>
+┳┻|<br>
+┻┳|<br>
+┳┻|<br>
+┻┳|<br>
+┳┻|<br>
+┻┳|<br>
+┳┻|<br>
+┻┳|<br>
+┳┻|<br>
+┻┳|<br>
+┳┻|<br>
+┻┳|<br>
+┳┻|_<br>
+┻┳| •.•) &nbsp;&nbsp;&nbsp;we are working<br>
+┳┻|⊂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;on ssl<br>
+┻┳|<br>
 
 ## Monitoring the Server
 Some stats and conditions of the host server can be stored in [InfluxDB](

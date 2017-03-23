@@ -7,8 +7,12 @@
     <ftp-server>
         <port>8021</port>
     </ftp-server>
+    <https-client>
+        <host>localhost</host>
+        <port>8080</port>
+    </https-client>
     <https-server>
-        <host>127.0.0.1</host>
+        <host>localhost</host>
         <port>8080</port>
         <keyword>changeit</keyword>
     </https-server>
