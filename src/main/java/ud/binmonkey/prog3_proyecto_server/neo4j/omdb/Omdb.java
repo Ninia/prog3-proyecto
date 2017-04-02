@@ -9,7 +9,10 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 /**
  * Java Implementation of the OMDB api
@@ -112,6 +115,8 @@ public class Omdb {
             title_info.replace("Released", dateFormatter(title_info.get("Released")));
             /* Language */
             title_info.replace("Language", listFormatter(title_info.get("Language")));
+            /* Genres */
+            title_info.replace("Genre", listFormatter(title_info.get("Genre")));
             /* Writers */
             title_info.replace("Writer", listFormatter(title_info.get("Writer")));
             /* Director - seems unnecessary but there are some movies with more than 1 directors e.g. Matrix */
@@ -137,33 +142,32 @@ public class Omdb {
             entry = entry.replaceAll("\\(.*?\\)", ""); /* removes characters between brackets */
             entry = entry.replaceAll("\\s+$", ""); /* removes whitespace at the beginning of the string */
             entry = entry.replaceAll("^\\s+", ""); /* removes whitespace at the end of the string */
-            formattedList.add(entry);
+            if (!formattedList.contains(entry))
+                formattedList.add(entry);
         }
 
         return formattedList;
     }
 
-    private static Date dateFormatter(Object date) {
+    private static Object dateFormatter(Object date) {
+
 
         try {
             DateFormat formatter;
             formatter = new SimpleDateFormat("dd MMM yy");
             return formatter.parse(date.toString());
         } catch (ParseException e) {
-            e.printStackTrace();
+            System.err.println("Error - Invalid date: " + date);
         }
 
-        return null;
+        return date;
     }
+
 
     private static String yearFormatter(Object year) {
 
         return year.toString().replace("â\u0080\u0093", "-"); /* Fixes encoding problem */
     }
-
-    public static void main(String[] args) {
-
-        System.out.println(Omdb.getTitle("tt0470752"));
-    }
+    
 }
 
