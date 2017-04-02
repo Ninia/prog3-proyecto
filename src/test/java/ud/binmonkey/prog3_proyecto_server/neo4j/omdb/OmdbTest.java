@@ -17,9 +17,9 @@ public class OmdbTest {
         HashMap search = Omdb.search("Trainspotting", MediaType.all);
         HashMap movie = (HashMap) search.get("tt0117951");
 
-        assertEquals(true, movie.get("Type").equals("movie"));
-        assertEquals(true, movie.get("Year").equals("1996"));
-        assertEquals(true, movie.get("Title").equals("Trainspotting"));
+        assertEquals("movie", movie.get("Type"));
+        assertEquals("1996", movie.get("Year"));
+        assertEquals("Trainspotting", movie.get("Title"));
     }
 
     /**
@@ -31,9 +31,9 @@ public class OmdbTest {
         Map movie = Omdb.getTitle("tt0117951");
 
         /* Checks that the movie is the same as the one searched for */
-        assertEquals(true, movie.get("Type").equals("movie"));
-        assertEquals(true, movie.get("Title").equals("Trainspotting"));
-        assertEquals(true, movie.get("Year").equals("1996"));
+        assertEquals("movie", movie.get("Type"));
+        assertEquals("1996", movie.get("Year"));
+        assertEquals("Trainspotting", movie.get("Title"));
 
         /* Checks info about the movie */
         ArrayList actors = (ArrayList) movie.get("Actors");

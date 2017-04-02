@@ -71,7 +71,7 @@ public class Omdb {
     }
 
     /**
-     * Get info from a IMDB Title
+     * Gets info from a IMDB Title and puts it into a Map making minor modifications
      *
      * @param id - IMDB Title to search for
      * @return a HashMap where the key are the names of the values
@@ -88,8 +88,9 @@ public class Omdb {
             JSONObject title = new JSONObject(s.nextLine());
             Map<String, Object> title_info = title.toMap();
 
+            /* Movie specific modifications */
             if (MediaType.movie.equalsName((String) title_info.get("Type"))) {
-                //Ratings
+                /* Ratings */
                 HashMap ratings = new HashMap<String, String>();
                 for (Object rating : (ArrayList) title_info.get("Ratings")) {
                     HashMap a = (HashMap) rating;
@@ -97,17 +98,26 @@ public class Omdb {
                 }
                 title_info.replace("Ratings", ratings);
 
-                // Release Date
-                title_info.replace("Released", dateFormatter(title_info.get("Released")));
-                // DVD Date
+                /* DVD Date */
                 title_info.replace("DVD", dateFormatter(title_info.get("DVD")));
             }
-                // Writers
-                title_info.replace("Writer", listFormatter(title_info.get("Writer")));
-                // Director - seems unnecessary but there are some movies with more than 1 directors e.g. Matrix
-                title_info.replace("Director", listFormatter(title_info.get("Director")));
-                // Actors
-                title_info.replace("Actors", listFormatter(title_info.get("Actors")));
+
+            /* TV series specific modifications */
+            if (MediaType.series.equalsName((String) title_info.get("Type"))) {
+                /* Year */
+                title_info.replace("Year", yearFormatter(title_info.get("Year")));
+            }
+
+            /* Release Date */
+            title_info.replace("Released", dateFormatter(title_info.get("Released")));
+            /* Language */
+            title_info.replace("Language", listFormatter(title_info.get("Language")));
+            /* Writers */
+            title_info.replace("Writer", listFormatter(title_info.get("Writer")));
+            /* Director - seems unnecessary but there are some movies with more than 1 directors e.g. Matrix */
+            title_info.replace("Director", listFormatter(title_info.get("Director")));
+            /* Actors */
+            title_info.replace("Actors", listFormatter(title_info.get("Actors")));
 
             return title_info;
 
@@ -124,9 +134,9 @@ public class Omdb {
         ArrayList formattedList = new ArrayList<String>();
         for (String entry : list.toString().split(",")) {
 
-            entry = entry.replaceAll("\\(.*?\\)", ""); // removes characters between brackets
-            entry = entry.replaceAll("\\s+$", ""); // removes whitespace at the beginning of the string
-            entry = entry.replaceAll("^\\s+", ""); // removes whitespace at the end of the string
+            entry = entry.replaceAll("\\(.*?\\)", ""); /* removes characters between brackets */
+            entry = entry.replaceAll("\\s+$", ""); /* removes whitespace at the beginning of the string */
+            entry = entry.replaceAll("^\\s+", ""); /* removes whitespace at the end of the string */
             formattedList.add(entry);
         }
 
@@ -136,10 +146,9 @@ public class Omdb {
     private static Date dateFormatter(Object date) {
 
         try {
-            String str_date = (String) date;
             DateFormat formatter;
             formatter = new SimpleDateFormat("dd MMM yy");
-            return formatter.parse(str_date);
+            return formatter.parse(date.toString());
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -147,11 +156,14 @@ public class Omdb {
         return null;
     }
 
+    private static String yearFormatter(Object year) {
+
+        return year.toString().replace("â\u0080\u0093", "-"); /* Fixes encoding problem */
+    }
+
     public static void main(String[] args) {
 
-        System.out.println(MediaType.movie);
-
-        System.out.println(Omdb.getTitle("tt4162058"));
+        System.out.println(Omdb.getTitle("tt0470752"));
     }
 }
 

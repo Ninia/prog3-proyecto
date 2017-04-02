@@ -16,7 +16,7 @@ public enum MediaType {
         return name.equals(otherName);
     }
 
-    //public  String toString(){
-    //    return this.name;
-    //}
+    public String toString() {
+        return this.name;
+    }
 }
