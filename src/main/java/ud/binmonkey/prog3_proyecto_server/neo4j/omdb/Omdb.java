@@ -9,10 +9,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Java Implementation of the OMDB api
@@ -111,8 +108,6 @@ public class Omdb {
                 title_info.replace("Year", yearFormatter(title_info.get("Year")));
             }
 
-            /* Release Date */
-            title_info.replace("Released", dateFormatter(title_info.get("Released")));
             /* Language */
             title_info.replace("Language", listFormatter(title_info.get("Language")));
             /* Genres */
@@ -135,7 +130,7 @@ public class Omdb {
         return null;
     }
 
-    private static ArrayList listFormatter(Object list) {
+    public static ArrayList listFormatter(Object list) {
         ArrayList formattedList = new ArrayList<String>();
         for (String entry : list.toString().split(",")) {
 
@@ -149,8 +144,7 @@ public class Omdb {
         return formattedList;
     }
 
-    private static Object dateFormatter(Object date) {
-
+    public static Date dateFormatter(Object date) {
 
         try {
             DateFormat formatter;
@@ -160,14 +154,27 @@ public class Omdb {
             System.err.println("Error - Invalid date: " + date);
         }
 
-        return date;
+        return null;
     }
 
 
-    private static String yearFormatter(Object year) {
-
-        return year.toString().replace("â\u0080\u0093", "-"); /* Fixes encoding problem */
+    public static String yearFormatter(Object year) {
+        return year.toString().replaceAll("â\u0080\u0093", "-"); /* Fixes encoding problem */
     }
-    
+
+    public static int intergerConversor(Object string) {
+
+        String str_int = string.toString();
+        str_int = str_int.replaceAll("[^0-9]", ""); /* Removes non integers*/
+        //str_int = str_int.replaceAll("\\.", ""); /* Removes non integers*/
+        //str_int = str_int.replaceAll(",", ""); /* Removes non integers*/
+
+
+        return Integer.parseInt(str_int);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(Omdb.getTitle("tt0117951"));
+    }
 }
 
