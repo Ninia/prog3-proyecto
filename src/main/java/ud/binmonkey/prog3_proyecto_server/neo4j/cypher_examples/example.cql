@@ -303,7 +303,7 @@ CREATE
 
 // Fargo S1E10's Relations
 CREATE
-  (tt3599918)-[:EPISODE_FROM {season: 1, episode: 10}]->(tt2802850),
+  (tt3599918)-[:BELONGS_TO {season: 1, episode: 10}]->(tt2802850),
   (Noah_Hawley)-[:WROTE]->(tt3599918),
   (Allison_Tolman)-[:ACTED_IN]->(tt3599918),
   (Colin_Hanks)-[:ACTED_IN]->(tt3599918),

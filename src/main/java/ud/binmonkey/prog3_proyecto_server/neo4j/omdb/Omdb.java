@@ -71,10 +71,10 @@ public class Omdb {
     }
 
     /**
-     * Gets info from a IMDB Title and puts it into a Map making minor modifications
+     * Gets info from a IMDB Title and puts it into a Map
      *
      * @param id - IMDB Title to search for
-     * @return a HashMap where the key are the names of the values
+     * @return a Map where the keys are the names of the values
      */
     public static Map getTitle(String id) {
 
@@ -86,40 +86,8 @@ public class Omdb {
 
             Scanner s = new Scanner(query.openStream());
             JSONObject title = new JSONObject(s.nextLine());
-            Map<String, Object> title_info = title.toMap();
 
-            /* Movie specific modifications */
-            if (MediaType.movie.equalsName((String) title_info.get("Type"))) {
-                /* Ratings */
-                HashMap ratings = new HashMap<String, String>();
-                for (Object rating : (ArrayList) title_info.get("Ratings")) {
-                    HashMap a = (HashMap) rating;
-                    ratings.put(a.get("Source"), a.get("Value"));
-                }
-                title_info.replace("Ratings", ratings);
-
-                /* DVD Date */
-                title_info.replace("DVD", dateFormatter(title_info.get("DVD")));
-            }
-
-            /* TV series specific modifications */
-            if (MediaType.series.equalsName((String) title_info.get("Type"))) {
-                /* Year */
-                title_info.replace("Year", yearFormatter(title_info.get("Year")));
-            }
-
-            /* Language */
-            title_info.replace("Language", listFormatter(title_info.get("Language")));
-            /* Genres */
-            title_info.replace("Genre", listFormatter(title_info.get("Genre")));
-            /* Writers */
-            title_info.replace("Writer", listFormatter(title_info.get("Writer")));
-            /* Director - seems unnecessary but there are some movies with more than 1 directors e.g. Matrix */
-            title_info.replace("Director", listFormatter(title_info.get("Director")));
-            /* Actors */
-            title_info.replace("Actors", listFormatter(title_info.get("Actors")));
-
-            return title_info;
+            return title.toMap();
 
         } catch (MalformedURLException e) {
             System.err.println("Malformed URL: " + url);
@@ -130,7 +98,13 @@ public class Omdb {
         return null;
     }
 
-    public static ArrayList listFormatter(Object list) {
+    /**
+     * Formats lists in String received from OMDB to a usable ArrayList
+     *
+     * @param list - string received from OMDB
+     * @return formatted Arraylist
+     */
+    protected static ArrayList listFormatter(Object list) {
         ArrayList formattedList = new ArrayList<String>();
         for (String entry : list.toString().split(",")) {
 
@@ -144,37 +118,74 @@ public class Omdb {
         return formattedList;
     }
 
-    public static Date dateFormatter(Object date) {
-
-        try {
-            DateFormat formatter;
-            formatter = new SimpleDateFormat("dd MMM yy");
-            return formatter.parse(date.toString());
-        } catch (ParseException e) {
-            System.err.println("Error - Invalid date: " + date);
+    /**
+     * Formats date in String received from OMDB to a usable Date
+     *
+     * @param date - String received from OMDB
+     * @return formatted Date
+     */
+    protected static Date dateFormatter(Object date) {
+        if (!(date == null)) {
+            {
+                try {
+                    DateFormat formatter;
+                    formatter = new SimpleDateFormat("dd MMM yy");
+                    return formatter.parse(date.toString());
+                } catch (ParseException e) {
+                    System.err.println("Error - Invalid date: " + date);
+                }
+            }
         }
-
         return null;
     }
 
+    /**
+     * Fixes encoding problem with some years received from OMDB
+     *
+     * @param year - year received from OMDB
+     * @return formatted year
+     */
 
-    public static String yearFormatter(Object year) {
+    protected static String yearFormatter(Object year) {
         return year.toString().replaceAll("â\u0080\u0093", "-"); /* Fixes encoding problem */
     }
 
-    public static int intergerConversor(Object string) {
+    /**
+     * Formats integer in String received from OMDB to a usable int
+     *
+     * @param string - String received from OMDB
+     * @return formatted int
+     */
+    protected static int intergerConversor(Object string) {
 
-        String str_int = string.toString();
-        str_int = str_int.replaceAll("[^0-9]", ""); /* Removes non integers*/
-        //str_int = str_int.replaceAll("\\.", ""); /* Removes non integers*/
-        //str_int = str_int.replaceAll(",", ""); /* Removes non integers*/
+        if (!string.equals("N/A")) {
+            String str_int = string.toString();
+            str_int = str_int.replaceAll("[^0-9]", ""); /* Removes non integers*/
+            return Integer.parseInt(str_int);
+        }
 
+        System.err.println("Error - Missing Info"); //TODO Ask for input
+        return 0;
 
-        return Integer.parseInt(str_int);
     }
 
-    public static void main(String[] args) {
-        System.out.println(Omdb.getTitle("tt0117951"));
+    /**
+     * Formats double in String received from OMDB to a usable double
+     *
+     * @param string - String received from OMDB
+     * @return formatted int
+     */
+    protected static double doubleConversor(Object string) {
+
+        if (!string.equals("N/A")) {
+            String str_double = string.toString();
+            str_double = str_double.replaceAll("\\$", "");
+            str_double = str_double.replaceAll(",", "");
+            return Double.parseDouble(str_double);
+        }
+
+        System.err.println("Error - Missing Info"); //TODO Ask for input
+        return 0;
     }
 }
 

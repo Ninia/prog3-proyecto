@@ -1,6 +1,5 @@
 package ud.binmonkey.prog3_proyecto_server.neo4j.omdb;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,8 +35,8 @@ public class OmdbTest {
         assertEquals("Trainspotting", movie.get("Title"));
 
         /* Checks info about the movie */
-        ArrayList actors = (ArrayList) movie.get("Actors");
+        String actors = (String) movie.get("Actors");
         assertEquals(true, actors.contains("Ewan McGregor"));
-        assertEquals(true, movie.get("Country").equals("UK"));
+        assertEquals("UK", movie.get("Country"));
     }
 }
