@@ -12,7 +12,7 @@ CREATE (tt0117951:Movie {
   Metascore:  '83',
   imdbRating: '8.2',
   imdbVotes:  '501,336',
-  Runtime:    '94 min',
+  Runtime:    94,
   Website:    'http://www.miramax.com/movie/trainspotting/',
   Poster:     'https://images-na.ssl-images-amazon.com/images/M/MV5BMzA5Zjc3ZTMtMmU5YS00YTMwLWI4MWUtYTU0YTVmNjVmODZhXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg'
 })
@@ -30,27 +30,27 @@ CREATE (tt0289043:Movie {
   Metascore:  '73',
   imdbRating: '7.6',
   imdbVotes:  '310,278',
-  Runtime:    '113 min',
+  Runtime:    113,
   Website:    'http://www.28dayslaterthemovie.co.uk/main.html',
   Poster:     'https://images-na.ssl-images-amazon.com/images/M/MV5BMTk3NjEwNDMzMF5BMl5BanBnXkFtZTgwMzgwNDgwNzE@._V1_SX300.jpg'
 })
 
 CREATE (tt0470752:Movie {
-  Title:      'Ex Machina',
-  imdbID:     'tt0470752',
-  Year:       '2014',
-  Released:   'Fri Apr 24 00:00:00 CEST 2015',
-  DVD:        'Tue Jul 14 00:00:00 CEST 2015',
-  Plot:       "Caleb, a 26 year old programmer at the world's largest internet company, wins a competition to spend a week at a private mountain retreat belonging to Nathan, the reclusive CEO of the company. But when Caleb arrives at the remote location he finds that he will have to participate in a strange and fascinating experiment in which he must interact with the world's first true artificial intelligence, housed in the body of a beautiful robot girl.",
-  Rated:      'R',
-  Awards:     'Won 1 Oscar. Another 64 wins & 137 nominations.',
-  BoxOffice:  '$19,012,798.00',
-  Metascore:  '78',
-  imdbRating: '7.7',
-  imdbVotes:  '332,256',
+Title:'Ex Machina',
+imdbID:'tt0470752',
+Year:'2014',
+Released:'Fri Apr 24 00:00:00 CEST 2015',
+DVD:'Tue Jul 14 00:00:00 CEST 2015',
+Plot:"Caleb, a 26 year old programmer at the world's largest internet company, wins a competition to spend a week at a private mountain retreat belonging to Nathan, the reclusive CEO of the company. But when Caleb arrives at the remote location he finds that he will have to participate in a strange and fascinating experiment in which he must interact with the world's first true artificial intelligence, housed in the body of a beautiful robot girl.",
+Rated:'R',
+Awards:'Won 1 Oscar. Another 64 wins & 137 nominations.',
+BoxOffice:'$19,012,798.00',
+Metascore:'78',
+imdbRating:'7.7',
+imdbVotes:332, 25',
   Runtime:    '108 min',
   Website:    'http://meet-ava.com/',
-  Poster:     'https://images-na.ssl-images-amazon.com/images/M/MV5BMTUxNzc0OTIxMV5BMl5BanBnXkFtZTgwNDI3NzU2NDE@._V1_SX300.jpg'
+Poster:'https://images-na.ssl-images-amazon.com/images/M/MV5BMTUxNzc0OTIxMV5BMl5BanBnXkFtZTgwNDI3NzU2NDE@._V1_SX300.jpg'
 })
 
 CREATE (tt2488496:Movie {
@@ -66,7 +66,7 @@ CREATE (tt2488496:Movie {
   Metascore:  '81',
   imdbRating: '8.1',
   imdbVotes:  '643,416',
-  Runtime:    '136 min',
+  Runtime:    136,
   Website:    'http://starwars.com/',
   Poster:     'https://images-na.ssl-images-amazon.com/images/M/MV5BOTAzODEzNDAzMl5BMl5BanBnXkFtZTgwMDU1MTgzNzE@._V1_SX300.jpg'
 })
@@ -84,7 +84,7 @@ CREATE (tt0121766:Movie {
   Metascore:  '68',
   imdbRating: '7.6',
   imdbVotes:  '550,940',
-  Runtime:    '140 min',
+  Runtime:    140,
   Website:    'http://www.starwars.com/',
   Poster:     'https://images-na.ssl-images-amazon.com/images/M/MV5BNTc4MTc3NTQ5OF5BMl5BanBnXkFtZTcwOTg0NjI4NA@@._V1_SX300.jpg'
 })
@@ -102,7 +102,7 @@ CREATE (tt2802850:Series {
   Metascore:  'N/A',
   imdbRating: '9.0',
   imdbVotes:  '196,864',
-  Runtime:    '53 min',
+  Runtime:    53,
   Poster:     'https://images-na.ssl-images-amazon.com/images/M/MV5BNmNiNDc4MzQtNjFmMC00MzQ1LTkyZjUtODMxN2UyMmYxZmFmXkEyXkFqcGdeQXVyNTMxMjgxMzA@._V1_SX300.jpg'
 })
 
@@ -116,7 +116,7 @@ CREATE (tt3599918:Episode {
   Rated:      'TV-MA',
   Awards:     'N/A',
   Metascore:  'N/A',
-  imdbRating: '9.4',
+  imdbRating: 9.4,
   imdbVotes:  '4829',
   Runtime:    '64 min',
   Poster:     'https://images-na.ssl-images-amazon.com/images/M/MV5BMjE0Nzc4Mjk2Ml5BMl5BanBnXkFtZTgwNTQxODEwMjE@._V1_SX300.jpg'
@@ -130,18 +130,15 @@ CREATE (Ewen_Bremne:Person {name: 'Ewen Bremne'})
 CREATE (Jonny_Lee_Miller:Person {name: 'Jonny Lee Miller'})
 CREATE (Kevin_McKidd:Person {name: 'Kevin McKidd'})
 CREATE (Danny_Boyle:Person {name: 'Danny Boyle'})
-
 CREATE (Alex_Palmer:Person {name: 'Alex Palmer'})
 CREATE (Bindu_De_Stoppani:Person {name: 'Alex Bindu De Stoppani'})
 CREATE (Jukka_Hiltunen:Person {name: 'Jukka Hiltunen'})
 CREATE (David_Schneider:Person {name: 'David Schneider'})
 CREATE (Alex_Garland:Person {name: 'Alex Garland'})
-
 CREATE (Domhnall_Gleeson:Person {name: 'Domhnall Gleeson'})
 CREATE (Corey_Johnson:Person {name: 'Corey Johnson'})
 CREATE (Oscar_Isaac:Person {name: 'Oscar Isaac'})
 CREATE (Alicia_Vikander:Person {name: 'Alicia Vikander'})
-
 CREATE(JJ_Abrams:Person {name: 'J.J. Abrams'})
 CREATE(Harrison_Ford:Person {name: 'Harrison Ford'})
 CREATE(Mark_Hamill:Person {name: 'Mark Hamill'})
@@ -150,16 +147,13 @@ CREATE(Adam_Driver:Person {name: 'Adam Driver'})
 CREATE(Lawrence_Kasdan:Person {name: 'Lawrence Kasdan'})
 CREATE(Michael_Arndt:Person {name: 'Michael Arndt'})
 CREATE(George_Lucas:Person {name: 'George Lucas'})
-
 CREATE(Natalie_Portman:Person {name: 'Natalie Portman'})
 CREATE(Hayden_Christensen:Person {name: 'Hayden Christensen'})
 CREATE(Ian_McDiarmid:Person {name: 'Ian McDiarmid'})
-
 CREATE(Allison_Tolman:Person {name: 'Allison Tolman'})
 CREATE(Colin_Hanks:Person {name: 'Colin Hanks'})
 CREATE(Martin_Freeman:Person {name: 'Martin Freeman'})
 CREATE(Billy_Bob_Thornton:Person {name: 'Billy Bob Thornton'})
-
 CREATE(Matt_Shakman:Person {name: 'Matt Shakman'})
 CREATE(Noah_Hawley:Person {name: 'Noah Hawley'})
 
@@ -210,7 +204,7 @@ CREATE
   (Metacritic)-[:SCORED {score: 83}]->(tt0117951),
   (UK)-[:COUNTRY]->(tt0117951),
   (Drama)-[:GENRE]->(tt0117951),
-  (English)-[:LANGUAGE]->(tt0117951)
+  (English)-[:SPOKEN_LANGUAGE]->(tt0117951)
 
 // 28 Days Later's Relations
 CREATE
@@ -228,8 +222,8 @@ CREATE
   (Drama)-[:GENRE]->(tt0289043),
   (Horror)-[:GENRE]->(tt0289043),
   (SciFi)-[:GENRE]->(tt0289043),
-  (English)-[:LANGUAGE]->(tt0289043),
-  (Spanish)-[:LANGUAGE]->(tt0289043)
+  (English)-[:SPOKEN_LANGUAGE]->(tt0289043),
+  (Spanish)-[:SPOKEN_LANGUAGE]->(tt0289043)
 
 // Ex Machinas's Relations
 CREATE
@@ -247,7 +241,7 @@ CREATE
   (Drama)-[:GENRE]->(tt0470752),
   (Mystery)-[:GENRE]->(tt0470752),
   (SciFi)-[:GENRE]->(tt0470752),
-  (English)-[:LANGUAGE]->(tt0470752)
+  (English)-[:SPOKEN_LANGUAGE]->(tt0470752)
 
 // Star Wars VII's Relations
 CREATE
@@ -259,6 +253,7 @@ CREATE
   (Mark_Hamill)-[:ACTED_IN]->(tt2488496),
   (Carrie_Fisher)-[:ACTED_IN]->(tt2488496),
   (Adam_Driver)-[:ACTED_IN]->(tt2488496),
+  (SciFi)-[:GENRE]->(tt2488496),
   (Oscar_Isaac)-[:ACTED_IN]->(tt2488496),
   (Domhnall_Gleeson)-[:ACTED_IN]->(tt2488496),
   (JJ_Abrams)-[:DIRECTED]->(tt2488496),
@@ -270,8 +265,7 @@ CREATE
   (Action)-[:GENRE]->(tt2488496),
   (Adventure)-[:GENRE]->(tt2488496),
   (Fantasy)-[:GENRE]->(tt2488496),
-  (SciFi)-[:GENRE]->(tt2488496),
-  (English)-[:LANGUAGE]->(tt2488496)
+  (English)-[:SPOKEN_LANGUAGE]->(tt2488496)
 
 // Star Wars III's Relations
 CREATE
@@ -290,7 +284,7 @@ CREATE
   (Adventure)-[:GENRE]->(tt0121766),
   (Fantasy)-[:GENRE]->(tt0121766),
   (SciFi)-[:GENRE]->(tt0121766),
-  (English)-[:LANGUAGE]->(tt0121766)
+  (English)-[:SPOKEN_LANGUAGE]->(tt0121766)
 
 // Fargo's Relations
 CREATE
@@ -299,7 +293,7 @@ CREATE
   (Crime)-[:GENRE]->(tt2802850),
   (Thriller)-[:GENRE]->(tt2802850),
   (Drama)-[:GENRE]->(tt2802850),
-  (English)-[:LANGUAGE]->(tt2802850)
+  (English)-[:SPOKEN_LANGUAGE]->(tt2802850)
 
 // Fargo S1E10's Relations
 CREATE

@@ -31,8 +31,25 @@ public class Neo4j {
         neo4j.addTitle("tt0117951");
         neo4j.addTitle("tt0289043");
         neo4j.addTitle("tt0470752");
+        neo4j.addTitle("tt0137523");
+
+        neo4j.addTitle("tt0068646");
+        neo4j.addTitle("tt0071562");
+        neo4j.addTitle("tt0099674");
+
+        neo4j.addTitle("tt0120737");
+        neo4j.addTitle("tt0167261");
+        neo4j.addTitle("tt0167260");
+
+        neo4j.addTitle("tt0120915");
+        neo4j.addTitle("tt0121765");
         neo4j.addTitle("tt2488496");
+        neo4j.addTitle("tt0076759");
+        neo4j.addTitle("tt0080684");
+        neo4j.addTitle("tt0086190");
         neo4j.addTitle("tt0121766");
+
+        neo4j.addTitle("tt0301357");
 
         neo4j.closeSession();
 
@@ -73,11 +90,12 @@ public class Neo4j {
 
                 System.out.println("Added Movie: " + movie.getImdbID());
 
-                addNodeList(movie.getLanguage(), "Language", id, "LANGUAGE");
+                addNodeList(movie.getLanguage(), "Language", id, "SPOKEN_LANGUAGE");
                 addNodeList(movie.getGenre(), "Genre", id, "GENRE");
                 addNodeList(movie.getWriter(), "Person", id, "WROTE");
                 addNodeList(movie.getDirector(), "Person", id, "DIRECTED");
                 addNodeList(movie.getActors(), "Person", id, "ACTED_IN");
+                addNodeList(movie.getProducers(), "Producer", id, "PRODUCED");
 
 
                 /* ScoreOutles TODO standarize scores */
@@ -122,7 +140,7 @@ public class Neo4j {
 
                 System.out.println("Added " + node_type + ": " + node);
             } else {
-                System.err.println(title + " already exists");
+                System.err.println(node + " already exists");
             }
 
             session.run("MATCH (a:" + node_type + " { name: {name}}), (b:Movie { name: {title}}) " +

@@ -19,6 +19,7 @@ public class OmdbMovie extends OmdbTitle {
     private ArrayList writer;
     private ArrayList director;
     private ArrayList actors;
+    private ArrayList producers;
 
     /**
      * Constructor for the class OMDBMovie that extends from OMDBTitle
@@ -44,6 +45,7 @@ public class OmdbMovie extends OmdbTitle {
         this.writer = Omdb.listFormatter(movie.get("Writer"));
         this.director = Omdb.listFormatter(movie.get("Director"));
         this.actors = Omdb.listFormatter(movie.get("Actors"));
+        this.producers = Omdb.listFormatter(movie.get("Production"));
     }
 
     /**
@@ -92,6 +94,12 @@ public class OmdbMovie extends OmdbTitle {
     public ArrayList getActors() {
         return actors;
     }
+
+    public ArrayList getProducers() {
+        return producers;
+    }
+
+    ;
 
     /* Overridden Methods */
     @Override
