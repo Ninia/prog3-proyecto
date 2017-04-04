@@ -10,7 +10,7 @@ import static org.neo4j.driver.v1.Values.parameters;
 public class OmdbMovie extends OmdbTitle {
 
     private Date dvd;
-    private double boxOffice; // in Dollars
+    private double boxOffice; /* in Dollars */
     private String website;
 
     private HashMap ratings = new HashMap<String, String>();

@@ -15,7 +15,7 @@ public class OmdbTitle {
     protected int metascore;
     protected int imdbRating;
     protected int imdbVotes;
-    protected int runtime; // minutes
+    protected int runtime; /* Minutes */
     protected String poster;
 
     OmdbTitle(Map title) {

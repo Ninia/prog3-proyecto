@@ -5,7 +5,10 @@ import ud.binmonkey.prog3_proyecto_server.neo4j.omdb.MediaType;
 import ud.binmonkey.prog3_proyecto_server.neo4j.omdb.Omdb;
 import ud.binmonkey.prog3_proyecto_server.neo4j.omdb.OmdbMovie;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
 
 import static org.neo4j.driver.v1.Values.parameters;
 
@@ -15,6 +18,19 @@ public class Neo4j {
     private String password;
     private Driver driver;
     private Session session;
+
+    /* Logger from Neo4j*/
+    private static final boolean ADD_TO_FIC_LOG = false; /* set false to overwrite */
+    private static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Neo4j.class.getName());
+
+    static {
+        try {
+            logger.addHandler(new FileHandler(
+                    "logs/" + Neo4j.class.getName() + ".log.xml", ADD_TO_FIC_LOG));
+        } catch (SecurityException | IOException e) {
+            logger.log(Level.SEVERE, "Error in log file creation");
+        }
+    }
 
     /**
      * Constructor for the class Neoj
@@ -77,18 +93,18 @@ public class Neo4j {
      * @param id - IMDB id of the title
      */
     public void addTitle(String id) {
-        // TODO Implement Series and Episodes
+        /* TODO Implement Series and Episodes */
         if (!checkNode(id, "Movie")) {
             if (MediaType.movie.equalsName((String) Omdb.getTitle(id).get("Type"))) {
 
                 OmdbMovie movie = new OmdbMovie(id);
 
-                // Add info of Movie
+                /* Add info of Movie */
                 session.run(
                         "CREATE (a:Movie {title: {title}, name: {name}, year: {year}, released: {released}, dvd: {dvd}, plot: {plot}, rated: {rated}, awards: {awards}, boxOffice: {boxOffice}, metascore: {metascore}, imdbRating: {imdbRating}, imdbVotes: {imdbVotes}, runtime: {runtime}, website: {website}, poster: {poster}})",
                         (Value) movie.toParameters());
 
-                System.out.println("Added Movie: " + movie.getImdbID());
+                logger.log(Level.INFO, "Added Movie: " + movie.getImdbID());
 
                 addNodeList(movie.getLanguage(), "Language", id, "SPOKEN_LANGUAGE");
                 addNodeList(movie.getGenre(), "Genre", id, "GENRE");
@@ -104,7 +120,7 @@ public class Neo4j {
                         session.run("CREATE (a:ScoreOutlet {name: {name}})",
                                 parameters("name", outlet));
 
-                        System.out.println("Added ScoreOutlet: " + outlet);
+                        logger.log(Level.INFO, "Added ScoreOutlet: " + outlet);
                     }
 
                     String score = (String) movie.getRatings().get(outlet);
@@ -113,11 +129,11 @@ public class Neo4j {
                                     "CREATE (a)-[:SCORED {score: {score}}]->(b)"
                             , parameters("name", outlet, "score", score, "id", id));
 
-                    System.out.println("Added SCORED: " + outlet + " -(" + score + ")-> " + id);
+                    logger.log(Level.INFO, "Added SCORED: " + outlet + " -(" + score + ")-> " + id);
                 }
             }
         } else {
-            System.err.println(id + " already exists");
+            logger.log(Level.WARNING, id + " already exists");
         }
     }
 
@@ -138,14 +154,15 @@ public class Neo4j {
                         "CREATE(p:" + node_type + " {name: {name}})",
                         parameters("name", node));
 
-                System.out.println("Added " + node_type + ": " + node);
+                logger.log(Level.INFO, "Added " + node_type + ": " + node);
             } else {
-                System.err.println(node + " already exists");
+                logger.log(Level.WARNING, node + " already exists");
             }
 
             session.run("MATCH (a:" + node_type + " { name: {name}}), (b:Movie { name: {title}}) " +
                     "CREATE (a)-[:" + relation_type + "]->(b)", parameters("name", node, "title", title));
-            System.out.println("Added " + relation_type + ": " + node + " -> " + title);
+
+            logger.log(Level.INFO, "Added " + relation_type + ": " + node + " -> " + title);
         }
     }
 
@@ -172,6 +189,6 @@ public class Neo4j {
 
     public void clearDB() {
         session.run("MATCH (n) DETACH DELETE n;");
-        System.out.println("Cleared DB");
+        logger.log(Level.INFO, "Cleared DB");
     }
 }
