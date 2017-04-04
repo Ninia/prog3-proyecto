@@ -106,7 +106,7 @@ CREATE (tt2802850:Series {
   poster:     'https://images-na.ssl-images-amazon.com/images/M/MV5BNmNiNDc4MzQtNjFmMC00MzQ1LTkyZjUtODMxN2UyMmYxZmFmXkEyXkFqcGdeQXVyNTMxMjgxMzA@._V1_SX300.jpg'
 })
 
-//Episodes
+/* Episodes */
 CREATE (tt3599918:Episode {
   title:      "Morton's Fork",
   name:     'tt3599918',
@@ -122,7 +122,7 @@ CREATE (tt3599918:Episode {
   poster:     'https://images-na.ssl-images-amazon.com/images/M/MV5BMjE0Nzc4Mjk2Ml5BMl5BanBnXkFtZTgwNTQxODEwMjE@._V1_SX300.jpg'
 })
 
-// People
+/* People */
 CREATE (John_Hodge:Person {name: 'John Hodge'})
 CREATE (Irvine_Welsh:Person {name: 'Irvine Welsh'})
 CREATE (Ewan_McGregor:Person {name: 'Ewan McGregor'})
@@ -157,7 +157,7 @@ CREATE(Billy_Bob_Thornton:Person {name: 'Billy Bob Thornton'})
 CREATE(Matt_Shakman:Person {name: 'Matt Shakman'})
 CREATE(Noah_Hawley:Person {name: 'Noah Hawley'})
 
-//Producers
+/* Producers */
 CREATE (Miramax_Films:Producer {name: 'Miramax Films'})
 CREATE (Fox_Searchlight_Pictures:Producer {name: 'Fox Searchlight Pictures'})
 CREATE (A24_Films:Producer {name: 'A24 Films'})
@@ -165,16 +165,16 @@ CREATE (Walt_Disney_Pictures:Producer {name: 'Walt Disney Pictures'})
 CREATE (Century_Fox:Producer {name: '20th Century Fox'})
 CREATE (FX_Productions:Producer {name: 'FX Productions'})
 
-// Score Outlets
+/* Score Outlets */
 CREATE (IMDB:ScoreOutlet {name: 'Internet Movie Database'})
 CREATE (Rotten_Tomatoes:ScoreOutlet {name: 'Rotten Tomatoes'})
 CREATE (Metacritic:ScoreOutlet {name: 'Metacritic'})
 
-// Countries
+/* Countries */
 CREATE (UK:Country {name: 'UK'})
 CREATE (USA:Country {name: 'USA'})
 
-// Genres
+/* Genres */
 CREATE (Drama:Genre {name: 'Drama'})
 CREATE (Horror:Genre {name: 'Horror'})
 CREATE (SciFi:Genre {name: 'Sci-Fi'})
@@ -185,11 +185,11 @@ CREATE (Fantasy:Genre {name: 'Fantasy'})
 CREATE (Crime:Genre {name: 'Crime'})
 CREATE (Thriller:Genre {name: 'Thriller'})
 
-// Languages
+/* Languages */
 CREATE (English:Language {name: 'English'})
 CREATE (Spanish:Language {name: 'Spanish'})
 
-// Trainspotting's Relations
+/* Trainspotting's Relations */
 CREATE
   (John_Hodge)-[:WROTE]->(tt0117951),
   (Irvine_Welsh)-[:WROTE]->(tt0117951),
@@ -206,7 +206,7 @@ CREATE
   (Drama)-[:GENRE]->(tt0117951),
   (English)-[:SPOKEN_LANGUAGE]->(tt0117951)
 
-// 28 Days Later's Relations
+/* 28 Days Later's Relations */
 CREATE
   (Alex_Garland)-[:WROTE]->(tt0289043),
   (Alex_Palmer)-[:ACTED_IN]->(tt0289043),
@@ -225,7 +225,7 @@ CREATE
   (English)-[:SPOKEN_LANGUAGE]->(tt0289043),
   (Spanish)-[:SPOKEN_LANGUAGE]->(tt0289043)
 
-// Ex Machinas's Relations
+/* Ex Machinas's Relations */
 CREATE
   (Alex_Garland)-[:WROTE]->(tt0470752),
   (Domhnall_Gleeson)-[:ACTED_IN]->(tt0470752),
@@ -243,7 +243,7 @@ CREATE
   (SciFi)-[:GENRE]->(tt0470752),
   (English)-[:SPOKEN_LANGUAGE]->(tt0470752)
 
-// Star Wars VII's Relations
+/* Star Wars VII's Relations */
 CREATE
   (Lawrence_Kasdan)-[:WROTE]->(tt2488496),
   (JJ_Abrams)-[:WROTE]->(tt2488496),
@@ -267,7 +267,7 @@ CREATE
   (Fantasy)-[:GENRE]->(tt2488496),
   (English)-[:SPOKEN_LANGUAGE]->(tt2488496)
 
-// Star Wars III's Relations
+/* Star Wars III's Relations */
 CREATE
   (George_Lucas)-[:WROTE]->(tt0121766),
   (Ewan_McGregor)-[:ACTED_IN]->(tt0121766),
@@ -295,7 +295,7 @@ CREATE
   (Drama)-[:GENRE]->(tt2802850),
   (English)-[:SPOKEN_LANGUAGE]->(tt2802850)
 
-// Fargo S1E10's Relations
+/* Fargo S1E10's Relations */
 CREATE
   (tt3599918)-[:BELONGS_TO {season: 1, episode: 10}]->(tt2802850),
   (Noah_Hawley)-[:WROTE]->(tt3599918),
