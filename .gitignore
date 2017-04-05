@@ -1,4 +1,4 @@
-.*
+.idea
 conf
 *.iml
 keys
@@ -7,3 +7,5 @@ keys
 !.gitignore
 /target/
 /src/test/resources/ftpd/
+logs/*
+!logs/README.txt
