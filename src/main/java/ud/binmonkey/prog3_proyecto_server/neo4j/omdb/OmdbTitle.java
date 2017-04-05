@@ -21,7 +21,7 @@ public class OmdbTitle {
     OmdbTitle(Map title) {
         this.title = (String) title.get("Title");
         this.imdbID = (String) title.get("imdbID");
-        this.year = (String) title.get("Year");
+        this.year = Omdb.yearFormatter(title.get("Year"));
         this.released = Omdb.dateFormatter(title.get("Released"));
         this.plot = (String) title.get("Plot");
         this.rated = (String) title.get("Rated");
@@ -35,100 +35,8 @@ public class OmdbTitle {
 
     /* Getters and Setters */
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getImdbID() {
         return imdbID;
-    }
-
-    public void setImdbID(String imdbID) {
-        this.imdbID = imdbID;
-    }
-
-    public String getYear() {
-        return year;
-    }
-
-    public void setYear(String year) {
-        this.year = year;
-    }
-
-    public Date getReleased() {
-        return released;
-    }
-
-    public void setReleased(Date released) {
-        this.released = released;
-    }
-
-    public String getPlot() {
-        return plot;
-    }
-
-    public void setPlot(String plot) {
-        this.plot = plot;
-    }
-
-    public String getRated() {
-        return rated;
-    }
-
-    public void setRated(String rated) {
-        this.rated = rated;
-    }
-
-    public String getAwards() {
-        return awards;
-    }
-
-    public void setAwards(String awards) {
-        this.awards = awards;
-    }
-
-    public int getMetascore() {
-        return metascore;
-    }
-
-    public void setMetascore(int metascore) {
-        this.metascore = metascore;
-    }
-
-    public int getImdbRating() {
-        return imdbRating;
-    }
-
-    public void setImdbRating(int imdbRating) {
-        this.imdbRating = imdbRating;
-    }
-
-    public int getImdbVotes() {
-        return imdbVotes;
-    }
-
-    public void setImdbVotes(int imdbVotes) {
-        this.imdbVotes = imdbVotes;
-    }
-
-    public int getRuntime() {
-        return runtime;
-    }
-
-    public void setRuntime(int runtime) {
-        this.runtime = runtime;
-    }
-
-    public String getPoster() {
-        return poster;
-    }
-
-    public void setPoster(String poster) {
-        this.poster = poster;
     }
 
     /* Overridden Methods*/

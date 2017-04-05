@@ -1,10 +1,11 @@
-.*
+.idea
 conf
 *.iml
 keys
-logs/*
 /conf/Network.xml
 /conf/System.xml
 !.gitignore
 /target/
 /src/test/resources/ftpd/
+logs/*
+!logs/README.txt

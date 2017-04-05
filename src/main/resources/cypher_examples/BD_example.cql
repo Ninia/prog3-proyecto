@@ -1,7 +1,14 @@
+/* Cosas que iremos creando sobre la marcha:
+- User Ratings
+- Relative path
+- Relative path by movie language
+- Sagas (e.g. Star Wars, MCU)
+*/
+
 /* Movies */
 CREATE (tt0117951:Movie {
   title:      'Trainspotting',
-  name:     'tt0117951',
+  name:       'tt0117951',
   year:       '1996',
   released:   'Fri Aug 09 00:00:00 CEST 1996',
   dvd:        'Tue Mar 24 00:00:00 CET 1998',
@@ -19,7 +26,7 @@ CREATE (tt0117951:Movie {
 
 CREATE (tt0289043:Movie {
   title:      '28 Days Later...',
-  name:     'tt0289043',
+  name:       'tt0289043',
   year:       '2002',
   released:   'Fri Jun 27 00:00:00 CEST 2003',
   dvd:        'Tue Oct 21 00:00:00 CEST 2003',
@@ -36,26 +43,26 @@ CREATE (tt0289043:Movie {
 })
 
 CREATE (tt0470752:Movie {
-  title:      'Ex Machina',
-  name:     'tt0470752',
-  year:       '2014',
-  released:   'Fri Apr 24 00:00:00 CEST 2015',
-  dvd:        'Tue Jul 14 00:00:00 CEST 2015',
-  plot:       "Caleb, a 26 year old programmer at the world's largest internet company, wins a competition to spend a week at a private mountain retreat belonging to Nathan, the reclusive CEO of the company. But when Caleb arrives at the remote location he finds that he will have to participate in a strange and fascinating experiment in which he must interact with the world's first true artificial intelligence, housed in the body of a beautiful robot girl.",
-  rated:      'R',
-  awards:     'Won 1 Oscar. Another 64 wins & 137 nominations.',
-  boxOffice:  '$19,012,798.00',
-  metascore:  '78',
-  imdbRating: '7.7',
-  imdbVotes:  '332,250',
-  runtime:    108,
-  runtimewebsite:    'http://meet-ava.com/',
-  poster:     'https://images-na.ssl-images-amazon.com/images/M/MV5BMTUxNzc0OTIxMV5BMl5BanBnXkFtZTgwNDI3NzU2NDE@._V1_SX300.jpg'
+  title:          'Ex Machina',
+  name:           'tt0470752',
+  year:           '2014',
+  released:       'Fri Apr 24 00:00:00 CEST 2015',
+  dvd:            'Tue Jul 14 00:00:00 CEST 2015',
+  plot:           "Caleb, a 26 year old programmer at the world's largest internet company, wins a competition to spend a week at a private mountain retreat belonging to Nathan, the reclusive CEO of the company. But when Caleb arrives at the remote location he finds that he will have to participate in a strange and fascinating experiment in which he must interact with the world's first true artificial intelligence, housed in the body of a beautiful robot girl.",
+  rated:          'R',
+  awards:         'Won 1 Oscar. Another 64 wins & 137 nominations.',
+  boxOffice:      '$19,012,798.00',
+  metascore:      '78',
+  imdbRating:     '7.7',
+  imdbVotes:      '332,250',
+  runtime:        108,
+  runtimewebsite: 'http://meet-ava.com/',
+  poster:         'https://images-na.ssl-images-amazon.com/images/M/MV5BMTUxNzc0OTIxMV5BMl5BanBnXkFtZTgwNDI3NzU2NDE@._V1_SX300.jpg'
 })
 
 CREATE (tt2488496:Movie {
   title:      'Star Wars: The Force Awakens',
-  name:     'tt2488496',
+  name:       'tt2488496',
   year:       '2015',
   released:   'Fri Dec 18 00:00:00 CET 2015',
   dvd:        'Tue Apr 05 00:00:00 CEST 2016',
@@ -73,7 +80,7 @@ CREATE (tt2488496:Movie {
 
 CREATE (tt0121766:Movie {
   title:      'Star Wars: Episode III - Revenge of the Sith',
-  name:     'tt0121766',
+  name:       'tt0121766',
   year:       '2005',
   released:   'Thu May 19 00:00:00 CEST 2005',
   dvd:        'Tue Nov 01 00:00:00 CET 2005',
@@ -92,7 +99,7 @@ CREATE (tt0121766:Movie {
 /* TV Series */
 CREATE (tt2802850:Series {
   title:      'Fargo',
-  name:     'tt2802850',
+  name:       'tt2802850',
   year:       '2014-',
   Seasons:    3,
   released:   'Tue Apr 15 00:00:00 CEST 2014',
@@ -109,7 +116,7 @@ CREATE (tt2802850:Series {
 /* Episodes */
 CREATE (tt3599918:Episode {
   title:      "Morton's Fork",
-  name:     'tt3599918',
+  name:       'tt3599918',
   year:       '2014',
   released:   'Tue Jun 17 00:00:00 CEST 2014',
   plot:       'Molly takes the lead, while Gus pursues a hunch. Lester manipulates a situation, and Malvo finds a new target.',
@@ -286,7 +293,7 @@ CREATE
   (SciFi)-[:GENRE]->(tt0121766),
   (English)-[:SPOKEN_LANGUAGE]->(tt0121766)
 
-// Fargo's Relations
+/* Fargo's Relations */
 CREATE
   (FX_Productions)-[:PRODUCED]->(tt0121766),
   (USA)-[:COUNTRY]->(tt2802850),

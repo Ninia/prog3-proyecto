@@ -1,0 +1,1 @@
+In order to synchronize this folder this file is needed.
