@@ -1,6 +1,10 @@
 package ud.binmonkey.prog3_proyecto_server.neo4j;
 
 import org.neo4j.driver.v1.*;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import ud.binmonkey.prog3_proyecto_server.common.DocumentReader;
 import ud.binmonkey.prog3_proyecto_server.neo4j.omdb.*;
 
 import java.io.IOException;
@@ -40,10 +44,15 @@ public class Neo4j {
     }
 
     private void readConfig() {
-        /* TODO store this on a .xml */
-        username = "test";
-        password = "test";
-        server_address = "bolt://localhost:7687";
+
+        NodeList nList = DocumentReader.getDoc("conf/Neo4jServer.xml").getElementsByTagName("neo4j-server");
+        Node nNode = nList.item(0);
+        Element eElement = (Element) nNode;
+
+
+        username = eElement.getElementsByTagName("username").item(0).getTextContent();
+        password = eElement.getElementsByTagName("password").item(0).getTextContent();
+        server_address = eElement.getElementsByTagName("server_address").item(0).getTextContent();
     }
 
     public void startSession() {
@@ -81,7 +90,10 @@ public class Neo4j {
             OmdbMovie movie = new OmdbMovie(id);
 
             session.run(
-                    "CREATE (a:Movie {title: {title}, name: {name}, year: {year}, released: {released}, dvd: {dvd}, plot: {plot}, rated: {rated}, awards: {awards}, boxOffice: {boxOffice}, metascore: {metascore}, imdbRating: {imdbRating}, imdbVotes: {imdbVotes}, runtime: {runtime}, website: {website}, poster: {poster}})",
+                    "CREATE (a:Movie {title: {title}, name: {name}, year: {year}, released: {released}, dvd: {dvd}," +
+                            " plot: {plot}, rated: {rated}, awards: {awards}, boxOffice: {boxOffice}," +
+                            " metascore: {metascore}, imdbRating: {imdbRating}, imdbVotes: {imdbVotes}," +
+                            " runtime: {runtime}, website: {website}, poster: {poster}})",
                     (Value) movie.toParameters());
 
             logger.log(Level.INFO, "Added Movie: " + movie.getImdbID());
@@ -127,7 +139,10 @@ public class Neo4j {
             OmdbSeries series = new OmdbSeries(id);
 
             session.run(
-                    "CREATE (a:Series {title: {title}, name: {name}, year: {year}, seasons: {seasons}, released: {released}, plot: {plot}, rated: {rated}, awards: {awards}, metascore: {metascore}, imdbRating: {imdbRating}, imdbVotes: {imdbVotes}, runtime: {runtime}, poster: {poster}})",
+                    "CREATE (a:Series {title: {title}, name: {name}, year: {year}, seasons: {seasons}," +
+                            " released: {released}, plot: {plot}, rated: {rated}, awards: {awards}," +
+                            " metascore: {metascore}, imdbRating: {imdbRating}, imdbVotes: {imdbVotes}," +
+                            " runtime: {runtime}, poster: {poster}})",
                     (Value) series.toParameters());
 
             logger.log(Level.INFO, "Added Series: " + series.getImdbID());
@@ -151,7 +166,9 @@ public class Neo4j {
             OmdbEpisode episode = new OmdbEpisode(id);
 
             session.run(
-                    "CREATE (a:Episode {title: {title}, name: {name}, year: {year}, released: {released}, plot: {plot}, rated: {rated}, awards: {awards}, metascore: {metascore}, imdbRating: {imdbRating}, imdbVotes: {imdbVotes}, runtime: {runtime}, poster: {poster}})",
+                    "CREATE (a:Episode {title: {title}, name: {name}, year: {year}, released: {released}," +
+                            " plot: {plot}, rated: {rated}, awards: {awards}, metascore: {metascore}," +
+                            " imdbRating: {imdbRating}, imdbVotes: {imdbVotes}, runtime: {runtime}, poster: {poster}})",
                     (Value) episode.toParameters());
 
             logger.log(Level.INFO, "Added Episode: " + episode.getImdbID());

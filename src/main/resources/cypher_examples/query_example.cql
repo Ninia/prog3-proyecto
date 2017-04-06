@@ -19,10 +19,16 @@ RETURN m.title, m.imdbRating, m.year
 /* List languages and the number of title they are spoken in, ordering them by the number of title */
 MATCH (a:Language)-[b:SPOKEN_LANGUAGE]->(c)
 RETURN a.name, count(c)
-  ORDER BY count(c) DESCENDING
+  ORDER BY count(c) DESCENDING;
 
 /* List movies of a Language, ordering by year */
 MATCH p = (n:Language)-[r:SPOKEN_LANGUAGE]->(m:Movie)
   WHERE n.name = 'English'
 RETURN m.title, m.imdbRating, m.year
   ORDER BY m.year;
+
+/* List Episodes of a Series, ordering by season and episode: */
+MATCH p = (n:Episode)-[r:BELONGS_TO]->(m:Series)
+  WHERE m.name = 'tt2802850'
+RETURN n.title, r.season, r.episode
+  ORDER BY r.season, r.episode;
