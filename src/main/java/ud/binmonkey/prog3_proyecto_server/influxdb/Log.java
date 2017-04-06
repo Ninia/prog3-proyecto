@@ -1,13 +1,13 @@
 package ud.binmonkey.prog3_proyecto_server.influxdb;
 
+import ud.binmonkey.prog3_proyecto_server.common.DocumentReader;
 import ud.binmonkey.prog3_proyecto_server.influxdb.monitor.CPU;
 import ud.binmonkey.prog3_proyecto_server.influxdb.monitor.Memory;
-import ud.binmonkey.prog3_proyecto_server.common.DocumentReader;
 
 import java.util.ArrayList;
 
 /**
- *  Obtain data about the server contained in Points so it can be logged to InfluxDB
+ * Obtain data about the server contained in Points so it can be logged to InfluxDB
  */
 public class Log {
 
@@ -15,11 +15,12 @@ public class Log {
             "conf/System.xml").getElementsByTagName("hostname").item(0).getTextContent();
 
 
-    /** Static method used for obtaining current CPU usage
+    /**
+     * Static method used for obtaining current CPU usage
      *
      * @return string containing current CPU usage percentage
      */
-    public static Point getCPUUsagePoint(){
+    public static Point getCPUUsagePoint() {
 
         Point point = new Point();
         point.setMeasurement("cpu_usage");
@@ -31,11 +32,12 @@ public class Log {
     }
 
 
-    /** Static method used for obtaining current CPU temperature
+    /**
+     * Static method used for obtaining current CPU temperature
      *
      * @return string containing current CPU temperature percentage
      */
-    public static Point getCPUTemperaturePoint(){
+    public static Point getCPUTemperaturePoint() {
 
         Point point = new Point();
         point.setMeasurement("cpu_temperature");
@@ -47,11 +49,12 @@ public class Log {
     }
 
 
-    /** Static method used for obtaining current memory usage
+    /**
+     * Static method used for obtaining current memory usage
      *
      * @return string containing current memory usage percentage
      */
-    public static Point getMemUsagePoint(){
+    public static Point getMemUsagePoint() {
         Point point = new Point();
         point.setMeasurement("mem_usage");
         point.getTags().put("host", "\"" + SYSNAME + "\"");
@@ -62,7 +65,8 @@ public class Log {
     }
 
 
-    /** Generates ArrayLists
+    /**
+     * Generates ArrayLists
      *
      * @param n of batch to be sent to InfluxDB
      * @return ArrayList containing the generated points
@@ -75,13 +79,14 @@ public class Log {
             if (getCPUTemperaturePoint().getFields().get("value") != null) {
                 sensors = true;
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
         ArrayList<Point> points = new ArrayList<>();
-        for (int i=0; i<n; i++){
+        for (int i = 0; i < n; i++) {
             points.add(getCPUUsagePoint());
             points.add(getCPUTemperaturePoint());
-            if (sensors){
+            if (sensors) {
                 points.add(getMemUsagePoint());
             }
         }
@@ -93,7 +98,7 @@ public class Log {
         String db = "server_stats";
         InfluxDB.createDataBase(db);
         ArrayList<Point> points = generatePoints(10);
-        for (Point point: points) {
+        for (Point point : points) {
             System.out.println(point);
         }
         InfluxDB.writePoints(db, points);

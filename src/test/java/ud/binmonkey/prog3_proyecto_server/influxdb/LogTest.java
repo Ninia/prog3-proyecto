@@ -1,6 +1,6 @@
 package ud.binmonkey.prog3_proyecto_server.influxdb;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 public class LogTest {
     @org.junit.Test

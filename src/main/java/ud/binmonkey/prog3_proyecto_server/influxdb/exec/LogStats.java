@@ -1,16 +1,15 @@
 package ud.binmonkey.prog3_proyecto_server.influxdb.exec;
 
 import org.w3c.dom.Element;
+import ud.binmonkey.prog3_proyecto_server.common.DocumentReader;
 import ud.binmonkey.prog3_proyecto_server.influxdb.InfluxDB;
 import ud.binmonkey.prog3_proyecto_server.influxdb.Log;
 import ud.binmonkey.prog3_proyecto_server.influxdb.Point;
-import ud.binmonkey.prog3_proyecto_server.common.DocumentReader;
-
 
 import java.util.ArrayList;
 
-/** Continuously logs server stats to InfluxDB
- *
+/**
+ * Continuously logs server stats to InfluxDB
  */
 public class LogStats {
 
@@ -18,7 +17,7 @@ public class LogStats {
     public static int time;
 
     /**
-     *  Create specified database and continuously write points to it
+     * Create specified database and continuously write points to it
      */
     public static void main(String[] args) {
 
