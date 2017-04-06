@@ -11,13 +11,9 @@ public class HtmlParser {
     }};
 
     public static String parse(String html) {
-        System.out.println("Hi");
         for (String rule : parseRules.keySet()) {
-            System.out.println(rule);
-            System.out.println(parseRules.get(rule));
             html = html.replace(rule, parseRules.get(rule));
         }
-        System.out.println("Bye");
         return html;
     }
 }

@@ -12,9 +12,14 @@ public class HTTPServer {
 
     private HttpServer httpServer;
     private HashMap<String, HttpHandler> contexts = new HashMap<String, HttpHandler>() {{
-       put("/antigravity", new HTTPHandlers.AntigravityHandler());
-       put("/js/", new HTTPHandlers.JsHandler());
-       put("/", new HTTPHandlers.DefaultHandler());
+        put("/", new HTTPHandlers.IndexHandler());
+        put("/antigravity", new HTTPHandlers.AntigravityHandler());
+        put("/favicon.ico", new HTTPHandlers.FavIcoHandler());
+        put("/images/", new HTTPHandlers.WebHandler());
+        put("/index", new HTTPHandlers.IndexHandler());
+        put("/js/", new HTTPHandlers.WebHandler());
+        put("/test", new HTTPHandlers.DefaultHandler());
+        put("/vendor/", new HTTPHandlers.WebHandler());
     }};
 
     public HTTPServer() throws IOException {
