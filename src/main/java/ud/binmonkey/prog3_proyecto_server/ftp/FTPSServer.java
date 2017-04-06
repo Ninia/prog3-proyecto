@@ -34,9 +34,9 @@ public class FTPSServer {
 
         /* load keyStore password */
         String keyStorePasswd = ((Element)
-                                ( DocumentReader.getDoc("conf/SSL.xml")
-                                ).getElementsByTagName("ssl").item(0)
-                                ).getElementsByTagName("keypasswd").item(0).getTextContent();
+                (DocumentReader.getDoc("conf/SSL.xml")
+                ).getElementsByTagName("ssl").item(0)
+        ).getElementsByTagName("keypasswd").item(0).getTextContent();
 
         sslConfigurationFactory.setKeystorePassword(keyStorePasswd);
 

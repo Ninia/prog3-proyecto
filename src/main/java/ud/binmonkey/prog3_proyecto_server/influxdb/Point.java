@@ -17,6 +17,10 @@ public class Point {
         return measurement;
     }
 
+    public void setMeasurement(String measurement) {
+        this.measurement = measurement;
+    }
+
     public HashMap getTags() {
         return tags;
     }
@@ -27,10 +31,6 @@ public class Point {
 
     public long getTime() {
         return time;
-    }
-
-    public void setMeasurement(String measurement) {
-        this.measurement = measurement;
     }
 
     public void setTime(long time) {
@@ -45,9 +45,9 @@ public class Point {
         out += "fields: {\n";
         short len = (short) fields.size(); /* correct field size shouldn't be too big for short. */
         short count = 1;
-        for (String field: fields.keySet()) {
+        for (String field : fields.keySet()) {
             out += "\t" + field + ": " + fields.get(field);
-            if (len > count){
+            if (len > count) {
                 out += ",";
                 count += 1; /* primitives. are. immutable. */
             }
@@ -57,9 +57,9 @@ public class Point {
         out += "tags: {\n";
         len = (short) tags.size(); /* correct field size shouldn't be too big for short. */
         count = 1;
-        for (String tag: tags.keySet()) {
+        for (String tag : tags.keySet()) {
             out += "\t" + tag + ": " + tags.get(tag);
-            if (len > count){
+            if (len > count) {
                 out += ",";
                 count += 1; /* primitives. are. immutable. */
             }
