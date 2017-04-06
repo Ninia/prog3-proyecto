@@ -12,7 +12,8 @@ public class URI {
         return document.getElementsByTagName(service);
     }
 
-    /** Obtain URI of service specified on conf/Network.xml
+    /**
+     * Obtain URI of service specified on conf/Network.xml
      *
      * @param service wanted service
      * @return string containing URI
@@ -28,7 +29,8 @@ public class URI {
 
     }
 
-    /** Obtain port of service specified on conf/Network.xml
+    /**
+     * Obtain port of service specified on conf/Network.xml
      *
      * @param service wanted service
      * @return string containing port
@@ -42,7 +44,8 @@ public class URI {
         return Integer.parseInt(port);
     }
 
-    /** Obtain of service specified on conf/Network.xml
+    /**
+     * Obtain of service specified on conf/Network.xml
      *
      * @param service wanted service
      * @return string containing ns

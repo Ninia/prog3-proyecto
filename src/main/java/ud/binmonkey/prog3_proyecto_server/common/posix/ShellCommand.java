@@ -16,7 +16,7 @@ public class ShellCommand {
 
             @SuppressWarnings("UnusedAssignment")
             String line = "";
-            while ((line = reader.readLine())!= null) {
+            while ((line = reader.readLine()) != null) {
                 output.append(line + "\n");
             }
 
