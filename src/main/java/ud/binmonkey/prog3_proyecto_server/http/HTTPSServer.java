@@ -38,7 +38,7 @@ public class HTTPSServer {
 
             /* obtain keyword from config xml*/
             Element settings = (Element) DocumentReader.getDoc(
-                         "conf/Network.xml").getElementsByTagName("http-server").item(0);
+                    "conf/Network.xml").getElementsByTagName("http-server").item(0);
             String keyword = settings.getElementsByTagName("keyword").item(0).getTextContent();
 
             /* initialize ssl context */
@@ -49,7 +49,7 @@ public class HTTPSServer {
 
             /* configure key store */
             KeyStore ks = KeyStore.getInstance("JKS");
-            ks.load( new FileInputStream("src/test/resources/keys/httpserver.jks"), passwd);
+            ks.load(new FileInputStream("src/test/resources/keys/httpserver.jks"), passwd);
 
             /* configure key management factory */
             KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
@@ -60,11 +60,11 @@ public class HTTPSServer {
             tmf.init(ks);
 
             /* setup SSL context */
-            sslContext.init( kmf.getKeyManagers(), tmf.getTrustManagers(), null);
+            sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
 
             /* create http server */
-            this.httpsServer =  HttpsServer.create(new InetSocketAddress(  URI.getHost("http-server"),
-                                URI.getPort("http-server")), 0);
+            this.httpsServer = HttpsServer.create(new InetSocketAddress(URI.getHost("http-server"),
+                    URI.getPort("http-server")), 0);
 
             System.out.println("Creating HTTPS server in " + URI.getURI("http-server"));
 
@@ -77,11 +77,11 @@ public class HTTPSServer {
                         SSLContext sslC = SSLContext.getDefault();
                         SSLEngine sslEngine = sslC.createSSLEngine();
                         parameters.setNeedClientAuth(false);
-                        parameters.setCipherSuites( sslEngine.getEnabledCipherSuites() );
-                        parameters.setProtocols( sslEngine.getEnabledProtocols() );
+                        parameters.setCipherSuites(sslEngine.getEnabledCipherSuites());
+                        parameters.setProtocols(sslEngine.getEnabledProtocols());
 
                         /* set default parameters */
-                        parameters.setSSLParameters( sslC.getDefaultSSLParameters() );
+                        parameters.setSSLParameters(sslC.getDefaultSSLParameters());
 
 
                     } catch (NoSuchAlgorithmException e) {
@@ -91,14 +91,14 @@ public class HTTPSServer {
             });
 
             /* assign contexts*/
-            for (String context: contexts.keySet()) {
+            for (String context : contexts.keySet()) {
                 httpsServer.createContext(context, contexts.get(context));
             }
 
             /* set multithreaded executor */
-            this.httpsServer.setExecutor(   new ThreadPoolExecutor(4, 8, 30,
-                                            TimeUnit.SECONDS,
-                                            new ArrayBlockingQueue<>(100)));
+            this.httpsServer.setExecutor(new ThreadPoolExecutor(4, 8, 30,
+                    TimeUnit.SECONDS,
+                    new ArrayBlockingQueue<>(100)));
 
         } catch (NoSuchAlgorithmException | KeyStoreException | UnrecoverableKeyException |
                 CertificateException | KeyManagementException e) {

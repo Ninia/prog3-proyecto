@@ -1,7 +1,7 @@
 package ud.binmonkey.prog3_proyecto_server.common;
 
 /**
- *  Create or compare indexed pairs of strings
+ * Create or compare indexed pairs of strings
  */
 public class Pair<String> {
 
@@ -13,11 +13,18 @@ public class Pair<String> {
         this.value = value;
     }
 
-    public String getKey() { return key; }
-    public String getValue() { return value; }
+    public String getKey() {
+        return key;
+    }
+
+    public String getValue() {
+        return value;
+    }
 
     @Override
-    public int hashCode() { return key.hashCode() ^ value.hashCode(); }
+    public int hashCode() {
+        return key.hashCode() ^ value.hashCode();
+    }
 
     @Override
     public boolean equals(Object o) {
