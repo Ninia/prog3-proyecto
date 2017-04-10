@@ -2,7 +2,6 @@ package ud.binmonkey.prog3_proyecto_server.common;
 
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
-import ud.binmonkey.prog3_proyecto_server.neo4j.Neo4j;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -15,18 +14,19 @@ import java.util.logging.Level;
 
 public class DocumentReader {
 
-    /* Logger from Neo4j */
+    /* Logger for DocumentReader */
     private static final boolean ADD_TO_FIC_LOG = false; /* set false to overwrite */
-    private static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Neo4j.class.getName());
+    private static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DocumentReader.class.getName());
 
     static {
         try {
             logger.addHandler(new FileHandler(
-                    "logs/" + Neo4j.class.getName() + ".log.xml", ADD_TO_FIC_LOG));
+                    "logs/" + DocumentReader.class.getName() + ".log.xml", ADD_TO_FIC_LOG));
         } catch (SecurityException | IOException e) {
             logger.log(Level.SEVERE, "Error in log file creation");
         }
     }
+    /* END Logger for DocumentReader */
 
     public static Document getDoc(String path) {
 

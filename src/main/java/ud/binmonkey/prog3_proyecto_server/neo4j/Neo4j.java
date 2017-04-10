@@ -16,7 +16,7 @@ import static org.neo4j.driver.v1.Values.parameters;
 
 public class Neo4j {
 
-    /* Logger from Neo4j */
+    /* Logger for Neo4j */
     private static final boolean ADD_TO_FIC_LOG = false; /* set false to overwrite */
     private static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Neo4j.class.getName());
 
@@ -28,6 +28,7 @@ public class Neo4j {
             logger.log(Level.SEVERE, "Error in log file creation");
         }
     }
+    /* END Logger for Neo4j */
 
     private String username;
     private String password;
@@ -40,7 +41,16 @@ public class Neo4j {
      */
     public Neo4j() {
         readConfig();
-        startSession();
+        try {
+            startSession();
+        } catch (org.neo4j.driver.v1.exceptions.ServiceUnavailableException e) {
+            logger.log(Level.SEVERE, "Unable to connect to server," +
+                    " ensure the database is running and that there is a working network connection to it.");
+            System.exit(0);
+        } catch (org.neo4j.driver.v1.exceptions.AuthenticationException e) {
+            logger.log(Level.SEVERE, ": The client is unauthorized due to authentication failure.");
+            System.exit(0);
+        }
     }
 
     private void readConfig() {
