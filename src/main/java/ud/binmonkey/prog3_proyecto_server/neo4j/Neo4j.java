@@ -9,6 +9,7 @@ import ud.binmonkey.prog3_proyecto_server.neo4j.omdb.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 
@@ -81,11 +82,11 @@ public class Neo4j {
      * @param id - IMDB id of the title
      */
     public void addTitle(String id) {
-        if (MediaType.movie.equalsName((String) Omdb.getTitle(id).get("Type"))) {
+        if (MediaType.MOVIE.equalsName((String) Omdb.getTitle(id).get("Type"))) {
             addMovie(id);
-        } else if (MediaType.series.equalsName((String) Omdb.getTitle(id).get("Type"))) {
+        } else if (MediaType.SERIES.equalsName((String) Omdb.getTitle(id).get("Type"))) {
             addSeries(id);
-        } else if (MediaType.episode.equalsName((String) Omdb.getTitle(id).get("Type"))) {
+        } else if (MediaType.EPISODE.equalsName((String) Omdb.getTitle(id).get("Type"))) {
             addEpisode(id);
         }
     }
@@ -233,11 +234,23 @@ public class Neo4j {
     }
 
     /**
-     * Check if a Node exists in the DB
+     * Takes a ArrayList of values and turns them into Nodes
      *
-     * @param id - Identifier of the Node
-     * @return true if the Node exists
+     * @param nodes         - List of values to turn into Nodes
+     * @param node_type     - Type of the nodes to create
+     * @param title         - Title the relation is assigned to
+     * @param relation_type - Type of the relation between the node and the title
      */
+    private void addNodeList(String node_type, String title, String node2_type, String relation_type, Object... nodes) {
+        addNodeList(new ArrayList<>(Arrays.asList(nodes)), node_type, title, node2_type, relation_type);
+    }
+
+        /**
+         * Check if a Node exists in the DB
+         *
+         * @param id - Identifier of the Node
+         * @return true if the Node exists
+         */
     private boolean checkNode(String id, String type) {
 
         boolean existance = false;
