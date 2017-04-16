@@ -1,4 +1,6 @@
-# prog3.proyecto
+# prog3_proyecto_server
+[![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/) [![Bash Shell](https://badges.frapsoft.com/bash/v1/bash.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
+
 Student project for Programming III course at Deusto University made by [Rafael Romón](https://github.com/rafaelromon), [Saul Segura](https://github.com/luasaul) and [Mikel Solabarrieta](https://github.com/mikelsr). 
 
 ## Description:
@@ -9,8 +11,20 @@ Self-Hosted Java Server that stores documents and media files, it communicates w
 * DWH - Analytics (Likes, usage, etc).
 
 <p align="center">
-  <img src="https://github.com/Ninia/prog3.proyecto/blob/master/src/main/resources/web/planteamiento.png" alt="Planteamiento"/>
+  <img src="https://github.com/Ninia/prog3.proyecto/blob/master/src/main/web/images/planteamiento.png" alt="Planteamiento"/>
 </p>
+
+┻┳|<br>
+┳┻|<br>
+┻┳|<br>
+┳┻|<br>
+┻┳|<br>
+┳┻|<br>
+┻┳|<br>
+┳┻|_<br>
+┻┳| •.•) &nbsp;&nbsp;&nbsp;we are working<br>
+┳┻|⊂&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;on ssl<br>
+┻┳|<br>
 
 ## Monitoring the Server
 Some stats and conditions of the host server can be stored in [InfluxDB](

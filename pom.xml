@@ -4,15 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ud.ninia.prog3-proyecto</groupId>
-    <artifactId>prog3-proyecto</artifactId>
+    <groupId>ud.binmonkey.prog3-proyecto</groupId>
+    <artifactId>prog3-proyecto_server</artifactId>
     <version>1.0-SNAPSHOT</version>
 
 
     <licenses>
         <license>
             <name>GNU General Public License, Version 3.0</name>
-            <url>https://github.com/Ninia/prog3-proyecto/blob/master/LICENSE</url>
+            <url>https://github.com/binary-monkey/prog3-proyecto_server/blob/master/LICENSE</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -36,8 +36,8 @@
             <name>Rafael Romon</name>
             <email>rafaelromonsagredo@opendeusto.es</email>
             <url>https://github.com/rafaelromon</url>
-            <organization>Ninia</organization>
-            <organizationUrl>https://github.com/Ninia</organizationUrl>
+            <organization>Binary Monkey</organization>
+            <organizationUrl>https://github.com/bin-monkey</organizationUrl>
             <roles>
                 <role>developer</role>
             </roles>
@@ -58,8 +58,8 @@
             <name>Mikel Solabarrieta</name>
             <email>mikelsr@opendeusto.es</email>
             <url>https://github.com/mikelsr</url>
-            <organization>Ninia</organization>
-            <organizationUrl>https://github.com/Ninia</organizationUrl>
+            <organization>Binary Monkey</organization>
+            <organizationUrl>https://github.com/bin-monkey</organizationUrl>
             <roles>
                 <role>developer</role>
             </roles>
@@ -95,6 +95,11 @@
             <artifactId>hamcrest-core</artifactId>
             <version>1.3</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j.driver</groupId>
+            <artifactId>neo4j-java-driver</artifactId>
+            <version>1.1.2</version>
         </dependency>
     </dependencies>
 
