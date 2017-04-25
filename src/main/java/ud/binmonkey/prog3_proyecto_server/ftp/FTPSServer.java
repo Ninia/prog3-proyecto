@@ -49,7 +49,7 @@ public class FTPSServer {
 
         /* user management */
         PropertiesUserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
-        userManagerFactory.setFile(new File("conf/properties/ftpusers.properties")); /* TODO: users.properties*/
+        userManagerFactory.setFile(new File("conf/properties/ftpusers.properties")); /* TODO: users.properties */
         userManagerFactory.setPasswordEncryptor(new SaltedPasswordEncryptor());
 //        UserManager um = userManagerFactory.createUserManager();
 
