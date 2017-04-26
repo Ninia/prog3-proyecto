@@ -1,26 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
 <server xmlns="http://mina.apache.org/ftpserver/spring/v1"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://mina.apache.org/ftpserver/spring/v1 http://mina.apache.org/ftpserver/ftpserver-1.0.xsd"
-        id="p3p-ftpserver"
-        max-logins="10"
-        anon-enabled="false"
-        max-anon-logins="5"
-        max-login-failures="10"
-        login-failure-delay="300">
-
-    <file-user-manager file="properties/ftpusers.properties" encrypt-passwords="true"/>
-
+        xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://mina.apache.org/ftpserver/spring/v1 http://mina.apache.org/ftpserver/ftpserver-1.0.xsd
+    "
+        id="myServer">
     <listeners>
-        <nio-listener name="default" port="8021" implicit-ssl="true" idle-timeout="60" local-address="127.0.0.1">
-            <!--ssl>
-                <keystore file="keystore.jks" password="changeit" key-password="changeit" />
-                <truststore file="truststore.jks" password="secret"/>
-            </ssl-->
-            <data-connection idle-timeout="60">
-                <active enabled="true" local-address="127.0.0.1" local-port="8023" ip-check="true"/>
-                <passive ports="8020" address="127.0.0.1" external-address="127.0.0.1"/>
-            </data-connection>
-            <blacklist></blacklist>
+        <nio-listener name="default" port="2222" implicit-ssl="false"
+                      idle-timeout="60"  >
+            <!--<blacklist>1.2.3.0/16, 1.2.4.0/16, 1.2.3.4</blacklist>-->
         </nio-listener>
     </listeners>
+    <ftplets>
+        <ftplet name="ftplet1">
+            <beans:bean class="MyFtplet">
+
+            </beans:bean>
+        </ftplet>
+    </ftplets>
+    <!-- The user manager, choose one -->
+    <file-user-manager file="conf/properties/users.properties"
+                       encrypt-passwords="true" />
+    <!-- The file system -->
+    <native-filesystem case-insensitive="false"
+                       create-home="true" />
+    <!-- Define the available languages -->
+    <messages languages="en" />
 </server>

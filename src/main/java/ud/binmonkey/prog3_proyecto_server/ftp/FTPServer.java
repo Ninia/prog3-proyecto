@@ -1,9 +1,10 @@
 package ud.binmonkey.prog3_proyecto_server.ftp;
 
-
 import org.apache.ftpserver.FtpServer;
 import org.apache.ftpserver.ftplet.FtpException;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
+
+
 
 public class FTPServer {
 
@@ -11,7 +12,7 @@ public class FTPServer {
 
     public FTPServer() {
         server = new FileSystemXmlApplicationContext("conf/FTPServer.xml").getBean(
-                "p3p-ftpserver", FtpServer.class);
+                "myServer", FtpServer.class);
     }
 
     public static void main(String[] args) throws FtpException {
