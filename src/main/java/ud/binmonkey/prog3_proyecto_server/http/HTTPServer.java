@@ -33,6 +33,8 @@ public class HTTPServer {
     public static void main(String[] args) {
         try {
             (new HTTPServer()).httpServer.start();
+            System.out.println("HTTP server started, listening on: " + "http://" +
+                    URI.getHost("http-server") + ":" + URI.getPort("http-server"));
         } catch (IOException e) {
             e.printStackTrace();
         }
