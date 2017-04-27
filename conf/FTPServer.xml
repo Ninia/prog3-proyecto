@@ -15,13 +15,13 @@
     </listeners>
     <ftplets>
         <ftplet name="ftplet1">
-            <beans:bean class="MyFtplet">
-
+            <beans:bean class="ud.binmonkey.prog3_proyecto_server.ftp.DefaultFtplet">
+                <!--<beans:property name="default" value="test" />-->
             </beans:bean>
         </ftplet>
     </ftplets>
     <!-- The user manager, choose one -->
-    <file-user-manager file="conf/properties/users.properties"
+    <file-user-manager file="conf/properties/ftpusers.properties"
                        encrypt-passwords="true" />
     <!-- The file system -->
     <native-filesystem case-insensitive="false"

@@ -11,8 +11,16 @@ public class FTPServer {
     private FtpServer server;
 
     public FTPServer() {
+
+        /* Extended version for debug */
+
+        FileSystemXmlApplicationContext fileSysContext = new FileSystemXmlApplicationContext(
+                "conf/FTPServer.xml");
+        assert true;
+        server = fileSysContext.getBean("myServer", FtpServer.class);
+        /* /* short version *\/
         server = new FileSystemXmlApplicationContext("conf/FTPServer.xml").getBean(
-                "myServer", FtpServer.class);
+                "myServer", FtpServer.class); */
     }
 
     public static void main(String[] args) throws FtpException {
