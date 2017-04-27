@@ -1,36 +1,26 @@
 package ud.binmonkey.prog3_proyecto_server.ftp;
 
 import org.apache.ftpserver.FtpServer;
-import org.apache.ftpserver.FtpServerFactory;
 import org.apache.ftpserver.ftplet.FtpException;
-import org.apache.ftpserver.listener.ListenerFactory;
-import org.apache.ftpserver.usermanager.PropertiesUserManagerFactory;
-import org.apache.ftpserver.usermanager.SaltedPasswordEncryptor;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
 
-import java.io.File;
+
 
 public class FTPServer {
 
     private FtpServer server;
 
-    public FTPServer() {
-        FtpServerFactory serverFactory = new FtpServerFactory();
-        ListenerFactory factory = new ListenerFactory();
-        /* set the port of the listener */
-        factory.setPort(8021);
-        /* replace the default listener */
-        serverFactory.addListener("default", factory.createListener());
-
-        /* user management */
-        PropertiesUserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
-        userManagerFactory.setFile(new File("conf/properties/ftpusers.properties")); /* TODO: users.properties*/
-        userManagerFactory.setPasswordEncryptor(new SaltedPasswordEncryptor());
-        serverFactory.setUserManager(userManagerFactory.createUserManager());
-
-        this.server = serverFactory.createServer();
+    public FTPServer(String configuration, String bean) {
+        server = new FileSystemXmlApplicationContext(configuration).getBean(
+                bean, FtpServer.class);
     }
 
     public static void main(String[] args) throws FtpException {
-        (new FTPServer()).server.start();
+        (new FTPServer("conf/FTPServer.xml", "myServer")).server.start();
     }
+
+    public FtpServer getServer() {
+        return server;
+    }
+
 }

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- THIS IS JUST A TEST FILE -->
 
 <server xmlns="http://mina.apache.org/ftpserver/spring/v1"
         xmlns:beans="http://www.springframework.org/schema/beans"
@@ -7,11 +8,11 @@
     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
     http://mina.apache.org/ftpserver/spring/v1 http://mina.apache.org/ftpserver/ftpserver-1.0.xsd
     "
-        id="myServer">
+        id="testServer">
 
 
     <listeners>
-        <nio-listener name="default" port="2222" implicit-ssl="false"
+        <nio-listener name="default" port="8022" implicit-ssl="false"
                       idle-timeout="60"  >
         </nio-listener>
     </listeners>
@@ -27,8 +28,8 @@
 
 
     <!-- The user manager, choose one -->
-    <file-user-manager file="conf/properties/ftpusers.properties"
-                       encrypt-passwords="true" />
+    <file-user-manager file="src/test/resources/ftp/users.properties"
+                       encrypt-passwords="false" />
 
 
     <!-- The file system -->
