@@ -6,10 +6,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 /**
  * Java Implementation of the OMDB api
@@ -96,96 +95,6 @@ public class Omdb {
         }
 
         return null;
-    }
-
-    /**
-     * Formats lists in String received from OMDB to a usable ArrayList
-     *
-     * @param list - string received from OMDB
-     * @return formatted Arraylist
-     */
-    protected static ArrayList listFormatter(Object list) {
-        ArrayList formattedList = new ArrayList<String>();
-        for (String entry : list.toString().split(",")) {
-
-            entry = entry.replaceAll("\\(.*?\\)", ""); /* removes characters between brackets */
-            entry = entry.replaceAll("\\s+$", ""); /* removes whitespace at the beginning of the string */
-            entry = entry.replaceAll("^\\s+", ""); /* removes whitespace at the end of the string */
-            if (!formattedList.contains(entry))
-                formattedList.add(entry);
-        }
-
-        return formattedList;
-    }
-
-    /**
-     * Formats date in String received from OMDB to a usable Date
-     *
-     * @param date - String received from OMDB
-     * @return formatted Date
-     */
-    protected static Date dateFormatter(Object date) {
-        if (!(date == null)) {
-            {
-                try {
-                    DateFormat formatter;
-                    formatter = new SimpleDateFormat("dd MMM yy");
-                    return formatter.parse(date.toString());
-                } catch (ParseException e) {
-                    System.err.println("Error - Invalid date: " + date);
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Fixes encoding problem with some years received from OMDB
-     *
-     * @param year - year received from OMDB
-     * @return formatted year
-     */
-
-    protected static String yearFormatter(Object year) {
-        return year.toString().replaceAll("â\u0080\u0093", "-"); /* Fixes encoding problem */
-    }
-
-    /**
-     * Formats integer in String received from OMDB to a usable int
-     *
-     * @param string - String received from OMDB
-     * @return formatted int
-     */
-    protected static int intergerConversor(Object string) {
-
-        if (!string.equals("N/A")) {
-            String str_int = string.toString();
-            str_int = str_int.replaceAll("[^0-9]", ""); /* Removes non integers*/
-            return Integer.parseInt(str_int);
-        }
-
-        System.err.println("Error - Missing Info"); //TODO Ask for input
-        return 0;
-
-    }
-
-    /**
-     * Formats double in String received from OMDB to a usable double
-     *
-     * @param string - String received from OMDB
-     * @return formatted int
-     */
-    protected static double doubleConversor(Object string) {
-
-        if (!string.equals("N/A")) {
-            String str_double = string.toString();
-            str_double = str_double.replaceAll("\\$", "");
-            str_double = str_double.replaceAll(",", "");
-            return Double.parseDouble(str_double);
-        }
-
-        System.err.println("Error - Missing Info"); //TODO Ask for input
-        return 0;
     }
 }
 

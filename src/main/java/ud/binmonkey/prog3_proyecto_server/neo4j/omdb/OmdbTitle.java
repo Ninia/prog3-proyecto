@@ -1,5 +1,7 @@
 package ud.binmonkey.prog3_proyecto_server.neo4j.omdb;
 
+import org.json.JSONObject;
+
 import java.util.Date;
 import java.util.Map;
 
@@ -21,20 +23,41 @@ public class OmdbTitle {
     OmdbTitle(Map title) {
         this.title = (String) title.get("Title");
         this.imdbID = (String) title.get("imdbID");
-        this.year = Omdb.yearFormatter(title.get("Year"));
-        this.released = Omdb.dateFormatter(title.get("Released"));
+        this.year = JSONFormatter.yearFormatter(title.get("Year"));
+        this.released = JSONFormatter.dateFormatter(title.get("Released"));
         this.plot = (String) title.get("Plot");
         this.rated = (String) title.get("Rated");
         this.awards = (String) title.get("Awards");
-        this.metascore = Omdb.intergerConversor(title.get("Metascore"));
-        this.imdbRating = Omdb.intergerConversor(title.get("imdbRating"));
-        this.imdbVotes = Omdb.intergerConversor(title.get("imdbVotes"));
-        this.runtime = Omdb.intergerConversor(title.get("Runtime"));
+        this.metascore = JSONFormatter.intergerConversor(title.get("Metascore"));
+        this.imdbRating = JSONFormatter.intergerConversor(title.get("imdbRating"));
+        this.imdbVotes = JSONFormatter.intergerConversor(title.get("imdbVotes"));
+        this.runtime = JSONFormatter.intergerConversor(title.get("Runtime"));
         this.poster = (String) title.get("Poster");
     }
 
-    /* Getters and Setters */
+    /**/
+    public JSONObject toJSON() {
 
+        JSONObject episodeJSON = new JSONObject();
+
+        episodeJSON.put("title", title);
+        episodeJSON.put("name", imdbID);
+        episodeJSON.put("year", year);
+        episodeJSON.put("released", released.toString());
+        episodeJSON.put("plot", plot);
+        episodeJSON.put("rated", rated);
+        episodeJSON.put("awards", awards);
+        episodeJSON.put("metascore", metascore);
+        episodeJSON.put("imdbRating", imdbRating);
+        episodeJSON.put("imdbVotes", imdbVotes);
+        episodeJSON.put("runtime", runtime);
+        episodeJSON.put("poster", poster);
+
+        return episodeJSON;
+    }
+
+    /**/
+    /* Getters and Setters */
     public String getImdbID() {
         return imdbID;
     }

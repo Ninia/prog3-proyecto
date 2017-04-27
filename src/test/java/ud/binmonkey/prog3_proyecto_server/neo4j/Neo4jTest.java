@@ -171,7 +171,7 @@ public class Neo4jTest {
             assertEquals(false, record.toString().isEmpty());
         }
 
-        System.out.println("\nList movies of a Language, ordering by year:");
+        System.out.println("\nList Episodes of a Series, ordering by season and episode:");
         result = neo4j.getSession().run("MATCH p = (n:Episode)-[r:" +
                 " BELONGS_TO]->(m:Series)" +
                 " WHERE m.name = 'tt2802850'" +

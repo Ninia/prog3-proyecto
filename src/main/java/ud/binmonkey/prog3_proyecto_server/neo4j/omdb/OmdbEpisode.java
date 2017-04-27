@@ -1,5 +1,7 @@
 package ud.binmonkey.prog3_proyecto_server.neo4j.omdb;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -12,7 +14,7 @@ public class OmdbEpisode extends OmdbTitle {
     private int episode;
 
     private ArrayList actors;
-    private ArrayList writers;
+    private ArrayList writer;
     private ArrayList director;
 
     /**
@@ -26,12 +28,18 @@ public class OmdbEpisode extends OmdbTitle {
         Map series = Omdb.getTitle(id);
 
         this.seriesID = (String) series.get("seriesID");
-        this.season = Omdb.intergerConversor(series.get("Season"));
-        this.episode = Omdb.intergerConversor(series.get("Episode"));
+        this.season = JSONFormatter.intergerConversor(series.get("Season"));
+        this.episode = JSONFormatter.intergerConversor(series.get("Episode"));
 
-        this.actors = Omdb.listFormatter(series.get("Actors"));
-        this.writers = Omdb.listFormatter(series.get("Writer"));
-        this.director = Omdb.listFormatter(series.get("Director"));
+        this.actors = JSONFormatter.listFormatter(series.get("Actors"));
+        this.writer = JSONFormatter.listFormatter(series.get("Writer"));
+        this.director = JSONFormatter.listFormatter(series.get("Director"));
+    }
+
+    public static void main(String[] args) {
+        OmdbEpisode omdbEpisode = new OmdbEpisode("tt3097534");
+
+        System.out.println(omdbEpisode.toJSON());
     }
 
     /**
@@ -55,12 +63,32 @@ public class OmdbEpisode extends OmdbTitle {
 
     /* Getters */
 
+    /**
+     * Converts OmdbEpisode to JSON format
+     *
+     * @return JSONObject
+     */
+    public JSONObject toJSON() {
+
+        JSONObject episodeJSON = super.toJSON();
+
+        episodeJSON.put("seriesID", seriesID);
+        episodeJSON.put("season", season);
+        episodeJSON.put("episode", episode);
+
+        episodeJSON.put("writer", writer);
+        episodeJSON.put("director", director);
+        episodeJSON.put("actors", actors);
+
+        return episodeJSON;
+    }
+
     public ArrayList getActors() {
         return actors;
     }
 
     public ArrayList getWriter() {
-        return writers;
+        return writer;
     }
 
     public ArrayList getDirector() {
@@ -95,6 +123,6 @@ public class OmdbEpisode extends OmdbTitle {
                 "\tIMDB Votes=" + imdbVotes + "\n" +
                 "\tRuntime=" + runtime + "\n" +
                 "\tPoster=" + poster + "\n" +
-                "\tGenre=" + writers + "\n";
+                "\tGenre=" + writer + "\n";
     }
 }
