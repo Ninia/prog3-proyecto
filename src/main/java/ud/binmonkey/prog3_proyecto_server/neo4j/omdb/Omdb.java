@@ -32,7 +32,7 @@ public class Omdb {
 
             HashMap search_results = new HashMap<String, HashMap>();
 
-            if (!type.equals(MediaType.all))
+            if (!type.equals(MediaType.ALL))
                 url = "http://www.omdbapi.com/?s=" + title.replace(" ", "%20") + "&type=" + type.name();
             else
                 url = "http://www.omdbapi.com/?s=" + title.replace(" ", "%20");

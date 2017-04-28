@@ -45,7 +45,6 @@ public class OmdbSeries extends OmdbTitle {
                 "seasons", seasons,
                 "released", released.toString(),
                 "plot", plot,
-                "rated", rated,
                 "awards", awards,
                 "metascore", metascore,
                 "imdbRating", imdbRating,
@@ -95,7 +94,7 @@ public class OmdbSeries extends OmdbTitle {
                 "\tYear=" + year + "\n" +
                 "\tReleased=" + released + "\n" +
                 "\tPlot=" + plot + "\n" +
-                "\tRated=" + rated + "\n" +
+                "\tRated=" + ageRating + "\n" +
                 "\tAward=" + awards + "\n" +
                 "\tMetascore=" + metascore + "\n" +
                 "\tIMDB Rating=" + imdbRating + "\n" +

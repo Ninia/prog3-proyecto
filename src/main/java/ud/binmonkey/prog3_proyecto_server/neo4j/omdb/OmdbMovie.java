@@ -86,7 +86,6 @@ public class OmdbMovie extends OmdbTitle {
                 "released", released.toString(),
                 "dvd", dvd.toString(),
                 "plot", plot,
-                "rated", rated,
                 "awards", awards,
                 "boxOffice", boxOffice,
                 "metascore", metascore,
@@ -130,6 +129,7 @@ public class OmdbMovie extends OmdbTitle {
     public ArrayList getCountry() {
         return country;
     }
+
     /* END Getters*/
 
     /* Overridden Methods */
@@ -144,7 +144,7 @@ public class OmdbMovie extends OmdbTitle {
                 "\tDVD=" + dvd + "\n" +
                 "\tBoxOffice=" + boxOffice + "\n" +
                 "\tPlot=" + plot + "\n" +
-                "\tRated=" + rated + "\n" +
+                "\tRated=" + ageRating + "\n" +
                 "\tAward=" + awards + "\n" +
                 "\tMetascore=" + metascore + "\n" +
                 "\tIMDB Rating=" + imdbRating + "\n" +

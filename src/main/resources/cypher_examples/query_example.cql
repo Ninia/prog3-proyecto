@@ -32,3 +32,14 @@ MATCH p = (n:Episode)-[r:BELONGS_TO]->(m:Series)
   WHERE m.name = 'tt2802850'
 RETURN n.title, r.season, r.episode
   ORDER BY r.season, r.episode;
+
+/* Show Titles scored by a ScoreOutlet */
+MATCH p = (n:ScoreOutlet)-[r:SCORED]->(m:Movie)
+  WHERE n.name = 'Internet Movie Database'
+RETURN m.title, r.score, m.year
+  ORDER BY m.year;
+
+/* Show Titles by Age Rating */
+MATCH p = (n)-[r:RATED]->(m:Movie)
+RETURN n.name, m.name
+  ORDER BY n.name, m.year;

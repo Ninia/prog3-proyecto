@@ -75,7 +75,7 @@ public class JSONFormatter {
      */
 
     protected static String yearFormatter(Object year) {
-        return year.toString().replaceAll("â\u0080\u0093", "-"); /* Fixes encoding problem */
+        return year.toString().replaceAll("Ã¢\u0080\u0093", "-"); /* Fixes encoding problem */
     }
 
     /**

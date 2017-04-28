@@ -61,6 +61,7 @@ public class Neo4jTest {
 
     /**
      * Test queries
+     * TODO better assert equals
      */
     @Test
     public void queryTests() {
@@ -129,54 +130,24 @@ public class Neo4jTest {
             assertEquals(false, record.toString().isEmpty());
         }
 
-        System.out.println("\nList movies produced by a Producer, ordering them by year and rating:");
-        result = neo4j.getSession().run("MATCH p = (n:Producer)-[r:" +
-                " PRODUCED]->(m:Movie)" +
-                " WHERE n.name = '20th Century Fox'" +
-                " RETURN m.title, m.imdbRating, m.year" +
-                " ORDER BY m.year, m.imdbRating DESCENDING");
-
-        while (result.hasNext()) {
-            record = result.next();
-            System.out.println(record.toString());
-
-            assertEquals(false, record.toString().isEmpty());
-        }
-
-        System.out.println("\nList languages and the number of title they are spoken in," +
-                " ordering them by the number of title:");
-        result = neo4j.getSession().run("MATCH(a:Language)-[b:" +
-                " SPOKEN_LANGUAGE]->(c)" +
-                " RETURN a.name, COUNT(c)" +
-                " ORDER BY COUNT(c) DESCENDING");
-
-        while (result.hasNext()) {
-            record = result.next();
-            System.out.println(record.toString());
-
-            assertEquals(false, record.toString().isEmpty());
-        }
-
-        System.out.println("\nList movies of a Language, ordering by year:");
-        result = neo4j.getSession().run("MATCH p = (n:Language)-[r:" +
-                " SPOKEN_LANGUAGE]->(m:Movie)" +
-                " WHERE n.name = 'English'" +
-                " RETURN m.title, m.imdbRating, m.year" +
-                " ORDER BY m.year");
-
-        while (result.hasNext()) {
-            record = result.next();
-            System.out.println(record.toString());
-
-            assertEquals(false, record.toString().isEmpty());
-        }
-
         System.out.println("\nList Episodes of a Series, ordering by season and episode:");
         result = neo4j.getSession().run("MATCH p = (n:Episode)-[r:" +
                 " BELONGS_TO]->(m:Series)" +
                 " WHERE m.name = 'tt2802850'" +
                 " RETURN n.title, r.season, r.episode" +
                 " ORDER BY r.season, r.episode");
+
+        while (result.hasNext()) {
+            record = result.next();
+            System.out.println(record.toString());
+
+            assertEquals(false, record.toString().isEmpty());
+        }
+
+        System.out.println("\nShow Titles by Age Rating");
+        result = neo4j.getSession().run("MATCH p=(n)-[r:RATED]->(m:Movie)" +
+                " RETURN n.name, m.name" +
+                " ORDER BY n.name, m.year");
 
         while (result.hasNext()) {
             record = result.next();

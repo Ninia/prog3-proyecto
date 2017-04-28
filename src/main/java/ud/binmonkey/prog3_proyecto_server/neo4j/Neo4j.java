@@ -9,7 +9,6 @@ import ud.binmonkey.prog3_proyecto_server.neo4j.omdb.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 
@@ -102,13 +101,14 @@ public class Neo4j {
 
             session.run(
                     "CREATE (a:Movie {title: {title}, name: {name}, year: {year}, released: {released}, dvd: {dvd}," +
-                            " plot: {plot}, rated: {rated}, awards: {awards}, boxOffice: {boxOffice}," +
+                            " plot: {plot}, awards: {awards}, boxOffice: {boxOffice}," +
                             " metascore: {metascore}, imdbRating: {imdbRating}, imdbVotes: {imdbVotes}," +
                             " runtime: {runtime}, website: {website}, poster: {poster}})",
                     (Value) movie.toParameters());
 
             logger.log(Level.INFO, "Added Movie: " + movie.getImdbID());
 
+            addNode(movie.getAgeRating(), "Rating", id, "Movie", "RATED");
             addNodeList(movie.getLanguage(), "Language", id, "Movie", "SPOKEN_LANGUAGE");
             addNodeList(movie.getGenre(), "Genre", id, "Movie", "GENRE");
             addNodeList(movie.getWriter(), "Person", id, "Movie", "WROTE");
@@ -151,13 +151,14 @@ public class Neo4j {
 
             session.run(
                     "CREATE (a:Series {title: {title}, name: {name}, year: {year}, seasons: {seasons}," +
-                            " released: {released}, plot: {plot}, rated: {rated}, awards: {awards}," +
+                            " released: {released}, plot: {plot}, awards: {awards}," +
                             " metascore: {metascore}, imdbRating: {imdbRating}, imdbVotes: {imdbVotes}," +
                             " runtime: {runtime}, poster: {poster}})",
                     (Value) series.toParameters());
 
             logger.log(Level.INFO, "Added Series: " + series.getImdbID());
 
+            addNode(series.getAgeRating(), "Rating", id, "Series", "RATED");
             addNodeList(series.getLanguage(), "Language", id, "Series", "SPOKEN_LANGUAGE");
             addNodeList(series.getGenre(), "Genre", id, "Series", "GENRE");
             addNodeList(series.getProducers(), "Producer", id, "Series", "PRODUCED");
@@ -178,7 +179,7 @@ public class Neo4j {
 
             session.run(
                     "CREATE (a:Episode {title: {title}, name: {name}, year: {year}, released: {released}," +
-                            " plot: {plot}, rated: {rated}, awards: {awards}, metascore: {metascore}," +
+                            " plot: {plot}, awards: {awards}, metascore: {metascore}," +
                             " imdbRating: {imdbRating}, imdbVotes: {imdbVotes}, runtime: {runtime}, poster: {poster}})",
                     (Value) episode.toParameters());
 
@@ -204,6 +205,24 @@ public class Neo4j {
         }
     }
 
+    private void addNode(String node, String node_type, String title, String node2_type, String relation_type) {
+
+        if (!checkNode(node, node_type)) {
+            session.run(
+                    "CREATE(p:" + node_type + " {name: {name}})",
+                    parameters("name", node));
+
+            logger.log(Level.INFO, "Added " + node_type + ": " + node);
+        } else {
+            logger.log(Level.WARNING, node + " already exists");
+        }
+
+        session.run("MATCH (a:" + node_type + " { name: {name}}), (b:" + node2_type + " { name: {title}}) " +
+                "CREATE (a)-[:" + relation_type + "]->(b)", parameters("name", node, "title", title));
+
+        logger.log(Level.INFO, "Added " + relation_type + ": " + node + " -> " + title);
+    }
+
     /**
      * Takes a ArrayList of values and turns them into Nodes
      *
@@ -215,42 +234,16 @@ public class Neo4j {
     private void addNodeList(ArrayList list, String node_type, String title, String node2_type, String relation_type) {
         for (Object o : list) {
             String node = o.toString();
-            if (!checkNode(node, node_type)) {
-
-                session.run(
-                        "CREATE(p:" + node_type + " {name: {name}})",
-                        parameters("name", node));
-
-                logger.log(Level.INFO, "Added " + node_type + ": " + node);
-            } else {
-                logger.log(Level.WARNING, node + " already exists");
-            }
-
-            session.run("MATCH (a:" + node_type + " { name: {name}}), (b:" + node2_type + " { name: {title}}) " +
-                    "CREATE (a)-[:" + relation_type + "]->(b)", parameters("name", node, "title", title));
-
-            logger.log(Level.INFO, "Added " + relation_type + ": " + node + " -> " + title);
+            addNode(node, node_type, title, node2_type, relation_type);
         }
     }
 
     /**
-     * Takes a ArrayList of values and turns them into Nodes
+     * Check if a Node exists in the DB
      *
-     * @param nodes         - List of values to turn into Nodes
-     * @param node_type     - Type of the nodes to create
-     * @param title         - Title the relation is assigned to
-     * @param relation_type - Type of the relation between the node and the title
+     * @param id - Identifier of the Node
+     * @return true if the Node exists
      */
-    private void addNodeList(String node_type, String title, String node2_type, String relation_type, Object... nodes) {
-        addNodeList(new ArrayList<>(Arrays.asList(nodes)), node_type, title, node2_type, relation_type);
-    }
-
-        /**
-         * Check if a Node exists in the DB
-         *
-         * @param id - Identifier of the Node
-         * @return true if the Node exists
-         */
     private boolean checkNode(String id, String type) {
 
         boolean existance = false;

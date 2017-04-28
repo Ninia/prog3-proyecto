@@ -12,7 +12,7 @@ public class OmdbTitle {
     protected String year;
     protected Date released;
     protected String plot;
-    protected String rated;
+    protected String ageRating;
     protected String awards;
     protected int metascore;
     protected int imdbRating;
@@ -26,7 +26,7 @@ public class OmdbTitle {
         this.year = JSONFormatter.yearFormatter(title.get("Year"));
         this.released = JSONFormatter.dateFormatter(title.get("Released"));
         this.plot = (String) title.get("Plot");
-        this.rated = (String) title.get("Rated");
+        this.ageRating = (String) title.get("Rated");
         this.awards = (String) title.get("Awards");
         this.metascore = JSONFormatter.intergerConversor(title.get("Metascore"));
         this.imdbRating = JSONFormatter.intergerConversor(title.get("imdbRating"));
@@ -45,7 +45,7 @@ public class OmdbTitle {
         episodeJSON.put("year", year);
         episodeJSON.put("released", released.toString());
         episodeJSON.put("plot", plot);
-        episodeJSON.put("rated", rated);
+        episodeJSON.put("rated", ageRating);
         episodeJSON.put("awards", awards);
         episodeJSON.put("metascore", metascore);
         episodeJSON.put("imdbRating", imdbRating);
@@ -62,6 +62,10 @@ public class OmdbTitle {
         return imdbID;
     }
 
+    public String getAgeRating() {
+        return ageRating;
+    }
+
     /* Overridden Methods*/
     @Override
     public String toString() {
@@ -71,7 +75,7 @@ public class OmdbTitle {
                 "\tYear=" + year + "\n" +
                 "\tReleased=" + released + "\n" +
                 "\tPlot=" + plot + "\n" +
-                "\tRated=" + rated + "\n" +
+                "\tRated=" + ageRating + "\n" +
                 "\tAward=" + awards + "\n" +
                 "\tMetascore=" + metascore + "\n" +
                 "\tIMDB Rating=" + imdbRating + "\n" +

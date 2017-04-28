@@ -8,7 +8,7 @@ public enum MediaType {
 
     private final String name;
 
-    private MediaType(String s) {
+    MediaType(String s) {
         name = s;
     }
 
