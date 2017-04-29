@@ -1,7 +1,5 @@
 package ud.binmonkey.prog3_proyecto_server.neo4j.omdb;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -61,26 +59,6 @@ public class OmdbEpisode extends OmdbTitle {
     }
 
     /* Getters */
-
-    /**
-     * Converts OmdbEpisode to JSON format
-     *
-     * @return JSONObject
-     */
-    public JSONObject toJSON() {
-
-        JSONObject episodeJSON = super.toJSON();
-
-        episodeJSON.put("seriesID", seriesID);
-        episodeJSON.put("season", season);
-        episodeJSON.put("episode", episode);
-
-        episodeJSON.put("writer", writer);
-        episodeJSON.put("director", director);
-        episodeJSON.put("actors", actors);
-
-        return episodeJSON;
-    }
 
     public ArrayList getActors() {
         return actors;

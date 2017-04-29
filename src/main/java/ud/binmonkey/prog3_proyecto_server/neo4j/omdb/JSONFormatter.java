@@ -49,8 +49,8 @@ public class JSONFormatter {
     /**
      * Formats Scores in Arraylist received from OMDB to a Hashmap where the key is the outlet, standardizing the scores
      *
-     * @param ratings
-     * @return
+     * @param ratings   - Arraylist of Ratings
+     * @return formatted Hashmap
      */
     protected static HashMap scoreFormatter(ArrayList ratings){
 

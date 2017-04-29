@@ -1,7 +1,5 @@
 package ud.binmonkey.prog3_proyecto_server.neo4j.omdb;
 
-import org.json.JSONObject;
-
 import java.util.Date;
 import java.util.Map;
 
@@ -35,28 +33,6 @@ public class OmdbTitle {
         this.poster = (String) title.get("Poster");
     }
 
-    /**/
-    public JSONObject toJSON() {
-
-        JSONObject episodeJSON = new JSONObject();
-
-        episodeJSON.put("title", title);
-        episodeJSON.put("name", imdbID);
-        episodeJSON.put("year", year);
-        episodeJSON.put("released", released.toString());
-        episodeJSON.put("plot", plot);
-        episodeJSON.put("rated", ageRating);
-        episodeJSON.put("awards", awards);
-        episodeJSON.put("metascore", metascore);
-        episodeJSON.put("imdbRating", imdbRating);
-        episodeJSON.put("imdbVotes", imdbVotes);
-        episodeJSON.put("runtime", runtime);
-        episodeJSON.put("poster", poster);
-
-        return episodeJSON;
-    }
-
-    /**/
     /* Getters and Setters */
 
     public String getImdbID() {

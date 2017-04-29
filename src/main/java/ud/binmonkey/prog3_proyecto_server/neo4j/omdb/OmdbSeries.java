@@ -1,7 +1,5 @@
 package ud.binmonkey.prog3_proyecto_server.neo4j.omdb;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -13,7 +11,7 @@ public class OmdbSeries extends OmdbTitle {
 
     private ArrayList language;
     private ArrayList genre;
-    private ArrayList producers;
+    private ArrayList producers = new ArrayList();
     private ArrayList country;
 
     /**
@@ -29,8 +27,7 @@ public class OmdbSeries extends OmdbTitle {
         this.seasons = JSONFormatter.intergerConversor(series.get("totalSeasons"));
         this.language = JSONFormatter.listFormatter(series.get("Language"));
         this.genre = JSONFormatter.listFormatter(series.get("Genre"));
-        this.producers = new ArrayList();
-        producers.add("Placeholder");
+        this.producers.add("Placeholder"); /* TODO Placeholder */
         this.country = JSONFormatter.listFormatter(series.get("Country"));
     }
 
@@ -51,20 +48,6 @@ public class OmdbSeries extends OmdbTitle {
                 "imdbVotes", imdbVotes,
                 "runtime", runtime,
                 "poster", poster);
-    }
-
-    public JSONObject toJSON() {
-
-        JSONObject episodeJSON = super.toJSON();
-
-        episodeJSON.put("seasons", seasons);
-
-        episodeJSON.put("language", language);
-        episodeJSON.put("genre", genre);
-        episodeJSON.put("producers", producers);
-        episodeJSON.put("country", country);
-
-        return episodeJSON;
     }
 
     /* Getters */

@@ -1,7 +1,5 @@
 package ud.binmonkey.prog3_proyecto_server.neo4j.omdb;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -49,32 +47,7 @@ public class OmdbMovie extends OmdbTitle {
         this.country = JSONFormatter.listFormatter(movie.get("Country"));
     }
 
-    public static void main(String[] args) {
-        OmdbMovie omdbMovie = new OmdbMovie("tt0117951");
-        System.out.println(omdbMovie.toJSON());
-    }
-
     /* Methods */
-    public JSONObject toJSON() {
-
-        JSONObject episodeJSON = super.toJSON();
-
-        episodeJSON.put("dvd", dvd.toString());
-        episodeJSON.put("boxOffice", boxOffice);
-        episodeJSON.put("website", website);
-
-        episodeJSON.put("ratings", ratings);
-        episodeJSON.put("language", language);
-        episodeJSON.put("genre", genre);
-        episodeJSON.put("writer", writer);
-        episodeJSON.put("director", director);
-        episodeJSON.put("actors", actors);
-        episodeJSON.put("producers", producers);
-        episodeJSON.put("country", country);
-
-        return episodeJSON;
-    }
-
     public Object toParameters() {
         return parameters(
                 "title", title,

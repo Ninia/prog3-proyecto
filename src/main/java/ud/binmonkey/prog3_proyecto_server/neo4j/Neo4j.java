@@ -252,7 +252,7 @@ public class Neo4j {
      *
      * @param node_type     - Type of the node to create
      * @param title         - Title the relation is assigned to
-     * @param node_type     - Type of node of the title
+     * @param title_type     - Type of node of the title
      * @param relation_type - Type of the relation between the node and the title
      */
     private void addNode(String node, String node_type, String title, String title_type, String relation_type) {
@@ -279,7 +279,7 @@ public class Neo4j {
      * @param list          - List of values to turn into Nodes
      * @param node_type     - Type of the nodes to create
      * @param title         - Title the relation is assigned to
-     * @param node_type     - Type of node of the title
+     * @param title_type     - Type of node of the title
      * @param relation_type - Type of the relation between the node and the title
      */
     private void addNodeList(ArrayList list, String node_type, String title, String title_type, String relation_type) {
