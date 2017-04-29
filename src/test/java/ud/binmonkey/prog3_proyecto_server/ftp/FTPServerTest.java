@@ -7,6 +7,7 @@ import ud.binmonkey.prog3_proyecto_server.common.TextFile;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertArrayEquals;
 
@@ -14,14 +15,14 @@ import static org.junit.Assert.assertArrayEquals;
 public class FTPServerTest {
 
     private FTPServer testServer;
-    private String confFile = "src/test/resources/ftp/conf.xml";
+    private String confPath = "src/test/resources/ftp/conf.xml";
     private String bean = "testServer";
 
     @Before
     public void setUp() throws Exception {
         /* Init server */
         /* Load configuration */
-        testServer = new FTPServer(confFile, bean);
+        testServer = new FTPServer(confPath, bean);
     }
 
     @Test
@@ -36,7 +37,7 @@ public class FTPServerTest {
         } catch (org.apache.ftpserver.FtpServerConfigurationException e) {
             if (e.getCause() instanceof IOException) {
                 System.err.print("\n --- Port specified in ftplet:`" + bean +
-                        "` in file:`" + confFile +  "` WAS NOT AVAILABLE --- \n");
+                        "` in file:`" + confPath +  "` WAS NOT AVAILABLE --- \n");
             } else {
                 e.printStackTrace();
             }
@@ -56,15 +57,20 @@ public class FTPServerTest {
         DefaultFtplet ftplet = new DefaultFtplet();
 
         /* dirty sorcery to load commands from file*/
-        String[] commands = TextFile.read(confFile).replaceAll(" ", "").split(
-                            "propertyname=\"forbiddenCommonCommands\"value=")[1].split(
-                            "/>")[0].replace("\"", "").split(";");
+        String confFile = TextFile.read(confPath);
+        if ( Pattern.compile(
+                "((.|\\\\n)*)property name( )?=( )?\"forbiddenCommonCommands\"( )?value=\"(.*?)\"( )?\\/\\>"
+        ).matcher(confFile).find()) {
 
-        String[] forbidden = DefaultFtplet.getForbiddenCommonCommands();
+            String[] commands = confFile.replaceAll(" ", "").split(
+                    "propertyname=\"forbiddenCommonCommands\"value=")[1].split(
+                    "/>")[0].replace("\"", "").split(";");
 
-        Arrays.sort(commands);
-        Arrays.sort(forbidden);
+            String[] forbidden = DefaultFtplet.getForbiddenCommonCommands();
+            Arrays.sort(commands);
+            Arrays.sort(forbidden);
 
-        assertArrayEquals(commands, forbidden);
+            assertArrayEquals(commands, forbidden);
+        }
     }
 }
