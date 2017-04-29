@@ -4,7 +4,7 @@
 Student project for Programming III course at Deusto University made by [Rafael Romón](https://github.com/rafaelromon), [Saul Segura](https://github.com/luasaul) and [Mikel Solabarrieta](https://github.com/mikelsr). 
 
 ## Description:
-Self-Hosted Java Server that stores documents and media files, it communicates with a Java Client, this Client uses 3 databases: 
+Self-Hosted Java Server that stores documents and media files, it communicates with a Java Client, this Server uses 3 databases: 
 
 * Neo4j - Information about movies, series and music.
 * MongoDB - Documents.
