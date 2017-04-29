@@ -120,21 +120,10 @@ public class Neo4j {
 
             /* ScoreOutles TODO standarize scores */
             for (Object outlet : movie.getRatings().keySet()) {
-                if (!checkNode((String) outlet, "ScoreOutlet")) {
-                    session.run("CREATE (a:ScoreOutlet {name: {name}})",
-                            parameters("name", outlet));
-
-                    logger.log(Level.INFO, "Added ScoreOutlet: " + outlet);
-                }
-
-                String score = (String) movie.getRatings().get(outlet);
-
-                session.run("MATCH (a:ScoreOutlet { name: {name}}), (b:Movie { name: {id}}) " +
-                                "CREATE (a)-[:SCORED {score: {score}}]->(b)"
-                        , parameters("name", outlet, "score", score, "id", id));
-
-                logger.log(Level.INFO, "Added SCORED: " + outlet + " -(" + score + ")-> " + id);
+                addRating(movie, (String) outlet, (Integer) movie.getRatings().get(outlet));
             }
+            /* END Score Outlets */
+
         } else {
             logger.log(Level.WARNING, id + " already exists");
         }
@@ -157,6 +146,12 @@ public class Neo4j {
                     (Value) series.toParameters());
 
             logger.log(Level.INFO, "Added Series: " + series.getImdbID());
+
+            /* Score Outles*/
+            addRating(series, "Internet Movie Database", series.getImdbRating());
+            if (series.getMetascore() != 0)
+                addRating(series, "Metacritic", series.getMetascore());
+            /* END Score Outlets */
 
             addNode(series.getAgeRating(), "Rating", id, "Series", "RATED");
             addNodeList(series.getLanguage(), "Language", id, "Series", "SPOKEN_LANGUAGE");
@@ -185,6 +180,12 @@ public class Neo4j {
 
             logger.log(Level.INFO, "Added Episode: " + episode.getImdbID());
 
+            /* Score Outles*/
+            addRating(episode, "Internet Movie Database", episode.getImdbRating());
+            if (episode.getMetascore() != 0)
+                addRating(episode, "Metacritic", episode.getMetascore());
+            /* END Score Outlets */
+
             addNodeList(episode.getWriter(), "Person", id, "Episode", "WROTE");
             addNodeList(episode.getDirector(), "Person", id, "Episode", "DIRECTED");
             addNodeList(episode.getActors(), "Person", id, "Episode", "ACTED_IN");
@@ -205,7 +206,56 @@ public class Neo4j {
         }
     }
 
-    private void addNode(String node, String node_type, String title, String node2_type, String relation_type) {
+    /**
+     * Adds a rating to the DB creating the outlet if necessary
+     *
+     * @param title     - Title
+     * @param outlet    - Score Outlet
+     * @param score     - Score
+     */
+    private void addRating(OmdbTitle title, String outlet, int score) {
+
+        String id = title.getImdbID();
+
+
+        if (!checkNode(outlet, "ScoreOutlet")) {
+            session.run("CREATE (a:ScoreOutlet {name: {name}})",
+                    parameters("name", outlet));
+
+            logger.log(Level.INFO, "Added ScoreOutlet: " + outlet);
+        }
+
+        if (outlet.equals("Internet Movie Database")) { /* IMDB Rating also contain number of votes */
+
+            int votes = title.getImdbVotes();
+
+            session.run("MATCH (a:ScoreOutlet { name: {name}}), (b { name: {id}}) " +
+                            "CREATE (a)-[:SCORED {score: {score}, votes: {votes}}]->(b)"
+                    , parameters("name", outlet, "id", id, "score", score,
+                            "votes", votes));
+
+            logger.log(Level.INFO, "Added SCORED: " + outlet + " -(" + score + ", "
+                    + votes + ")-> " + id);
+
+        } else {
+
+            session.run("MATCH (a:ScoreOutlet { name: {name}}), (b { name: {id}}) " +
+                            "CREATE (a)-[:SCORED {score: {score}}]->(b)"
+                    , parameters("name", outlet, "score", score, "id", id));
+
+            logger.log(Level.INFO, "Added SCORED: " + outlet + " -(" + score + ")-> " + id);
+        }
+    }
+
+    /**
+     * Adds a Node to the DB creating a relation with another node
+     *
+     * @param node_type     - Type of the node to create
+     * @param title         - Title the relation is assigned to
+     * @param node_type     - Type of node of the title
+     * @param relation_type - Type of the relation between the node and the title
+     */
+    private void addNode(String node, String node_type, String title, String title_type, String relation_type) {
 
         if (!checkNode(node, node_type)) {
             session.run(
@@ -217,7 +267,7 @@ public class Neo4j {
             logger.log(Level.WARNING, node + " already exists");
         }
 
-        session.run("MATCH (a:" + node_type + " { name: {name}}), (b:" + node2_type + " { name: {title}}) " +
+        session.run("MATCH (a:" + node_type + " { name: {name}}), (b:" + title_type + " { name: {title}}) " +
                 "CREATE (a)-[:" + relation_type + "]->(b)", parameters("name", node, "title", title));
 
         logger.log(Level.INFO, "Added " + relation_type + ": " + node + " -> " + title);
@@ -229,12 +279,13 @@ public class Neo4j {
      * @param list          - List of values to turn into Nodes
      * @param node_type     - Type of the nodes to create
      * @param title         - Title the relation is assigned to
+     * @param node_type     - Type of node of the title
      * @param relation_type - Type of the relation between the node and the title
      */
-    private void addNodeList(ArrayList list, String node_type, String title, String node2_type, String relation_type) {
+    private void addNodeList(ArrayList list, String node_type, String title, String title_type, String relation_type) {
         for (Object o : list) {
             String node = o.toString();
-            addNode(node, node_type, title, node2_type, relation_type);
+            addNode(node, node_type, title, title_type, relation_type);
         }
     }
 

@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 
@@ -43,6 +44,41 @@ public class JSONFormatter {
         }
 
         return formattedList;
+    }
+
+    /**
+     * Formats Scores in Arraylist received from OMDB to a Hashmap where the key is the outlet, standardizing the scores
+     *
+     * @param ratings
+     * @return
+     */
+    protected static HashMap scoreFormatter(ArrayList ratings){
+
+        HashMap formatted_ratings = new HashMap<String, Integer>();
+        int formatted_value;
+
+        for (Object rating : ratings) {
+            HashMap a = (HashMap) rating;
+
+            String source = (String) a.get("Source");
+            String value = (String) a.get("Value");
+
+            if (source.equals("Internet Movie Database")){
+                value = value.replace("/10", "");
+                value = value.replace(".", "");
+                formatted_value =  Integer.parseInt(value);
+            } else if (source.equals("Metacritic")){
+                value = value.replace("/100", "");
+                formatted_value =  Integer.parseInt(value);
+            } else { /* Rotten Tomatoes */
+                value = value.replace("%", "");
+                formatted_value =  Integer.parseInt(value);
+            }
+
+            formatted_ratings.put(source, formatted_value);
+        }
+
+        return formatted_ratings;
     }
 
     /**

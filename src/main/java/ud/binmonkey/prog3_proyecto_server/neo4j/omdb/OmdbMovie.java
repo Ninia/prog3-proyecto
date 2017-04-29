@@ -15,7 +15,7 @@ public class OmdbMovie extends OmdbTitle {
     private double boxOffice; /* in Dollars */
     private String website;
 
-    private HashMap ratings = new HashMap<String, String>();
+    private HashMap ratings = new HashMap<String, Integer>();
     private ArrayList language;
     private ArrayList genre;
     private ArrayList writer;
@@ -38,10 +38,7 @@ public class OmdbMovie extends OmdbTitle {
         this.boxOffice = JSONFormatter.doubleConversor(movie.get("BoxOffice"));
         this.website = (String) movie.get("Website");
 
-        for (Object rating : (ArrayList) movie.get("Ratings")) {
-            HashMap a = (HashMap) rating;
-            ratings.put(a.get("Source"), a.get("Value"));
-        }
+        this.ratings = JSONFormatter.scoreFormatter((ArrayList) movie.get("Ratings"));
 
         this.language = JSONFormatter.listFormatter(movie.get("Language"));
         this.genre = JSONFormatter.listFormatter(movie.get("Genre"));
@@ -129,7 +126,6 @@ public class OmdbMovie extends OmdbTitle {
     public ArrayList getCountry() {
         return country;
     }
-
     /* END Getters*/
 
     /* Overridden Methods */

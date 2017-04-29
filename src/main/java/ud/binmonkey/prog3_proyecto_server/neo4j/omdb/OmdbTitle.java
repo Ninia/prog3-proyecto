@@ -58,12 +58,25 @@ public class OmdbTitle {
 
     /**/
     /* Getters and Setters */
+
     public String getImdbID() {
         return imdbID;
     }
 
     public String getAgeRating() {
         return ageRating;
+    }
+
+    public int getMetascore() {
+        return metascore;
+    }
+
+    public int getImdbRating() {
+        return imdbRating;
+    }
+
+    public int getImdbVotes() {
+        return imdbVotes;
     }
 
     /* Overridden Methods*/
