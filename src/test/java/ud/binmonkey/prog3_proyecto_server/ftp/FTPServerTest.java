@@ -53,20 +53,21 @@ public class FTPServerTest {
      */
     public void loadProperties() throws IOException {
 
+        /* Regex to obtain all property elements*/
+        String propertiesRegex = "name=\"forbiddenCommonCommands\"( )?value=\"(\\w+[;|\"]+)+";
+        String confFile = TextFile.read(confPath);
+
         /* Check if forbidden commands are loaded correctly from file*/
         DefaultFtplet ftplet = new DefaultFtplet();
 
         /* dirty sorcery to load commands from file*/
-        String confFile = TextFile.read(confPath);
-        if ( Pattern.compile(
-                "((.|\\\\n)*)property name( )?=( )?\"forbiddenCommonCommands\"( )?value=\"(.*?)\"( )?\\/\\>"
-        ).matcher(confFile).find()) {
-
-            String[] commands = confFile.replaceAll(" ", "").split(
-                    "propertyname=\"forbiddenCommonCommands\"value=")[1].split(
-                    "/>")[0].replace("\"", "").split(";");
+        if (Pattern.compile(propertiesRegex).matcher(confFile).find())
+        {
+            String[] commands = confFile.split("forbiddenCommonCommands")[1].replaceAll("( |\")", "").split(
+                    "value=")[1].split("/>")[0].split(";");
 
             String[] forbidden = DefaultFtplet.getForbiddenCommonCommands();
+
             Arrays.sort(commands);
             Arrays.sort(forbidden);
 
