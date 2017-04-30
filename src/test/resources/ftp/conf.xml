@@ -20,7 +20,7 @@
 
     <ftplets>
         <ftplet name="ftplet1">
-            <beans:bean class="ud.binmonkey.prog3_proyecto_server.ftp.DefaultFtplet">
+            <beans:bean class="ud.binmonkey.prog3_proyecto_server.ftp.FTPlet">
                 <beans:property name="forbiddenCommonCommands" value="DELE;RMD;XRMD" />
             </beans:bean>
         </ftplet>

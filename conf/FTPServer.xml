@@ -7,7 +7,7 @@
     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
     http://mina.apache.org/ftpserver/spring/v1 http://mina.apache.org/ftpserver/ftpserver-1.0.xsd
     "
-        id="myServer">
+        id="FTPlet">
 
 
     <listeners>
@@ -18,8 +18,8 @@
 
 
     <ftplets>
-        <ftplet name="ftplet1">
-            <beans:bean class="ud.binmonkey.prog3_proyecto_server.ftp.DefaultFtplet">
+        <ftplet name="FTPlet">
+            <beans:bean id="FTPServer" class="ud.binmonkey.prog3_proyecto_server.ftp.FTPlet">
                 <beans:property name="forbiddenCommonCommands" value="DELE;RMD;XRMD" />
             </beans:bean>
         </ftplet>

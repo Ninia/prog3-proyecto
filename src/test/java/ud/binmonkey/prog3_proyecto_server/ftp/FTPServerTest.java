@@ -1,5 +1,6 @@
 package ud.binmonkey.prog3_proyecto_server.ftp;
 
+import org.apache.ftpserver.FtpServer;
 import org.apache.ftpserver.ftplet.FtpException;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +15,7 @@ import static org.junit.Assert.assertArrayEquals;
 
 public class FTPServerTest {
 
-    private FTPServer testServer;
+    private FtpServer testServer;
     private String confPath = "src/test/resources/ftp/conf.xml";
     private String bean = "testServer";
 
@@ -22,7 +23,7 @@ public class FTPServerTest {
     public void setUp() throws Exception {
         /* Init server */
         /* Load configuration */
-        testServer = new FTPServer(confPath, bean);
+        testServer = FTPServer.getFtpServer(confPath, bean);
     }
 
     @Test
@@ -31,8 +32,8 @@ public class FTPServerTest {
      */
     public void portAvailable() {
         try {
-            testServer.getServer().start();
-            testServer.getServer().stop();
+            testServer.start();
+            testServer.stop();
 
         } catch (org.apache.ftpserver.FtpServerConfigurationException e) {
             if (e.getCause() instanceof IOException) {
@@ -58,7 +59,7 @@ public class FTPServerTest {
         String confFile = TextFile.read(confPath);
 
         /* Check if forbidden commands are loaded correctly from file*/
-        DefaultFtplet ftplet = new DefaultFtplet();
+        FTPlet ftplet = new FTPlet();
 
         /* dirty sorcery to load commands from file*/
         if (Pattern.compile(propertiesRegex).matcher(confFile).find())
@@ -66,7 +67,7 @@ public class FTPServerTest {
             String[] commands = confFile.split("forbiddenCommonCommands")[1].replaceAll("( |\")", "").split(
                     "value=")[1].split("/>")[0].split(";");
 
-            String[] forbidden = DefaultFtplet.getForbiddenCommonCommands();
+            String[] forbidden = FTPlet.getForbiddenCommonCommands();
 
             Arrays.sort(commands);
             Arrays.sort(forbidden);
