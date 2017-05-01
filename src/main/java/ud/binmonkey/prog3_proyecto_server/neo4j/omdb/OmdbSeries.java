@@ -52,6 +52,10 @@ public class OmdbSeries extends OmdbTitle {
 
     /* Getters */
 
+    public Enum getType() {
+        return MediaType.SERIES;
+    }
+
     public ArrayList getLanguage() {
         return language;
     }
@@ -67,24 +71,5 @@ public class OmdbSeries extends OmdbTitle {
     public ArrayList getCountry() {
         return country;
     }
-
-    /* Overridden Methods */
-    @Override
-    public String toString() {
-        return "OmdbMovie:\n" +
-                "\tTitle=" + title + "\n" +
-                "\tIMDB ID=" + imdbID + "\n" +
-                "\tYear=" + year + "\n" +
-                "\tReleased=" + released + "\n" +
-                "\tPlot=" + plot + "\n" +
-                "\tRated=" + ageRating + "\n" +
-                "\tAward=" + awards + "\n" +
-                "\tMetascore=" + metascore + "\n" +
-                "\tIMDB Rating=" + imdbRating + "\n" +
-                "\tIMDB Votes=" + imdbVotes + "\n" +
-                "\tRuntime=" + runtime + "\n" +
-                "\tPoster=" + poster + "\n" +
-                "\tLanguage=" + language + "\n" +
-                "\tGenre=" + genre + "\n";
-    }
+    /* END Getters */
 }

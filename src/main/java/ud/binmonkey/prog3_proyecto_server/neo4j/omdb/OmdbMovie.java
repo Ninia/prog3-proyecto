@@ -68,6 +68,11 @@ public class OmdbMovie extends OmdbTitle {
     /* END Methods */
 
     /* Getters */
+
+    public Enum getType() {
+        return MediaType.MOVIE;
+    }
+
     public HashMap getRatings() {
         return ratings;
     }
@@ -100,59 +105,4 @@ public class OmdbMovie extends OmdbTitle {
         return country;
     }
     /* END Getters*/
-
-    /* Overridden Methods */
-    @Override
-    /* TODO cleanup */
-    public String toString() {
-        System.out.println("OmdbMovie:\n" +
-                "\tTitle=" + title + "\n" +
-                "\tIMDB ID=" + imdbID + "\n" +
-                "\tYear=" + year + "\n" +
-                "\tReleased=" + released + "\n" +
-                "\tDVD=" + dvd + "\n" +
-                "\tBoxOffice=" + boxOffice + "\n" +
-                "\tPlot=" + plot + "\n" +
-                "\tRated=" + ageRating + "\n" +
-                "\tAward=" + awards + "\n" +
-                "\tMetascore=" + metascore + "\n" +
-                "\tIMDB Rating=" + imdbRating + "\n" +
-                "\tIMDB Votes=" + imdbVotes + "\n" +
-                "\tRuntime=" + runtime + "\n" +
-                "\tWebsite=" + website + "\n" +
-                "\tPoster=" + poster);
-                /* Movie Specific Values */
-        System.out.println("\tRatings:");
-        for (Object outlet : ratings.keySet()) {
-            System.out.println("\t\t" + outlet + " " + ratings.get(outlet));
-        }
-
-        System.out.println("\tLanguages:");
-        for (Object entry : language) {
-            System.out.println("\t\t" + entry);
-        }
-
-        System.out.println("\tGenres:");
-        for (Object entry : genre) {
-            System.out.println("\t\t" + entry);
-        }
-
-        System.out.println("\tWriters:");
-        for (Object entry : writer) {
-            System.out.println("\t\t" + entry);
-        }
-
-        System.out.println("\tDirectors:");
-        for (Object entry : director) {
-            System.out.println("\t\t" + entry);
-        }
-
-        System.out.println("\tActors:");
-        for (Object entry : actors) {
-            System.out.println("\t\t" + entry);
-        }
-
-        return "";
-    }
-    /* END Overridden Methods */
 }

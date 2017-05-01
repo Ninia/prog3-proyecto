@@ -1,5 +1,7 @@
 package ud.binmonkey.prog3_proyecto_server.neo4j;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.StatementResult;
@@ -13,11 +15,26 @@ import static org.junit.Assert.assertEquals;
  */
 public class Neo4jTest {
 
+    private Neo4j neo4j;
+
+    @Before
+    public void setUp() {
+        neo4j = new Neo4j();
+        neo4j.clearDB();
+    }
+
+    @After
+    public void tearDown() {
+        neo4j.closeSession();
+    }
+
     /* Adding Tests */
+
+    /**
+     * Simple Test
+     */
     @Test
     public void addTest() {
-        Neo4j neo4j = new Neo4j();
-        neo4j.clearDB();
 
         neo4j.addTitle("tt0117951"); /* Trainspotting */
 
@@ -37,9 +54,6 @@ public class Neo4jTest {
      */
     @Test
     public void addEpisodesTest() {
-
-        Neo4j neo4j = new Neo4j();
-        neo4j.clearDB();
 
         /* Adding Episodes */
         neo4j.addTitle("tt2169080");
@@ -68,9 +82,6 @@ public class Neo4jTest {
 
         StatementResult result;
         Record record;
-
-        Neo4j neo4j = new Neo4j();
-        neo4j.clearDB();
 
         /* Adding Movies */
         neo4j.addTitle("tt0117951"); /* Trainspotting */
