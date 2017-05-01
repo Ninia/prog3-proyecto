@@ -19,7 +19,7 @@ public class FTPServer extends DefaultFtpServer{
     static {
         try {
             logger.addHandler(new FileHandler(
-                    "logs/" + FtpServer.class.getName() +"." +
+                    "logs/" + FTPServer.class.getName() + "." +
                             DateUtils.currentFormattedDate() + ".log.xml", true));
         } catch (SecurityException | IOException e) {
             logger.log(Level.SEVERE, "Unable to create log file.");
@@ -30,11 +30,9 @@ public class FTPServer extends DefaultFtpServer{
         super(serverContext);
     }
 
+    @SuppressWarnings("WeakerAccess")  /* for probable later use from outside class*/
     public static FtpServer getFtpServer(String configLocation, String beanName) {
         FileSystemXmlApplicationContext context = new FileSystemXmlApplicationContext(configLocation);
-        for (String con: context.getBeanDefinitionNames()) {
-            System.out.println(con);
-        }
         context.setAllowBeanDefinitionOverriding(true);
         context.setBeanName("FTPServer");
 

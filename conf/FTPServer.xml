@@ -11,7 +11,7 @@
 
 
     <listeners>
-        <nio-listener name="default" port="2222" implicit-ssl="false"
+        <nio-listener name="default" port="8022" implicit-ssl="false"
                       idle-timeout="60"  >
         </nio-listener>
     </listeners>
@@ -20,7 +20,7 @@
     <ftplets>
         <ftplet name="FTPlet">
             <beans:bean id="FTPServer" class="ud.binmonkey.prog3_proyecto_server.ftp.FTPlet">
-                <beans:property name="forbiddenCommonCommands" value="DELE;RMD;XRMD" />
+                <beans:property name="allowedCommonCommands" value="EPRT;GET;LIST;PWD;QUIT;SIZE;STAT;SYST;USER" />
             </beans:bean>
         </ftplet>
     </ftplets>
@@ -28,7 +28,7 @@
 
     <!-- The user manager, choose one -->
     <file-user-manager file="conf/properties/ftpusers.properties"
-                       encrypt-passwords="true" />
+                       encrypt-passwords="false" />
 
 
     <!-- The file system -->
