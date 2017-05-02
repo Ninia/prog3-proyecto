@@ -20,8 +20,8 @@
 
     <ftplets>
         <ftplet name="ftplet1">
-            <beans:bean class="ud.binmonkey.prog3_proyecto_server.ftp.DefaultFtplet">
-                <beans:property name="forbiddenCommonCommands" value="DELE;RMD;XRMD" />
+            <beans:bean class="ud.binmonkey.prog3_proyecto_server.ftp.FTPlet">
+                <beans:property name="allowedCommonCommands" value="ABOR;ACCT;ALLO;APPE;AUTH;CCC;CWD;EPRT;FEAT;GET;HELP;LIST;LPRT;MDTM;MLST;MODE;NLST;OPTS;PASV;PWD;QUIT;REIN;REST;RETR;SIZE;STAT;SYST;USER" />
             </beans:bean>
         </ftplet>
     </ftplets>
