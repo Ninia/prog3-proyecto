@@ -261,6 +261,12 @@
             <version>${org.springframework.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- temporary until merge with mongodb -->
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver</artifactId>
+            <version>3.4.2</version>
+        </dependency>
     </dependencies>
 
 </project>

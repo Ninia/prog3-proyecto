@@ -1,0 +1,102 @@
+[
+  {
+    "birthdate": "03-12-1987",
+    "display_name": "Adams Smith",
+    "email": "bromar18@gmail.com",
+    "gender": "Male",
+    "password": "RGM8LAMB",
+    "preferred_language": "English",
+    "role": "admin",
+    "username": "Bromar18"
+  },
+  {
+    "birth_date": "13-02-1995",
+    "display_name": "Baker Thomas",
+    "email": "bakerthomas@gmail.com",
+    "gender": "Male",
+    "password": "K80NDTAU",
+    "preferred_language": "English",
+    "role": "mod",
+    "username": "cvXZCvZx"
+  },
+  {
+    "birth_date": "26-04-1967",
+    "display_name": "Anna Jones",
+    "email": "anna.jones@gmail.com",
+    "gender": "Female",
+    "password": "HXLGCBJB",
+    "preferred_language": "English",
+    "role": "mod",
+    "username": "Goroz"
+  },
+  {
+    "birth_date": "12-11-1990",
+    "display_name": "David Taylor",
+    "email": "davistaylor@gmail.com",
+    "gender": "Male",
+    "password": "OXY6WRDC",
+    "preferred_language": "English",
+    "role": "user",
+    "username": "DarthVader"
+  },
+  {
+    "birth_date": "23-10-1991",
+    "display_name": "Michael Anderson",
+    "email": "mikeanderson@gmail.com",
+    "gender": "Male",
+    "password": "TKOBKY6Y",
+    "preferred_language": "English",
+    "role": "user",
+    "username": "Mike1314"
+  },
+  {
+    "birth_date": "03-01-1987",
+    "display_name": "Mark Jones",
+    "email": "mjones@gmail.com",
+    "gender": "Male",
+    "password": "YE1XPPKB",
+    "preferred_language": "English",
+    "role": "user",
+    "username": "MJones"
+  },
+  {
+    "birth_date": "10-05-1978",
+    "display_name": "Jake Williams",
+    "email": "jake.williams@gmail.com",
+    "gender": "Male",
+    "password": "K8EHSHLN",
+    "preferred_language": "English",
+    "role": "user",
+    "username": "Willy09"
+  },
+  {
+    "birth_date": "28-03-1984",
+    "display_name": "Marta Peterson",
+    "email": "martapeterson@gmail.com",
+    "gender": "Female",
+    "password": "RE3XFGZ0",
+    "preferred_language": "English",
+    "role": "user",
+    "username": "WonderWoman"
+  },
+  {
+    "birth_date": "16-11-1984",
+    "display_name": "Evans Webber",
+    "email": "evans.weber@gmail.com",
+    "gender": "Male",
+    "password": "9NN6FTV5",
+    "preferred_language": "English",
+    "role": "mod",
+    "username": "Captain"
+  },
+  {
+    "birth_date": "29-03-1965",
+    "display_name": "Maria Moore",
+    "email": "lostcell@gmail.com",
+    "gender": "Female",
+    "password": "75LJ3GIM",
+    "preferred_language": "English",
+    "role": "user",
+    "username": "LostCell"
+  }
+]
