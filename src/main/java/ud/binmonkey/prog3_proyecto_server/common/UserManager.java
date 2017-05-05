@@ -131,7 +131,7 @@ public class UserManager {
      * @param userName username to be deleted
      * @param ftpUserFileLocation location of user properties file
      */
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"WeakerAccess", "unused"})
     public static void deleteUser(String userName, String ftpUserFileLocation) throws FtpException, AdminEditException {
         try {
             /* document to restore user if FTP deletion fails */
@@ -154,10 +154,21 @@ public class UserManager {
             InvalidNameException, AdminEditException {
 
         String USERFILE = "conf/properties/ftpusers.properties";
-        String userFile = "src/main/resources/mongodb/examples/users.json";
-        JSONObject users = new JSONObject(TextFile.read(userFile));
+        String userList = "src/main/resources/mongodb/examples/users.json";
+        JSONObject users = new JSONObject(TextFile.read(userList));
         for (Object o: users.getJSONArray("users")) {
             if (o instanceof JSONObject) {
+                /* remove user from both ftp and mongodb */
+                try {
+                    MongoDB.deleteUser((String) ((JSONObject) o).get("username"));
+                } catch (UserNotFoundException e) {
+                    /* as expected */
+                }
+                try {
+                    FTPServer.deleteUser((String) ((JSONObject) o).get("username"), USERFILE);
+                } catch (UserNotFoundException e) {
+                    /* as expected */
+                }
                 createUser((JSONObject) o, USERFILE);
             }
         }
