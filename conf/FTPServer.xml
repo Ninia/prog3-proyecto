@@ -1,10 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
 <server xmlns="http://mina.apache.org/ftpserver/spring/v1"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans/spring-beans.xsd"
-        xsi:schemaLocation="http://mina.apache.org/ftpserver/spring/v1 http://mina.apache.org/ftpserver/ftpserver-1.0.xsd"
-        id="p3p-ftpserver"
-        max-logins="10"
-        anon-enabled="false"
-        max-anon-logins="5"
-        max-login-failures="10"
-        login-failure-delay="300">
+        xmlns:beans="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://mina.apache.org/ftpserver/spring/v1 http://mina.apache.org/ftpserver/ftpserver-1.0.xsd
+    "
+        id="FTPlet">
+
+
+    <listeners>
+        <nio-listener name="default" port="8022" implicit-ssl="false"
+                      idle-timeout="60"  >
+        </nio-listener>
+    </listeners>
+
+
+    <ftplets>
+        <ftplet name="FTPlet">
+            <beans:bean id="FTPServer" class="ud.binmonkey.prog3_proyecto_server.ftp.FTPlet">
+                <beans:property name="allowedCommonCommands" value="ABOR;ACCT;ALLO;APPE;AUTH;CCC;CWD;EPRT;FEAT;GET;HELP;LIST;LPRT;MDTM;MLST;MODE;NLST;OPTS;PASV;PWD;QUIT;REIN;REST;RETR;SIZE;STAT;SYST;USER" />
+            </beans:bean>
+        </ftplet>
+    </ftplets>
+
+
+    <!-- The user manager, choose one -->
+    <file-user-manager file="conf/properties/ftpusers.properties"
+                       encrypt-passwords="true" />
+
+
+    <!-- The file system -->
+    <native-filesystem case-insensitive="false"
+                       create-home="true" />
 </server>

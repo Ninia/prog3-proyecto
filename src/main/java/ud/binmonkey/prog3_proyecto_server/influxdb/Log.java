@@ -9,6 +9,7 @@ import java.util.ArrayList;
 /**
  * Obtain data about the server contained in Points so it can be logged to InfluxDB
  */
+@SuppressWarnings("unchecked")
 public class Log {
 
     private static String SYSNAME = DocumentReader.getDoc(
@@ -20,7 +21,7 @@ public class Log {
      *
      * @return string containing current CPU usage percentage
      */
-    public static Point getCPUUsagePoint() {
+    static Point getCPUUsagePoint() {
 
         Point point = new Point();
         point.setMeasurement("cpu_usage");
@@ -37,7 +38,7 @@ public class Log {
      *
      * @return string containing current CPU temperature percentage
      */
-    public static Point getCPUTemperaturePoint() {
+    private static Point getCPUTemperaturePoint() {
 
         Point point = new Point();
         point.setMeasurement("cpu_temperature");
@@ -54,7 +55,7 @@ public class Log {
      *
      * @return string containing current memory usage percentage
      */
-    public static Point getMemUsagePoint() {
+    private static Point getMemUsagePoint() {
         Point point = new Point();
         point.setMeasurement("mem_usage");
         point.getTags().put("host", "\"" + SYSNAME + "\"");
@@ -80,6 +81,7 @@ public class Log {
                 sensors = true;
             }
         } catch (Exception e) {
+            /* Intentionally empty */
         }
 
         ArrayList<Point> points = new ArrayList<>();

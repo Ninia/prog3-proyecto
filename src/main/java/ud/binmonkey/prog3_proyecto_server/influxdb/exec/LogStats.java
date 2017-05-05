@@ -19,6 +19,7 @@ public class LogStats {
     /**
      * Create specified database and continuously write points to it
      */
+    @SuppressWarnings("InfiniteLoopStatement")
     public static void main(String[] args) {
 
         Element settings = (Element) DocumentReader.getDoc(
@@ -32,6 +33,7 @@ public class LogStats {
         InfluxDB.createDataBase(db);
         while (true) {
             System.out.print("\rWriting points.    ");
+            @SuppressWarnings("unused")
             ArrayList<Point> points = Log.generatePoints(size);
 //            InfluxDB.writePoints(db, points);
 //            for (Point point: points){
