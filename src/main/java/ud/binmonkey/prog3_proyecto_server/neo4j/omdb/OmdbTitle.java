@@ -1,7 +1,5 @@
 package ud.binmonkey.prog3_proyecto_server.neo4j.omdb;
 
-import org.json.JSONObject;
-
 import java.util.Date;
 import java.util.Map;
 
@@ -12,7 +10,7 @@ public class OmdbTitle {
     protected String year;
     protected Date released;
     protected String plot;
-    protected String rated;
+    protected String ageRating;
     protected String awards;
     protected int metascore;
     protected int imdbRating;
@@ -26,7 +24,7 @@ public class OmdbTitle {
         this.year = JSONFormatter.yearFormatter(title.get("Year"));
         this.released = JSONFormatter.dateFormatter(title.get("Released"));
         this.plot = (String) title.get("Plot");
-        this.rated = (String) title.get("Rated");
+        this.ageRating = (String) title.get("Rated");
         this.awards = (String) title.get("Awards");
         this.metascore = JSONFormatter.intergerConversor(title.get("Metascore"));
         this.imdbRating = JSONFormatter.intergerConversor(title.get("imdbRating"));
@@ -35,31 +33,26 @@ public class OmdbTitle {
         this.poster = (String) title.get("Poster");
     }
 
-    /**/
-    public JSONObject toJSON() {
-
-        JSONObject episodeJSON = new JSONObject();
-
-        episodeJSON.put("title", title);
-        episodeJSON.put("name", imdbID);
-        episodeJSON.put("year", year);
-        episodeJSON.put("released", released.toString());
-        episodeJSON.put("plot", plot);
-        episodeJSON.put("rated", rated);
-        episodeJSON.put("awards", awards);
-        episodeJSON.put("metascore", metascore);
-        episodeJSON.put("imdbRating", imdbRating);
-        episodeJSON.put("imdbVotes", imdbVotes);
-        episodeJSON.put("runtime", runtime);
-        episodeJSON.put("poster", poster);
-
-        return episodeJSON;
-    }
-
-    /**/
     /* Getters and Setters */
+
     public String getImdbID() {
         return imdbID;
+    }
+
+    public String getAgeRating() {
+        return ageRating;
+    }
+
+    public int getMetascore() {
+        return metascore;
+    }
+
+    public int getImdbRating() {
+        return imdbRating;
+    }
+
+    public int getImdbVotes() {
+        return imdbVotes;
     }
 
     /* Overridden Methods*/
@@ -71,7 +64,7 @@ public class OmdbTitle {
                 "\tYear=" + year + "\n" +
                 "\tReleased=" + released + "\n" +
                 "\tPlot=" + plot + "\n" +
-                "\tRated=" + rated + "\n" +
+                "\tRated=" + ageRating + "\n" +
                 "\tAward=" + awards + "\n" +
                 "\tMetascore=" + metascore + "\n" +
                 "\tIMDB Rating=" + imdbRating + "\n" +

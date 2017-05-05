@@ -1,5 +1,7 @@
 package ud.binmonkey.prog3_proyecto_server.neo4j;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.StatementResult;
@@ -13,11 +15,26 @@ import static org.junit.Assert.assertEquals;
  */
 public class Neo4jTest {
 
+    private Neo4j neo4j;
+
+    @Before
+    public void setUp() {
+        neo4j = new Neo4j();
+        neo4j.clearDB();
+    }
+
+    @After
+    public void tearDown() {
+        neo4j.closeSession();
+    }
+
     /* Adding Tests */
+
+    /**
+     * Simple Test
+     */
     @Test
     public void addTest() {
-        Neo4j neo4j = new Neo4j();
-        neo4j.clearDB();
 
         neo4j.addTitle("tt0117951"); /* Trainspotting */
 
@@ -38,9 +55,6 @@ public class Neo4jTest {
     @Test
     public void addEpisodesTest() {
 
-        Neo4j neo4j = new Neo4j();
-        neo4j.clearDB();
-
         /* Adding Episodes */
         neo4j.addTitle("tt2169080");
         neo4j.addTitle("tt3333824");
@@ -59,17 +73,30 @@ public class Neo4jTest {
         }
     }
 
+    @Test
+    public void addListTest() {
+        neo4j.addList("Lord of The Rings Saga", "tt0120737", "tt0167261");
+        neo4j.addList("Lord of The Rings Saga", "tt0167260", "tt0167261");
+
+        StatementResult result = neo4j.getSession().run("MATCH p=(n:List)-[r:CONTAINS]-(m) " +
+                "WHERE m.name='tt0167260' RETURN n.name AS name");
+
+        while (result.hasNext()) {
+            Record record = result.next();
+
+            assertEquals("Lord of The Rings Saga", record.get("name").asString());
+        }
+    }
+
     /**
      * Test queries
+     * TODO better assert equals
      */
     @Test
     public void queryTests() {
 
         StatementResult result;
         Record record;
-
-        Neo4j neo4j = new Neo4j();
-        neo4j.clearDB();
 
         /* Adding Movies */
         neo4j.addTitle("tt0117951"); /* Trainspotting */
@@ -79,18 +106,11 @@ public class Neo4jTest {
         neo4j.addTitle("tt0301357"); /* Goodbye Lenin */
 
         /* LOTR Movies */
-        neo4j.addTitle("tt0120737");
-        neo4j.addTitle("tt0167261");
-        neo4j.addTitle("tt0167260");
+        neo4j.addList("Lord of The Rings Saga", "tt0120737", "tt0167261", "tt0167260");
 
         /* Star Wars Movies */
-        neo4j.addTitle("tt0120915");
-        neo4j.addTitle("tt0121765");
-        neo4j.addTitle("tt2488496");
-        neo4j.addTitle("tt0076759");
-        neo4j.addTitle("tt0080684");
-        neo4j.addTitle("tt0086190");
-        neo4j.addTitle("tt0121766");
+        neo4j.addList("Star Wars Saga", "tt0120915", "tt0121765", "tt2488496", "tt0076759", "tt0080684",
+                "tt0086190", "tt0121766");
 
         /* Adding Series */
         neo4j.addTitle("tt2802850"); /* Fargo */
@@ -129,54 +149,24 @@ public class Neo4jTest {
             assertEquals(false, record.toString().isEmpty());
         }
 
-        System.out.println("\nList movies produced by a Producer, ordering them by year and rating:");
-        result = neo4j.getSession().run("MATCH p = (n:Producer)-[r:" +
-                " PRODUCED]->(m:Movie)" +
-                " WHERE n.name = '20th Century Fox'" +
-                " RETURN m.title, m.imdbRating, m.year" +
-                " ORDER BY m.year, m.imdbRating DESCENDING");
-
-        while (result.hasNext()) {
-            record = result.next();
-            System.out.println(record.toString());
-
-            assertEquals(false, record.toString().isEmpty());
-        }
-
-        System.out.println("\nList languages and the number of title they are spoken in," +
-                " ordering them by the number of title:");
-        result = neo4j.getSession().run("MATCH(a:Language)-[b:" +
-                " SPOKEN_LANGUAGE]->(c)" +
-                " RETURN a.name, COUNT(c)" +
-                " ORDER BY COUNT(c) DESCENDING");
-
-        while (result.hasNext()) {
-            record = result.next();
-            System.out.println(record.toString());
-
-            assertEquals(false, record.toString().isEmpty());
-        }
-
-        System.out.println("\nList movies of a Language, ordering by year:");
-        result = neo4j.getSession().run("MATCH p = (n:Language)-[r:" +
-                " SPOKEN_LANGUAGE]->(m:Movie)" +
-                " WHERE n.name = 'English'" +
-                " RETURN m.title, m.imdbRating, m.year" +
-                " ORDER BY m.year");
-
-        while (result.hasNext()) {
-            record = result.next();
-            System.out.println(record.toString());
-
-            assertEquals(false, record.toString().isEmpty());
-        }
-
         System.out.println("\nList Episodes of a Series, ordering by season and episode:");
         result = neo4j.getSession().run("MATCH p = (n:Episode)-[r:" +
                 " BELONGS_TO]->(m:Series)" +
                 " WHERE m.name = 'tt2802850'" +
                 " RETURN n.title, r.season, r.episode" +
                 " ORDER BY r.season, r.episode");
+
+        while (result.hasNext()) {
+            record = result.next();
+            System.out.println(record.toString());
+
+            assertEquals(false, record.toString().isEmpty());
+        }
+
+        System.out.println("\nShow Titles by Age Rating");
+        result = neo4j.getSession().run("MATCH p=(n)-[r:RATED]->(m:Movie)" +
+                " RETURN n.name, m.name" +
+                " ORDER BY n.name, m.year");
 
         while (result.hasNext()) {
             record = result.next();

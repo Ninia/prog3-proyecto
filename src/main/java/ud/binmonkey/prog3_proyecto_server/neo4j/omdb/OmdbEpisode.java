@@ -1,7 +1,5 @@
 package ud.binmonkey.prog3_proyecto_server.neo4j.omdb;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -36,12 +34,6 @@ public class OmdbEpisode extends OmdbTitle {
         this.director = JSONFormatter.listFormatter(series.get("Director"));
     }
 
-    public static void main(String[] args) {
-        OmdbEpisode omdbEpisode = new OmdbEpisode("tt3097534");
-
-        System.out.println(omdbEpisode.toJSON());
-    }
-
     /**
      * @return Return information in org.neo4j.driver.v1.Values.parameters format
      */
@@ -52,7 +44,6 @@ public class OmdbEpisode extends OmdbTitle {
                 "year", year,
                 "released", released.toString(),
                 "plot", plot,
-                "rated", rated,
                 "awards", awards,
                 "metascore", metascore,
                 "imdbRating", imdbRating,
@@ -63,24 +54,8 @@ public class OmdbEpisode extends OmdbTitle {
 
     /* Getters */
 
-    /**
-     * Converts OmdbEpisode to JSON format
-     *
-     * @return JSONObject
-     */
-    public JSONObject toJSON() {
-
-        JSONObject episodeJSON = super.toJSON();
-
-        episodeJSON.put("seriesID", seriesID);
-        episodeJSON.put("season", season);
-        episodeJSON.put("episode", episode);
-
-        episodeJSON.put("writer", writer);
-        episodeJSON.put("director", director);
-        episodeJSON.put("actors", actors);
-
-        return episodeJSON;
+    public Enum getType() {
+        return MediaType.EPISODE;
     }
 
     public ArrayList getActors() {
@@ -106,23 +81,5 @@ public class OmdbEpisode extends OmdbTitle {
     public int getEpisode() {
         return episode;
     }
-
-    /* Overridden Methods */
-    @Override
-    public String toString() {
-        return "OmdbMovie:\n" +
-                "\tTitle=" + title + "\n" +
-                "\tIMDB ID=" + imdbID + "\n" +
-                "\tYear=" + year + "\n" +
-                "\tReleased=" + released + "\n" +
-                "\tPlot=" + plot + "\n" +
-                "\tRated=" + rated + "\n" +
-                "\tAward=" + awards + "\n" +
-                "\tMetascore=" + metascore + "\n" +
-                "\tIMDB Rating=" + imdbRating + "\n" +
-                "\tIMDB Votes=" + imdbVotes + "\n" +
-                "\tRuntime=" + runtime + "\n" +
-                "\tPoster=" + poster + "\n" +
-                "\tGenre=" + writer + "\n";
-    }
+    /* END Getters */
 }

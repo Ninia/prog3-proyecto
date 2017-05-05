@@ -1,8 +1,7 @@
-/* Cosas que iremos creando sobre la marcha:
+/* TODO list:
 - User Ratings
 - Relative path
 - Relative path by movie language
-- Sagas (e.g. Star Wars, MCU)
 */
 
 /* Movies */
@@ -13,7 +12,6 @@ CREATE (tt0117951:Movie {
   released:   'Fri Aug 09 00:00:00 CEST 1996',
   dvd:        'Tue Mar 24 00:00:00 CET 1998',
   plot:       'Renton, deeply immersed in the Edinburgh drug scene, tries to clean up and get out, despite the allure of the drugs and influence of friends.',
-  rated:      'R',
   awards:     'Nominated for 1 Oscar. Another 20 wins & 26 nominations.',
   boxOffice:  'N/A',
   metascore:  '83',
@@ -31,7 +29,6 @@ CREATE (tt0289043:Movie {
   released:   'Fri Jun 27 00:00:00 CEST 2003',
   dvd:        'Tue Oct 21 00:00:00 CEST 2003',
   plot:       "Animal activists invade a laboratory with the intention of releasing chimpanzees that are undergoing experimentation, infected by a virus -a virus that causes rage. The naive activists ignore the pleas of a scientist to keep the cages locked, with disastrous results. Twenty-eight days later, our protagonist, Jim, wakes up from a coma, alone, in an abandoned hospital. He begins to seek out anyone else to find London is deserted, apparently without a living soul. After finding a church, which had become inhabited by zombie like humans intent on his demise, he runs for his life. Selena and Mark rescue him from the horde and bring him up to date on the mass carnage and horror as all of London tore itself apart. This is a tale of survival and ultimately, heroics, with nice subtext about mankind's savage nature.",
-  rated:      'R',
   awards:     '10 wins & 29 nominations.',
   boxOffice:  '$44,900,469.00',
   metascore:  '73',
@@ -49,7 +46,6 @@ CREATE (tt0470752:Movie {
   released:       'Fri Apr 24 00:00:00 CEST 2015',
   dvd:            'Tue Jul 14 00:00:00 CEST 2015',
   plot:           "Caleb, a 26 year old programmer at the world's largest internet company, wins a competition to spend a week at a private mountain retreat belonging to Nathan, the reclusive CEO of the company. But when Caleb arrives at the remote location he finds that he will have to participate in a strange and fascinating experiment in which he must interact with the world's first true artificial intelligence, housed in the body of a beautiful robot girl.",
-  rated:          'R',
   awards:         'Won 1 Oscar. Another 64 wins & 137 nominations.',
   boxOffice:      '$19,012,798.00',
   metascore:      '78',
@@ -67,7 +63,6 @@ CREATE (tt2488496:Movie {
   released:   'Fri Dec 18 00:00:00 CET 2015',
   dvd:        'Tue Apr 05 00:00:00 CEST 2016',
   plot:       '30 years after the defeat of Darth Vader and the Empire, Rey, a scavenger from the planet Jakku, finds a BB-8 droid that knows the whereabouts of the long lost Luke Skywalker. Rey, as well as a rogue stormtrooper and two smugglers, are thrown into the middle of a battle between the Resistance and the daunting legions of the First Order.',
-  rated:      'PG-13',
   awards:     'Nominated for 5 Oscars. Another 51 wins & 112 nominations.',
   boxOffice:  '$936,658,640.00',
   metascore:  '81',
@@ -85,7 +80,6 @@ CREATE (tt0121766:Movie {
   released:   'Thu May 19 00:00:00 CEST 2005',
   dvd:        'Tue Nov 01 00:00:00 CET 2005',
   plot:       'Near the end of the Clone Wars, Darth Sidious has revealed himself and is ready to execute the last part of his plan to rule the galaxy. Sidious is ready for his new apprentice, Darth Vader, to step into action and kill the remaining Jedi. Vader, however, struggles to choose the dark side and save his wife or remain loyal to the Jedi order.',
-  rated:      'PG-13',
   awards:     'Nominated for 1 Oscar. Another 25 wins & 52 nominations.',
   boxOffice:  'N/A',
   metascore:  '68',
@@ -104,7 +98,6 @@ CREATE (tt2802850:Series {
   Seasons:    3,
   released:   'Tue Apr 15 00:00:00 CEST 2014',
   plot:       "The all new 'true crime' case of Fargo's new chapter travels back to 1979 in Sioux Falls, South Dakota and Luverne, Minnesota, where a young State Police Officer Lou Solverson, recently back from Vietnam, investigates a case involving a local crime gang and a major Mob syndicate. Helping him piece things together is his father-in-law, Sheriff Hank Larsson. The investigation will lead them to a colorful cast of characters that includes Karl Weathers, the town lawyer of Luverne, Minnesota. A Korean War vet, Karl is a flowery drunk blessed with the gift of gab and the eloquence of a true con artist. Joe Bulo, the front man for the northern expansion of a Kansas City crime syndicate. The new face of corporate crime, Joe's bringing a Walmart mentality to small town America. His number two is Mike Milligan. Part enforcer, part detective, Mike is always smiling - but the joke is usually on you. Bulo and his crew have their sights set on the Gerhardt crime family in Fargo, currently led by matriarch Floyd Gerhardt. With her husband at death's door, Floyd takes over the family business, frustrating her eldest son, Dodd Gerhardt. An impatient hothead with a cruel streak to match his ambitions, Dodd can't wait for both his parents to die so he can take over and expand their business from kingdom to empire. Bear Gerhardt is the middle son, an intimidatingly large man who, although inarticulate, is the most decent of his clan. Rye Gerhardt, the youngest of the Gerhardt clan, views himself as a big shot, but in reality he's just a small dog who barks big.",
-  rated:      'TV-MA',
   awards:     'Won 2 Golden Globes. Another 37 wins & 125 nominations.',
   metascore:  'N/A',
   imdbRating: '9.0',
@@ -120,7 +113,6 @@ CREATE (tt3599918:Episode {
   year:       '2014',
   released:   'Tue Jun 17 00:00:00 CEST 2014',
   plot:       'Molly takes the lead, while Gus pursues a hunch. Lester manipulates a situation, and Malvo finds a new target.',
-  rated:      'TV-MA',
   awards:     'N/A',
   metascore:  'N/A',
   imdbRating: 9.4,
@@ -196,6 +188,14 @@ CREATE (Thriller:Genre {name: 'Thriller'})
 CREATE (English:Language {name: 'English'})
 CREATE (Spanish:Language {name: 'Spanish'})
 
+/* Age Ratings */
+CREATE (R:Rating {name: 'R'})
+CREATE (PG13:Rating {name: 'PG-13'})
+CREATE (TVMA:Rating {name: 'TV-MA'})
+
+/* Lists */
+CREATE (SW:List {name: 'Star Wars Saga'})
+
 /* Trainspotting's Relations */
 CREATE
   (John_Hodge)-[:WROTE]->(tt0117951),
@@ -211,7 +211,8 @@ CREATE
   (Metacritic)-[:SCORED {score: 83}]->(tt0117951),
   (UK)-[:COUNTRY]->(tt0117951),
   (Drama)-[:GENRE]->(tt0117951),
-  (English)-[:SPOKEN_LANGUAGE]->(tt0117951)
+  (English)-[:SPOKEN_LANGUAGE]->(tt0117951),
+  (R)-[:RATED]->(tt0117951)
 
 /* 28 Days Later's Relations */
 CREATE
@@ -230,7 +231,8 @@ CREATE
   (Horror)-[:GENRE]->(tt0289043),
   (SciFi)-[:GENRE]->(tt0289043),
   (English)-[:SPOKEN_LANGUAGE]->(tt0289043),
-  (Spanish)-[:SPOKEN_LANGUAGE]->(tt0289043)
+  (Spanish)-[:SPOKEN_LANGUAGE]->(tt0289043),
+  (R)-[:RATED]->(tt0289043)
 
 /* Ex Machinas's Relations */
 CREATE
@@ -248,7 +250,8 @@ CREATE
   (Drama)-[:GENRE]->(tt0470752),
   (Mystery)-[:GENRE]->(tt0470752),
   (SciFi)-[:GENRE]->(tt0470752),
-  (English)-[:SPOKEN_LANGUAGE]->(tt0470752)
+  (English)-[:SPOKEN_LANGUAGE]->(tt0470752),
+  (R)-[:RATED]->(tt0470752)
 
 /* Star Wars VII's Relations */
 CREATE
@@ -272,7 +275,9 @@ CREATE
   (Action)-[:GENRE]->(tt2488496),
   (Adventure)-[:GENRE]->(tt2488496),
   (Fantasy)-[:GENRE]->(tt2488496),
-  (English)-[:SPOKEN_LANGUAGE]->(tt2488496)
+  (English)-[:SPOKEN_LANGUAGE]->(tt2488496),
+  (PG13)-[:RATED]->(tt2488496),
+  (SW)-[:CONTAINS]->(tt2488496)
 
 /* Star Wars III's Relations */
 CREATE
@@ -291,7 +296,9 @@ CREATE
   (Adventure)-[:GENRE]->(tt0121766),
   (Fantasy)-[:GENRE]->(tt0121766),
   (SciFi)-[:GENRE]->(tt0121766),
-  (English)-[:SPOKEN_LANGUAGE]->(tt0121766)
+  (English)-[:SPOKEN_LANGUAGE]->(tt0121766),
+  (PG13)-[:RATED]->(tt0121766),
+  (SW)-[:CONTAINS]->(tt0121766)
 
 /* Fargo's Relations */
 CREATE
@@ -300,7 +307,8 @@ CREATE
   (Crime)-[:GENRE]->(tt2802850),
   (Thriller)-[:GENRE]->(tt2802850),
   (Drama)-[:GENRE]->(tt2802850),
-  (English)-[:SPOKEN_LANGUAGE]->(tt2802850)
+  (English)-[:SPOKEN_LANGUAGE]->(tt2802850),
+  (TVMA)-[:RATED]->(tt2802850)
 
 /* Fargo S1E10's Relations */
 CREATE

@@ -32,7 +32,7 @@ public class Omdb {
 
             HashMap search_results = new HashMap<String, HashMap>();
 
-            if (!type.equals(MediaType.all))
+            if (!type.equals(MediaType.ALL))
                 url = "http://www.omdbapi.com/?s=" + title.replace(" ", "%20") + "&type=" + type.name();
             else
                 url = "http://www.omdbapi.com/?s=" + title.replace(" ", "%20");
@@ -88,6 +88,41 @@ public class Omdb {
 
             return title.toMap();
 
+        } catch (MalformedURLException e) {
+            System.err.println("Malformed URL: " + url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    /**
+     * Gets the type from a IMDB Title
+     *
+     * @param id - IMDB Title to search for
+     * @return - Type
+     */
+    public static MediaType getType(String id) {
+
+        try {
+
+            url = "http://www.omdbapi.com/?i=" + id;
+
+            URL query = new URL(url);
+
+            Scanner s = new Scanner(query.openStream());
+            JSONObject title = new JSONObject(s.nextLine());
+
+            String type = (String) title.get("Type");
+
+            if (MediaType.MOVIE.equalsName(type)) {
+                return MediaType.MOVIE;
+            } else if (MediaType.SERIES.equalsName(type)) {
+                return MediaType.SERIES;
+            } else if (MediaType.EPISODE.equalsName(type)) {
+                return MediaType.EPISODE;
+            }
         } catch (MalformedURLException e) {
             System.err.println("Malformed URL: " + url);
         } catch (IOException e) {
