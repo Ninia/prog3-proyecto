@@ -12,7 +12,7 @@ public class OmdbEpisode extends OmdbTitle {
     private int episode;
 
     private ArrayList actors;
-    private ArrayList writers;
+    private ArrayList writer;
     private ArrayList director;
 
     /**
@@ -26,12 +26,12 @@ public class OmdbEpisode extends OmdbTitle {
         Map series = Omdb.getTitle(id);
 
         this.seriesID = (String) series.get("seriesID");
-        this.season = Omdb.intergerConversor(series.get("Season"));
-        this.episode = Omdb.intergerConversor(series.get("Episode"));
+        this.season = JSONFormatter.intergerConversor(series.get("Season"));
+        this.episode = JSONFormatter.intergerConversor(series.get("Episode"));
 
-        this.actors = Omdb.listFormatter(series.get("Actors"));
-        this.writers = Omdb.listFormatter(series.get("Writer"));
-        this.director = Omdb.listFormatter(series.get("Director"));
+        this.actors = JSONFormatter.listFormatter(series.get("Actors"));
+        this.writer = JSONFormatter.listFormatter(series.get("Writer"));
+        this.director = JSONFormatter.listFormatter(series.get("Director"));
     }
 
     /**
@@ -44,7 +44,6 @@ public class OmdbEpisode extends OmdbTitle {
                 "year", year,
                 "released", released.toString(),
                 "plot", plot,
-                "rated", rated,
                 "awards", awards,
                 "metascore", metascore,
                 "imdbRating", imdbRating,
@@ -55,12 +54,16 @@ public class OmdbEpisode extends OmdbTitle {
 
     /* Getters */
 
+    public Enum getType() {
+        return MediaType.EPISODE;
+    }
+
     public ArrayList getActors() {
         return actors;
     }
 
     public ArrayList getWriter() {
-        return writers;
+        return writer;
     }
 
     public ArrayList getDirector() {
@@ -78,23 +81,5 @@ public class OmdbEpisode extends OmdbTitle {
     public int getEpisode() {
         return episode;
     }
-
-    /* Overridden Methods */
-    @Override
-    public String toString() {
-        return "OmdbMovie:\n" +
-                "\tTitle=" + title + "\n" +
-                "\tIMDB ID=" + imdbID + "\n" +
-                "\tYear=" + year + "\n" +
-                "\tReleased=" + released + "\n" +
-                "\tPlot=" + plot + "\n" +
-                "\tRated=" + rated + "\n" +
-                "\tAward=" + awards + "\n" +
-                "\tMetascore=" + metascore + "\n" +
-                "\tIMDB Rating=" + imdbRating + "\n" +
-                "\tIMDB Votes=" + imdbVotes + "\n" +
-                "\tRuntime=" + runtime + "\n" +
-                "\tPoster=" + poster + "\n" +
-                "\tGenre=" + writers + "\n";
-    }
+    /* END Getters */
 }

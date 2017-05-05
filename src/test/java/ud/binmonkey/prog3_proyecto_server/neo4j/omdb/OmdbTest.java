@@ -13,8 +13,7 @@ public class OmdbTest {
     @org.junit.Test
     public void testSearch() {
 
-        HashMap search = Omdb.search("Trainspotting", MediaType.all);
-        assert search != null;
+        HashMap search = Omdb.search("Trainspotting", MediaType.ALL);
         HashMap movie = (HashMap) search.get("tt0117951");
 
         assertEquals("movie", movie.get("Type"));
