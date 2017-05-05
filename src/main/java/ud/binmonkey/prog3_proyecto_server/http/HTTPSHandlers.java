@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+@SuppressWarnings("WeakerAccess")
 public class HTTPSHandlers {
 
 

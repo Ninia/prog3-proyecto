@@ -10,10 +10,11 @@ public class Memory {
         );
     }
 
+    @SuppressWarnings("InfiniteLoopStatement")
     public static void main(String[] args) {
         while (true) {
             System.out.println("Memory usage: " +
-                    "" + Memory.getUsage());
+                    "" + getUsage());
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ie) {

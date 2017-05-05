@@ -4,6 +4,7 @@ package ud.binmonkey.prog3_proyecto_server.tcp;
  * TestProtocol based on KnockKnockProtocol from
  * https://docs.oracle.com/javase/tutorial/networking/sockets/examples/KnockKnockProtocol.java
  */
+@SuppressWarnings("WeakerAccess")
 public class TestProtocol {
     private static final int WAITING = 0;
     private static final int SENTHANDSHAKE = 1;
