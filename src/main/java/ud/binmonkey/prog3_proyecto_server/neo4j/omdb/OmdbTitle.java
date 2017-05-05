@@ -10,7 +10,7 @@ public class OmdbTitle {
     protected String year;
     protected Date released;
     protected String plot;
-    protected String rated;
+    protected String ageRating;
     protected String awards;
     protected int metascore;
     protected int imdbRating;
@@ -21,15 +21,15 @@ public class OmdbTitle {
     OmdbTitle(Map title) {
         this.title = (String) title.get("Title");
         this.imdbID = (String) title.get("imdbID");
-        this.year = Omdb.yearFormatter(title.get("Year"));
-        this.released = Omdb.dateFormatter(title.get("Released"));
+        this.year = JSONFormatter.yearFormatter(title.get("Year"));
+        this.released = JSONFormatter.dateFormatter(title.get("Released"));
         this.plot = (String) title.get("Plot");
-        this.rated = (String) title.get("Rated");
+        this.ageRating = (String) title.get("Rated");
         this.awards = (String) title.get("Awards");
-        this.metascore = Omdb.intergerConversor(title.get("Metascore"));
-        this.imdbRating = Omdb.intergerConversor(title.get("imdbRating"));
-        this.imdbVotes = Omdb.intergerConversor(title.get("imdbVotes"));
-        this.runtime = Omdb.intergerConversor(title.get("Runtime"));
+        this.metascore = JSONFormatter.intergerConversor(title.get("Metascore"));
+        this.imdbRating = JSONFormatter.intergerConversor(title.get("imdbRating"));
+        this.imdbVotes = JSONFormatter.intergerConversor(title.get("imdbVotes"));
+        this.runtime = JSONFormatter.intergerConversor(title.get("Runtime"));
         this.poster = (String) title.get("Poster");
     }
 
@@ -37,6 +37,22 @@ public class OmdbTitle {
 
     public String getImdbID() {
         return imdbID;
+    }
+
+    public String getAgeRating() {
+        return ageRating;
+    }
+
+    public int getMetascore() {
+        return metascore;
+    }
+
+    public int getImdbRating() {
+        return imdbRating;
+    }
+
+    public int getImdbVotes() {
+        return imdbVotes;
     }
 
     /* Overridden Methods*/
@@ -48,7 +64,7 @@ public class OmdbTitle {
                 "\tYear=" + year + "\n" +
                 "\tReleased=" + released + "\n" +
                 "\tPlot=" + plot + "\n" +
-                "\tRated=" + rated + "\n" +
+                "\tRated=" + ageRating + "\n" +
                 "\tAward=" + awards + "\n" +
                 "\tMetascore=" + metascore + "\n" +
                 "\tIMDB Rating=" + imdbRating + "\n" +
