@@ -73,6 +73,21 @@ public class Neo4jTest {
         }
     }
 
+    @Test
+    public void addListTest() {
+        neo4j.addList("Lord of The Rings Saga", "tt0120737", "tt0167261");
+        neo4j.addList("Lord of The Rings Saga", "tt0167260", "tt0167261");
+
+        StatementResult result = neo4j.getSession().run("MATCH p=(n:List)-[r:CONTAINS]-(m) " +
+                "WHERE m.name='tt0167260' RETURN n.name AS name");
+
+        while (result.hasNext()) {
+            Record record = result.next();
+
+            assertEquals("Lord of The Rings Saga", record.get("name").asString());
+        }
+    }
+
     /**
      * Test queries
      * TODO better assert equals
@@ -91,18 +106,11 @@ public class Neo4jTest {
         neo4j.addTitle("tt0301357"); /* Goodbye Lenin */
 
         /* LOTR Movies */
-        neo4j.addTitle("tt0120737");
-        neo4j.addTitle("tt0167261");
-        neo4j.addTitle("tt0167260");
+        neo4j.addList("Lord of The Rings Saga", "tt0120737", "tt0167261", "tt0167260");
 
         /* Star Wars Movies */
-        neo4j.addTitle("tt0120915");
-        neo4j.addTitle("tt0121765");
-        neo4j.addTitle("tt2488496");
-        neo4j.addTitle("tt0076759");
-        neo4j.addTitle("tt0080684");
-        neo4j.addTitle("tt0086190");
-        neo4j.addTitle("tt0121766");
+        neo4j.addList("Star Wars Saga", "tt0120915", "tt0121765", "tt2488496", "tt0076759", "tt0080684",
+                "tt0086190", "tt0121766");
 
         /* Adding Series */
         neo4j.addTitle("tt2802850"); /* Fargo */

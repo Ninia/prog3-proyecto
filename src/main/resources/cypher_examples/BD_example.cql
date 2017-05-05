@@ -2,8 +2,6 @@
 - User Ratings
 - Relative path
 - Relative path by movie language
-- Sagas (e.g. Star Wars, MCU)
-- Move Age Ratings to Nodes
 */
 
 /* Movies */
@@ -195,6 +193,9 @@ CREATE (R:Rating {name: 'R'})
 CREATE (PG13:Rating {name: 'PG-13'})
 CREATE (TVMA:Rating {name: 'TV-MA'})
 
+/* Lists */
+CREATE (SW:List {name: 'Star Wars Saga'})
+
 /* Trainspotting's Relations */
 CREATE
   (John_Hodge)-[:WROTE]->(tt0117951),
@@ -275,7 +276,8 @@ CREATE
   (Adventure)-[:GENRE]->(tt2488496),
   (Fantasy)-[:GENRE]->(tt2488496),
   (English)-[:SPOKEN_LANGUAGE]->(tt2488496),
-  (PG13)-[:RATED]->(tt2488496)
+  (PG13)-[:RATED]->(tt2488496),
+  (SW)-[:CONTAINS]->(tt2488496)
 
 /* Star Wars III's Relations */
 CREATE
@@ -295,7 +297,8 @@ CREATE
   (Fantasy)-[:GENRE]->(tt0121766),
   (SciFi)-[:GENRE]->(tt0121766),
   (English)-[:SPOKEN_LANGUAGE]->(tt0121766),
-  (PG13)-[:RATED]->(tt0121766)
+  (PG13)-[:RATED]->(tt0121766),
+  (SW)-[:CONTAINS]->(tt0121766)
 
 /* Fargo's Relations */
 CREATE
