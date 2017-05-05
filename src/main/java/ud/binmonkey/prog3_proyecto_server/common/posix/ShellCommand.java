@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 public class ShellCommand {
     public static String executeCommand(String command) {
 
-        StringBuffer output = new StringBuffer();
+        StringBuilder output = new StringBuilder();
 
         Process p;
         try {
@@ -17,7 +17,7 @@ public class ShellCommand {
             @SuppressWarnings("UnusedAssignment")
             String line = "";
             while ((line = reader.readLine()) != null) {
-                output.append(line + "\n");
+                output.append(line).append("\n");
             }
 
         } catch (Exception e) {

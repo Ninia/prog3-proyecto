@@ -11,7 +11,7 @@ public class OmdbSeries extends OmdbTitle {
 
     private ArrayList language;
     private ArrayList genre;
-    private ArrayList producers;
+    private ArrayList producers = new ArrayList();
     private ArrayList country;
 
     /**
@@ -24,12 +24,11 @@ public class OmdbSeries extends OmdbTitle {
         super(Omdb.getTitle(id));
         Map series = Omdb.getTitle(id);
 
-        this.seasons = Omdb.intergerConversor(series.get("totalSeasons"));
-        this.language = Omdb.listFormatter(series.get("Language"));
-        this.genre = Omdb.listFormatter(series.get("Genre"));
-        this.producers = new ArrayList();
-        producers.add("Placeholder");
-        this.country = Omdb.listFormatter(series.get("Country"));
+        this.seasons = JSONFormatter.intergerConversor(series.get("totalSeasons"));
+        this.language = JSONFormatter.listFormatter(series.get("Language"));
+        this.genre = JSONFormatter.listFormatter(series.get("Genre"));
+        this.producers.add("Placeholder"); /* TODO Placeholder */
+        this.country = JSONFormatter.listFormatter(series.get("Country"));
     }
 
     /**
@@ -43,7 +42,6 @@ public class OmdbSeries extends OmdbTitle {
                 "seasons", seasons,
                 "released", released.toString(),
                 "plot", plot,
-                "rated", rated,
                 "awards", awards,
                 "metascore", metascore,
                 "imdbRating", imdbRating,
@@ -53,6 +51,10 @@ public class OmdbSeries extends OmdbTitle {
     }
 
     /* Getters */
+
+    public Enum getType() {
+        return MediaType.SERIES;
+    }
 
     public ArrayList getLanguage() {
         return language;
@@ -69,24 +71,5 @@ public class OmdbSeries extends OmdbTitle {
     public ArrayList getCountry() {
         return country;
     }
-
-    /* Overridden Methods */
-    @Override
-    public String toString() {
-        return "OmdbMovie:\n" +
-                "\tTitle=" + title + "\n" +
-                "\tIMDB ID=" + imdbID + "\n" +
-                "\tYear=" + year + "\n" +
-                "\tReleased=" + released + "\n" +
-                "\tPlot=" + plot + "\n" +
-                "\tRated=" + rated + "\n" +
-                "\tAward=" + awards + "\n" +
-                "\tMetascore=" + metascore + "\n" +
-                "\tIMDB Rating=" + imdbRating + "\n" +
-                "\tIMDB Votes=" + imdbVotes + "\n" +
-                "\tRuntime=" + runtime + "\n" +
-                "\tPoster=" + poster + "\n" +
-                "\tLanguage=" + language + "\n" +
-                "\tGenre=" + genre + "\n";
-    }
+    /* END Getters */
 }

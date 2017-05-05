@@ -6,6 +6,7 @@ keys
 /conf/System.xml
 !.gitignore
 /target/
-/src/test/resources/ftpd/
+/src/test/resources/ftp/
 logs/*
 !logs/README.txt
+/conf/properties/ftpusers.properties

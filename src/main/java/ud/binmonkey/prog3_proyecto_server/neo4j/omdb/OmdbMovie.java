@@ -13,7 +13,7 @@ public class OmdbMovie extends OmdbTitle {
     private double boxOffice; /* in Dollars */
     private String website;
 
-    private HashMap ratings = new HashMap<String, String>();
+    private HashMap ratings = new HashMap<String, Integer>();
     private ArrayList language;
     private ArrayList genre;
     private ArrayList writer;
@@ -32,27 +32,22 @@ public class OmdbMovie extends OmdbTitle {
         super(Omdb.getTitle(id));
         Map movie = Omdb.getTitle(id);
 
-        this.dvd = Omdb.dateFormatter(movie.get("DVD"));
-        this.boxOffice = Omdb.doubleConversor(movie.get("BoxOffice"));
+        this.dvd = JSONFormatter.dateFormatter(movie.get("DVD"));
+        this.boxOffice = JSONFormatter.doubleConversor(movie.get("BoxOffice"));
         this.website = (String) movie.get("Website");
 
-        for (Object rating : (ArrayList) movie.get("Ratings")) {
-            HashMap a = (HashMap) rating;
-            ratings.put(a.get("Source"), a.get("Value"));
-        }
+        this.ratings = JSONFormatter.scoreFormatter((ArrayList) movie.get("Ratings"));
 
-        this.language = Omdb.listFormatter(movie.get("Language"));
-        this.genre = Omdb.listFormatter(movie.get("Genre"));
-        this.writer = Omdb.listFormatter(movie.get("Writer"));
-        this.director = Omdb.listFormatter(movie.get("Director"));
-        this.actors = Omdb.listFormatter(movie.get("Actors"));
-        this.producers = Omdb.listFormatter(movie.get("Production"));
-        this.country = Omdb.listFormatter(movie.get("Country"));
+        this.language = JSONFormatter.listFormatter(movie.get("Language"));
+        this.genre = JSONFormatter.listFormatter(movie.get("Genre"));
+        this.writer = JSONFormatter.listFormatter(movie.get("Writer"));
+        this.director = JSONFormatter.listFormatter(movie.get("Director"));
+        this.actors = JSONFormatter.listFormatter(movie.get("Actors"));
+        this.producers = JSONFormatter.listFormatter(movie.get("Production"));
+        this.country = JSONFormatter.listFormatter(movie.get("Country"));
     }
 
-    /**
-     * @return Return information in org.neo4j.driver.v1.Values.parameters format
-     */
+    /* Methods */
     public Object toParameters() {
         return parameters(
                 "title", title,
@@ -61,7 +56,6 @@ public class OmdbMovie extends OmdbTitle {
                 "released", released.toString(),
                 "dvd", dvd.toString(),
                 "plot", plot,
-                "rated", rated,
                 "awards", awards,
                 "boxOffice", boxOffice,
                 "metascore", metascore,
@@ -71,8 +65,14 @@ public class OmdbMovie extends OmdbTitle {
                 "website", website,
                 "poster", poster);
     }
+    /* END Methods */
 
     /* Getters */
+
+    public Enum getType() {
+        return MediaType.MOVIE;
+    }
+
     public HashMap getRatings() {
         return ratings;
     }
@@ -104,33 +104,5 @@ public class OmdbMovie extends OmdbTitle {
     public ArrayList getCountry() {
         return country;
     }
-
-    ;
-
-    /* Overridden Methods */
-    @Override
-    public String toString() {
-        return "OmdbMovie:\n" +
-                "\tTitle=" + title + "\n" +
-                "\tIMDB ID=" + imdbID + "\n" +
-                "\tYear=" + year + "\n" +
-                "\tReleased=" + released + "\n" +
-                "\tDVD=" + dvd + "\n" +
-                "\tBoxOffice=" + boxOffice + "\n" +
-                "\tPlot=" + plot + "\n" +
-                "\tRated=" + rated + "\n" +
-                "\tAward=" + awards + "\n" +
-                "\tMetascore=" + metascore + "\n" +
-                "\tIMDB Rating=" + imdbRating + "\n" +
-                "\tIMDB Votes=" + imdbVotes + "\n" +
-                "\tRuntime=" + runtime + "\n" +
-                "\tWebsite=" + website + "\n" +
-                "\tPoster=" + poster + "\n" +
-                "\tRatings=" + ratings + "\n" +
-                "\tLanguage=" + language + "\n" +
-                "\tGenre=" + genre + "\n" +
-                "\tWriter=" + writer + "\n" +
-                "\tDirector=" + director + "\n" +
-                "\tActors=" + actors + "\n";
-    }
+    /* END Getters*/
 }
