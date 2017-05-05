@@ -199,15 +199,8 @@ public class FTPServer extends DefaultFtpServer{
     }
 
     public static void main(String[] args) throws FtpException, InvalidNameException, AdminEditException {
-        String PROPERTIES = "conf/properties/ftpusers.properties";
-        try {
-            FTPServer.createUser("test", "test", PROPERTIES);
-        } catch (NewUserExistsException e) {
-            try {
-                FTPServer.deleteUser("test", PROPERTIES);
-            } catch (UserNotFoundException e1) {
-                e1.printStackTrace();
-            }
-        }
+
+        FtpServer ftpServer = FTPServer.getFtpServer("conf/FTPServer.xml", FTPlet.class.getSimpleName());
+        ftpServer.start();
     }
 }
