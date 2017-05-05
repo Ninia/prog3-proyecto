@@ -8,16 +8,14 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import ud.binmonkey.prog3_proyecto_server.common.*;
-import ud.binmonkey.prog3_proyecto_server.common.exceptions.AdminEditException;
-import ud.binmonkey.prog3_proyecto_server.common.exceptions.InvalidNameException;
-import ud.binmonkey.prog3_proyecto_server.common.exceptions.NewUserExistsException;
-import ud.binmonkey.prog3_proyecto_server.common.exceptions.UserNotFoundException;
+import ud.binmonkey.prog3_proyecto_server.common.exceptions.*;
 
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@SuppressWarnings("unused")
 public class MongoDB {
 
     /* TODO: tests */
@@ -162,6 +160,199 @@ public class MongoDB {
             LOG.log(Level.INFO, "New user created:" + logInfo);
         } else {
             throw new NewUserExistsException(user.getUserName());
+        }
+    }
+
+    /**
+     * Change birth date of user
+     * @param userName username of user whose birthdate will be changed
+     * @param birthDate new birthdate
+     */
+    public static void changeBirthdate(String userName, String birthDate) throws AdminEditException {
+
+        /*todo: check validity */
+        userName = userName.toLowerCase();
+        Security.checkAdmin(userName);
+        if (userExists(userName)) {
+            MongoDatabase db = getUsersDB();
+            MongoCollection collection = db.getCollection(COLLECTION);
+            collection.updateMany(
+                    new BasicDBObject("username", userName),
+                    new BasicDBObject("$set",
+                            new BasicDBObject("birthdate", birthDate)
+                    )
+            );
+        }
+        LOG.log(Level.INFO, "Birthdate of user `" + userName +  "` has been changed to `" + birthDate + "''.");
+    }
+
+    /**
+     * Change display name of user
+     * @param userName username of user whose display name will be changed
+     * @param displayName new display name
+     */
+    public static void changeEmail(String userName, String email) throws AdminEditException {
+
+        /*todo: check validity */
+        userName = userName.toLowerCase();
+        Security.checkAdmin(userName);
+
+        if (userExists(userName)) {
+            MongoDatabase db = getUsersDB();
+            MongoCollection collection = db.getCollection(COLLECTION);
+            collection.updateMany(
+                    new BasicDBObject("username", userName),
+                    new BasicDBObject("$set",
+                            new BasicDBObject("email", email)
+                    )
+            );
+        }
+        LOG.log(Level.INFO, "Email of user `" + userName +  "` has been changed to `" + email + "''.");
+    }
+
+    /**
+     * Change email of user
+     * @param userName username of user whose email will be changed
+     * @param email new email
+     * @throws AdminEditException
+     */
+    public static void changeDisplayName(String userName, String displayName) throws AdminEditException {
+
+        /*todo: check validity */
+        userName = userName.toLowerCase();
+        Security.checkAdmin(userName);
+
+        if (userExists(userName)) {
+            MongoDatabase db = getUsersDB();
+            MongoCollection collection = db.getCollection(COLLECTION);
+            collection.updateMany(
+                    new BasicDBObject("username", userName),
+                    new BasicDBObject("$set",
+                            new BasicDBObject("display_name", displayName)
+                    )
+            );
+        }
+        LOG.log(Level.INFO, "DisplayName of user `" + userName +  "` has been changed to `" + displayName + "''.");
+    }
+
+    /**
+     * change preferred language of user
+     * @param userName username of user whose email will be changed
+     * @param language new preferred language, MUST BE IN @Language ENUM
+     */
+    public static void changeGender(String userName, String gender) throws AdminEditException {
+
+        /*todo: check validity */
+        userName = userName.toLowerCase();
+        Security.checkAdmin(userName);
+
+        if (userExists(userName)) {
+            MongoDatabase db = getUsersDB();
+            MongoCollection collection = db.getCollection(COLLECTION);
+            collection.updateMany(
+                    new BasicDBObject("username", userName),
+                    new BasicDBObject("$set",
+                            new BasicDBObject("gender", gender)
+                    )
+            );
+        }
+        LOG.log(Level.INFO, "Gender of user `" + userName +  "` has been changed to `" + gender + "''.");
+    }
+
+    /**
+     * change role of user
+     * @param userName username of user whose role will be changed
+     * @param role new role. MUST BE IN @Role ENUM
+     */
+    public static void changePreferredLanguage(String userName, String language)
+            throws AdminEditException, UnsupportedLanguageException {
+
+        /*todo: check validity */
+        userName = userName.toLowerCase();
+        Security.checkAdmin(userName);
+
+        boolean validLang = false;
+        for (Language lang: Language.values()) {
+            if (language.equals(lang.toString())) {
+                validLang = true;
+                break;
+            }
+        }
+        if (!validLang) {
+            throw new UnsupportedLanguageException(language);
+        }
+        if (userExists(userName)) {
+            MongoDatabase db = getUsersDB();
+            MongoCollection collection = db.getCollection(COLLECTION);
+            collection.updateMany(
+                    new BasicDBObject("username", userName),
+                    new BasicDBObject("$set",
+                            new BasicDBObject("preferred_language", language)
+                    )
+            );
+        }
+        LOG.log(Level.INFO, "Preferred language of user `" + userName +
+                "` has been changed to `" + language + "''.");
+    }
+
+    public static void changeRole(String userName, String role) throws AdminEditException, InvalidRoleException {
+
+        /*todo: check validity */
+        userName = userName.toLowerCase();
+        Security.checkAdmin(userName);
+
+        boolean validRole = false;
+        for(Role r: Role.values()) {
+            if (role.equals(r.toString())) {
+                validRole = true;
+                break;
+            }
+        }
+        if (!validRole) {
+            throw new InvalidRoleException(role);
+        }
+        if (userExists(userName)) {
+            MongoDatabase db = getUsersDB();
+            MongoCollection collection = db.getCollection(COLLECTION);
+            collection.updateMany(
+                    new BasicDBObject("username", userName),
+                    new BasicDBObject("$set",
+                            new BasicDBObject("role", role)
+                    )
+            );
+        }
+        LOG.log(Level.INFO, "Role of user `" + userName +  "` has been changed to `" + role + "''.");
+    }
+
+    /**
+     * Change password of MongoDB user
+     * @param userName username whose password will be changed
+     * @param oldPassword current password
+     * @param newPassword new password
+     * @throws UserNotFoundException user was not found
+     */
+    public static void changePassword(String userName, String oldPassword, String newPassword)
+            throws UserNotFoundException, IncorrectPasswordException, AdminEditException {
+
+        userName = userName.toLowerCase();
+        Security.checkAdmin(userName);
+
+        if(userExists(userName)) {
+            if (getUser(userName).get("password").equals(oldPassword)) {
+                MongoDatabase db = getUsersDB();
+                MongoCollection collection = db.getCollection(COLLECTION);
+                collection.updateMany(
+                        new BasicDBObject("username", userName),
+                        new BasicDBObject("$set",
+                                new BasicDBObject("password", newPassword)
+                        )
+                );
+                LOG.log(Level.INFO, "Changed password of user `" + userName +  "`.");
+            } else {
+                throw new IncorrectPasswordException(userName);
+            }
+        } else {
+            throw new UserNotFoundException(userName);
         }
     }
 

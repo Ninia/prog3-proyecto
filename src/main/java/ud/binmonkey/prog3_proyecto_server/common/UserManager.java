@@ -3,10 +3,7 @@ package ud.binmonkey.prog3_proyecto_server.common;
 import org.apache.ftpserver.ftplet.FtpException;
 import org.bson.Document;
 import org.json.JSONObject;
-import ud.binmonkey.prog3_proyecto_server.common.exceptions.AdminEditException;
-import ud.binmonkey.prog3_proyecto_server.common.exceptions.InvalidNameException;
-import ud.binmonkey.prog3_proyecto_server.common.exceptions.NewUserExistsException;
-import ud.binmonkey.prog3_proyecto_server.common.exceptions.UserNotFoundException;
+import ud.binmonkey.prog3_proyecto_server.common.exceptions.*;
 import ud.binmonkey.prog3_proyecto_server.ftp.FTPServer;
 import ud.binmonkey.prog3_proyecto_server.mongodb.MongoDB;
 
@@ -16,6 +13,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@SuppressWarnings("unused")
 public class UserManager {
 
     /* todo tests */
@@ -36,7 +34,6 @@ public class UserManager {
      * @param newUserName old username
      * @param ftpUserFileLocation location of users properties file
      */
-    @SuppressWarnings("unused")
     public static void changeUserName(String oldUserName, String newUserName, String ftpUserFileLocation)
             throws FtpException, IOException, AdminEditException, InvalidNameException {
         try {
@@ -81,6 +78,27 @@ public class UserManager {
         } catch (NewUserExistsException e) {
             LOG.log(Level.SEVERE, "MongoDB user `" + user.getUserName() + "` already exists.");
         }
+    }
+
+    /**
+     * Change password of both FTP and MongoDB
+     * @param userName username of user whose password will be changed
+     * @param oldPassword current password
+     * @param newPassword new password
+     * @param ftpUserFileLocation location of FTP user properties file
+     */
+    public static void changePassword(String userName, String oldPassword, String newPassword,
+                                      String ftpUserFileLocation)
+            throws UserNotFoundException, IncorrectPasswordException, AdminEditException {
+        MongoDB.changePassword(userName, oldPassword, newPassword);
+        try {
+            FTPServer.changePassword(userName, oldPassword, newPassword, ftpUserFileLocation);
+        } catch (FtpException | AdminEditException | IncorrectPasswordException | UserNotFoundException e) {
+            /* revert chagnes */
+            MongoDB.changePassword(userName, newPassword, oldPassword);
+        }
+
+
     }
 
     /**
@@ -131,7 +149,7 @@ public class UserManager {
      * @param userName username to be deleted
      * @param ftpUserFileLocation location of user properties file
      */
-    @SuppressWarnings({"WeakerAccess", "unused"})
+    @SuppressWarnings("WeakerAccess")
     public static void deleteUser(String userName, String ftpUserFileLocation) throws FtpException, AdminEditException {
         try {
             /* document to restore user if FTP deletion fails */
@@ -172,5 +190,52 @@ public class UserManager {
                 createUser((JSONObject) o, USERFILE);
             }
         }
+    }
+
+    /**
+     * Change birth date of user
+     * @param userName username of user whose birthdate will be changed
+     * @param birthDate new birthdate
+     */
+    public void changeBirthDate(String userName, String birthDate) throws AdminEditException {
+        MongoDB.changeBirthdate(userName, birthDate);
+    }
+
+    /**
+     * Change display name of user
+     * @param userName username of user whose display name will be changed
+     * @param displayName new display name
+     */
+    public void changeDisplayName(String userName, String displayName) throws AdminEditException {
+        MongoDB.changeDisplayName(userName, displayName);
+    }
+
+    /**
+     * Change email of user
+     * @param userName username of user whose email will be changed
+     * @param email new email
+     * @throws AdminEditException
+     */
+    public void changeEmail(String userName, String email) throws AdminEditException {
+        MongoDB.changeEmail(userName, email);
+    }
+
+    /**
+     * change preferred language of user
+     * @param userName username of user whose email will be changed
+     * @param language new preferred language, MUST BE IN @Language ENUM
+     */
+    public void changePreferredLanguage(String userName, String language)
+            throws AdminEditException, UnsupportedLanguageException {
+        MongoDB.changePreferredLanguage(userName, language);
+    }
+
+    /**
+     * change role of user
+     * @param userName username of user whose role will be changed
+     * @param role new role. MUST BE IN @Role ENUM
+     */
+    public void changeRole(String userName, String role) throws AdminEditException, InvalidRoleException {
+        MongoDB.changeRole(userName, role);
     }
 }

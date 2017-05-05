@@ -2,6 +2,7 @@ package ud.binmonkey.prog3_proyecto_server.ftp;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.ftpserver.FtpServer;
+import org.apache.ftpserver.ftplet.Authority;
 import org.apache.ftpserver.ftplet.FtpException;
 import org.apache.ftpserver.ftplet.User;
 import org.apache.ftpserver.ftplet.UserManager;
@@ -12,13 +13,11 @@ import org.apache.ftpserver.usermanager.impl.BaseUser;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 import ud.binmonkey.prog3_proyecto_server.common.DateUtils;
 import ud.binmonkey.prog3_proyecto_server.common.Security;
-import ud.binmonkey.prog3_proyecto_server.common.exceptions.AdminEditException;
-import ud.binmonkey.prog3_proyecto_server.common.exceptions.InvalidNameException;
-import ud.binmonkey.prog3_proyecto_server.common.exceptions.NewUserExistsException;
-import ud.binmonkey.prog3_proyecto_server.common.exceptions.UserNotFoundException;
+import ud.binmonkey.prog3_proyecto_server.common.exceptions.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -129,6 +128,45 @@ public class FTPServer extends DefaultFtpServer{
             }
         } else {
             throw new UserNotFoundException(oldUserName);
+        }
+    }
+
+    /**
+     * Change password of FTP user. TODO: there ust be a better way of doing this that does not involve total rebuild
+     * @param userName username of user changing it's password
+     * @param oldPassword current password
+     * @param newPassword new password
+     * @param userFileLocation location of user properties file
+     */
+    @SuppressWarnings({"unused", "unchecked"})
+    public static void changePassword(String userName, String oldPassword, String newPassword, String userFileLocation)
+            throws AdminEditException, FtpException, UserNotFoundException, IncorrectPasswordException {
+
+        /* lowercase username */
+        userName = userName.toLowerCase();
+
+        Security.checkAdmin(userName);
+
+        PropertiesUserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
+        userManagerFactory.setFile(new File(userFileLocation));
+
+        UserManager userManager = userManagerFactory.createUserManager();
+
+        if (userManager.getUserByName(userName) != null) {
+            User user = userManager.getUserByName(userName);
+            if (user.getPassword().equals(oldPassword)) {
+                throw new IncorrectPasswordException(userName);
+            }
+            BaseUser newUser = new BaseUser();
+            newUser.setAuthorities((List<Authority>) user.getAuthorities());
+            newUser.setName(user.getName());
+            newUser.setPassword(newPassword);
+            newUser.setHomeDirectory(user.getHomeDirectory());
+            deleteUser(userName, userFileLocation);
+            userManager.save(newUser);
+            LOG.log(Level.INFO, "Changed password of user `" + userName +  "`.");
+        } else {
+            throw new UserNotFoundException(userName);
         }
     }
 
