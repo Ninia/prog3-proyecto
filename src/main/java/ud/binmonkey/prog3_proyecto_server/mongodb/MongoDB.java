@@ -43,6 +43,10 @@ public class MongoDB {
      */
     public static void changeUserName(String oldUserName, String newUserName) throws UserNotFoundException, NewUserExistsException {
 
+        /* lowercase usernames */
+        oldUserName = oldUserName.toLowerCase();
+        newUserName = newUserName.toLowerCase();
+
         if(userExists(oldUserName)) {
             if (!userExists(newUserName)) {
                 MongoDatabase db = getUsersDB();
@@ -82,6 +86,9 @@ public class MongoDB {
      */
     public static Document getUser(String userName) throws UserNotFoundException {
 
+        /* lowercase usernames */
+        userName = userName.toLowerCase();
+
         MongoDatabase db = getUsersDB();
         MongoCollection collection = db.getCollection(COLLECTION);
         FindIterable iterable = collection.find(new BasicDBObject("username", userName));
@@ -102,6 +109,9 @@ public class MongoDB {
      */
     public static boolean userExists(String userName) {
 
+        /* lowercase usernames */
+        userName = userName.toLowerCase();
+
         MongoDatabase db = getUsersDB();
         MongoCollection collection = db.getCollection(COLLECTION);
         BasicDBObject query = new BasicDBObject();
@@ -117,6 +127,10 @@ public class MongoDB {
      * @param user user (as an object) to be created
      */
     public static void createUser(User user) throws NewUserExistsException {
+
+        /* lowercase usernames */
+        user.setUserName(user.getUserName().toLowerCase());
+
         if (!userExists(user.getUserName())) {
             MongoDatabase db = getUsersDB();
             MongoCollection collection = db.getCollection(COLLECTION);
@@ -155,6 +169,10 @@ public class MongoDB {
      * @param userName
      */
     public static void deleteUser(String userName) throws UserNotFoundException {
+
+        /* lowercase username */
+        userName = userName.toLowerCase();
+
         if (userExists(userName)) {
             MongoDatabase db = getUsersDB();
             MongoCollection collection = db.getCollection(COLLECTION);

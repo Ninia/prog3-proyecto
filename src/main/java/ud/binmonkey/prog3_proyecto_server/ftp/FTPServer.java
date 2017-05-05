@@ -14,6 +14,9 @@ import org.apache.ftpserver.usermanager.impl.BaseUser;
 import org.apache.ftpserver.usermanager.impl.WritePermission;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 import ud.binmonkey.prog3_proyecto_server.common.DateUtils;
+import ud.binmonkey.prog3_proyecto_server.common.Security;
+import ud.binmonkey.prog3_proyecto_server.common.exceptions.AdminEditException;
+import ud.binmonkey.prog3_proyecto_server.common.exceptions.InvalidNameException;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.NewUserExistsException;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.UserNotFoundException;
 
@@ -26,7 +29,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FTPServer extends DefaultFtpServer{
-    /* TODO: change booleans to custom Exceptions */
 
     private static final Logger LOG = Logger.getLogger(FtpServer.class.getName());
     private static String ftpdLocation = "src/test/resources/ftp/ftpd";
@@ -41,6 +43,8 @@ public class FTPServer extends DefaultFtpServer{
         }
     }
 
+    private String ADMIN  = "admin";
+
     public FTPServer(FtpServerContext serverContext) {
         super(serverContext);
     }
@@ -52,7 +56,12 @@ public class FTPServer extends DefaultFtpServer{
      * @param userFileLocation location to user file
      * @return true if user was created false if username was taken
      */
-    public static void createUser(String userName, String password, String userFileLocation) throws FtpException, NewUserExistsException {
+    public static void createUser(String userName, String password, String userFileLocation) throws FtpException, NewUserExistsException, AdminEditException, InvalidNameException {
+
+        /* lowercase usernames */
+        userName = userName.toLowerCase();
+        Security.checkAdmin(userName);
+        Security.isValidName(userName);
 
         FtpServerFactory serverFactory = new FtpServerFactory();
         PropertiesUserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
@@ -102,7 +111,13 @@ public class FTPServer extends DefaultFtpServer{
      * @throws FtpException
      */
     public static void renameUser(String oldUserName, String newUserName, String userFileLocation)
-            throws FtpException, IOException, NewUserExistsException, UserNotFoundException {
+            throws FtpException, IOException, NewUserExistsException, UserNotFoundException, AdminEditException {
+
+        /* lowercase usernames */
+        oldUserName = oldUserName.toLowerCase();
+        newUserName = newUserName.toLowerCase();
+
+        Security.checkAdmin(oldUserName, newUserName);
 
         FtpServerFactory serverFactory = new FtpServerFactory();
         PropertiesUserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
@@ -138,7 +153,12 @@ public class FTPServer extends DefaultFtpServer{
         }
     }
 
-    public static void deleteUser(String userName, String userFileLocation) throws FtpException, UserNotFoundException {
+    public static void deleteUser(String userName, String userFileLocation) throws FtpException, UserNotFoundException, AdminEditException {
+
+        /* lowercase usernames */
+        userName = userName.toLowerCase();
+        Security.checkAdmin(userName);
+
         FtpServerFactory serverFactory = new FtpServerFactory();
         PropertiesUserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
         userManagerFactory.setFile(new File(userFileLocation));
@@ -162,7 +182,7 @@ public class FTPServer extends DefaultFtpServer{
         return context.getBean(beanName, FtpServer.class);
     }
 
-    public static void main(String[] args) throws FtpException {
+    public static void main(String[] args) throws FtpException, InvalidNameException, AdminEditException {
         String PROPERTIES = "conf/properties/ftpusers.properties";
         try {
             FTPServer.createUser("test", "test", PROPERTIES);

@@ -1,120 +1,124 @@
-[{
-    "username" : "Goroz",
-    "password" : "",
-    "role" : "mod",
-    "display_name" : "Anna Jones",
-    "email" : "anna.jones@gmail.com",
-    "birthdate" : "26-04-1967",
-    "preferred_language" : "English",
-    "gender" : "Female"
-},
 {
-    "username" : "Mike1314",
-    "password" : "",
-    "role" : "user",
-    "display_name" : "Michael Anderson",
-    "email" : "mikeanderson@gmail.com",
-    "birthdate" : "23-10-1991",
-    "preferred_language" : "German",
-    "gender" : "Male"
-},
-{
-    "username" : "MJones",
-    "password" : "",
-    "role" : "user",
-    "display_name" : "Mark Jones",
-    "email" : "mjones@gmail.com",
-    "birthdate" : "03-01-1987",
-    "preferred_language" : "English",
-    "gender" : "Male"
-},
-{
-    "username" : "Willy09",
-    "password" : "",
-    "role" : "user",
-    "display_name" : "Jake Williams",
-    "email" : "jake.williams@gmail.com",
-    "birthdate" : "10-05-1978",
-    "preferred_language" : "English",
-    "gender" : "Male"
-},
-{
-    "username" : "WonderWoman",
-    "password" : "",
-    "role" : "user",
-    "display_name" : "Marta Peterson",
-    "email" : "martapeterson@gmail.com",
-    "birthdate" : "28-03-1984",
-    "preferred_language" : "Spanish",
-    "gender" : "Female"
-},
-{
-    "username" : "Captain",
-    "password" : "",
-    "role" : "mod",
-    "display_name" : "Evans Webber",
-    "email" : "evans.weber@gmail.com",
-    "birthdate" : "16-11-1984",
-    "preferred_language" : "German",
-    "gender" : "Male"
-},
-{
-    "username" : "LostCell",
-    "password" : "",
-    "role" : "user",
-    "display_name" : "Maria Moore",
-    "email" : "lostcell@gmail.com",
-    "birthdate" : "29-03-1965",
-    "preferred_language" : "English",
-    "gender" : "Female"
-},
-{
-    "username" : "HellMan",
-    "password" : "",
-    "role" : "user",
-    "display_name" : "Jack Smith",
-    "email" : "smith.hell@gmail.com",
-    "birthdate" : "26-11-1975",
-    "preferred_language" : "Spanish",
-    "gender" : "Male"
-},
-{
-    "username" : "LostCell",
-    "password" : "",
-    "role" : "user",
-    "display_name" : "Maria Moore",
-    "email" : "lostcell@gmail.com",
-    "birthdate" : "29-03-1965",
-    "preferred_language" : "Spanish",
-    "gender" : "Female"
-},
-{
-    "username" : "scuby",
-    "password" : "",
-    "role" : "user",
-    "display_name" : "John Fire",
-    "email" : "johnfire@gmail.com",
-    "birthdate" : "12-010-1987",
-    "preferred_language" : "English",
-    "gender" : "Male"
-},
-{
-    "username" : "SpaceGirl",
-    "password" : "",
-    "role" : "user",
-    "display_name" : "Monica Clark",
-    "email" : "monclark@gmail.com",
-    "birthdate" : "17-07-1968",
-    "preferred_language" : "English",
-    "gender" : "Female"
-},
-{
-    "username" : "Girl",
-    "password" : "",
-    "role" : "user",
-    "display_name" : "Maria Jones",
-    "email" : "marijones@gmail.com",
-    "birthdate" : "15-09-1988",
-    "preferred_language" : "German",
-    "gender" : "Female"
-}]
+  "users": [
+    {
+      "birthdate": "26-04-1967",
+      "display_name": "Anna Jones",
+      "email": "anna.jones@gmail.com",
+      "gender": "Female",
+      "password": "XFROR3TO",
+      "preferred_language": "English",
+      "role": "mod",
+      "username": "Goroz"
+    },
+    {
+      "birthdate": "23-10-1991",
+      "display_name": "Michael Anderson",
+      "email": "mikeanderson@gmail.com",
+      "gender": "Male",
+      "password": "7QI2JVLT",
+      "preferred_language": "German",
+      "role": "user",
+      "username": "Mike1314"
+    },
+    {
+      "birthdate": "03-01-1987",
+      "display_name": "Mark Jones",
+      "email": "mjones@gmail.com",
+      "gender": "Male",
+      "password": "65XNBD1F",
+      "preferred_language": "English",
+      "role": "user",
+      "username": "MJones"
+    },
+    {
+      "birthdate": "10-05-1978",
+      "display_name": "Jake Williams",
+      "email": "jake.williams@gmail.com",
+      "gender": "Male",
+      "password": "MGQNBKEZ",
+      "preferred_language": "English",
+      "role": "user",
+      "username": "Willy09"
+    },
+    {
+      "birthdate": "28-03-1984",
+      "display_name": "Marta Peterson",
+      "email": "martapeterson@gmail.com",
+      "gender": "Female",
+      "password": "MYHMJDG4",
+      "preferred_language": "Spanish",
+      "role": "user",
+      "username": "WonderWoman"
+    },
+    {
+      "birthdate": "16-11-1984",
+      "display_name": "Evans Webber",
+      "email": "evans.weber@gmail.com",
+      "gender": "Male",
+      "password": "NFKBQK8Y",
+      "preferred_language": "German",
+      "role": "mod",
+      "username": "Captain"
+    },
+    {
+      "birthdate": "29-03-1965",
+      "display_name": "Maria Moore",
+      "email": "lostcell@gmail.com",
+      "gender": "Female",
+      "password": "PEPGTV5E",
+      "preferred_language": "English",
+      "role": "user",
+      "username": "LostCell"
+    },
+    {
+      "birthdate": "26-11-1975",
+      "display_name": "Jack Smith",
+      "email": "smith.hell@gmail.com",
+      "gender": "Male",
+      "password": "TQDGKDM9",
+      "preferred_language": "Spanish",
+      "role": "user",
+      "username": "HellMan"
+    },
+    {
+      "birthdate": "29-03-1965",
+      "display_name": "Maria Moore",
+      "email": "lostcell@gmail.com",
+      "gender": "Female",
+      "password": "JAWFQZ7Q",
+      "preferred_language": "Spanish",
+      "role": "user",
+      "username": "LostCell"
+    },
+    {
+      "birthdate": "12-010-1987",
+      "display_name": "John Fire",
+      "email": "johnfire@gmail.com",
+      "gender": "Male",
+      "password": "EXM6SPNP",
+      "preferred_language": "English",
+      "role": "user",
+      "username": "scuby"
+    },
+    {
+      "birthdate": "17-07-1968",
+      "display_name": "Monica Clark",
+      "email": "monclark@gmail.com",
+      "gender": "Female",
+      "password": "AHAGIJBQ",
+      "preferred_language": "English",
+      "role": "user",
+      "username": "SpaceGirl"
+    },
+    {
+      "birthdate": "15-09-1988",
+      "display_name": "Maria Jones",
+      "email": "marijones@gmail.com",
+      "gender": "Female",
+      "password": "6PBMWMJX",
+      "preferred_language": "German",
+      "role": "user",
+      "username": "Girl"
+    }
+  ]
+}
