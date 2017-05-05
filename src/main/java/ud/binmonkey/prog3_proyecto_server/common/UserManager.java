@@ -8,7 +8,6 @@ import ud.binmonkey.prog3_proyecto_server.ftp.FTPServer;
 import ud.binmonkey.prog3_proyecto_server.mongodb.MongoDB;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,7 +65,7 @@ public class UserManager {
         try {
             MongoDB.createUser(user);
             try {
-                FTPServer.createUser(user.getUserName(), Arrays.toString(user.getPassword()), ftpUserFileLocation);
+                FTPServer.createUser(user.getUserName(), String.valueOf(user.getPassword()), ftpUserFileLocation);
                 return;
             } catch (NewUserExistsException e) {
                 LOG.log(Level.SEVERE, "FTP user `" + user.getUserName() + "` already exists.");
@@ -214,7 +213,6 @@ public class UserManager {
      * Change email of user
      * @param userName username of user whose email will be changed
      * @param email new email
-     * @throws AdminEditException
      */
     public void changeEmail(String userName, String email) throws AdminEditException {
         MongoDB.changeEmail(userName, email);
@@ -223,6 +221,7 @@ public class UserManager {
     /**
      * change preferred language of user
      * @param userName username of user whose email will be changed
+     * @param language new preferred language, MUST BE IN @Language ENUM
      * @param language new preferred language, MUST BE IN @Language ENUM
      */
     public void changePreferredLanguage(String userName, String language)
