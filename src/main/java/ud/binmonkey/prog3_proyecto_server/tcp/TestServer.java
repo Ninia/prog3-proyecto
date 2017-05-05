@@ -13,18 +13,15 @@ import java.net.Socket;
  * TestServer based on KnockKnockServer from
  * https://docs.oracle.com/javase/tutorial/networking/sockets/examples/KnockKnockServer.java
  */
+@SuppressWarnings("WeakerAccess")
 public class TestServer extends Thread {
-
-    private InetAddress clientAddress;
-
-    private int serverPort = URI.getPort("test-server");
-    private int clientPort;
 
     private ServerSocket serverSocket = null;
     private Socket clientSocket = null;
 
     public TestServer() {
 
+        int serverPort = URI.getPort("test-server");
         try {
             serverSocket = new ServerSocket(serverPort);
             System.out.println("Server - Listening at port: " + serverPort);
@@ -58,8 +55,6 @@ public class TestServer extends Thread {
 
     /**
      * Creates and starts a new ThreadConnection to free the server port
-     *
-     * @throws IOException
      */
     private void startThread() throws IOException {
 
@@ -67,8 +62,8 @@ public class TestServer extends Thread {
                 new InputStreamReader(
                         clientSocket.getInputStream()));
 
-        clientPort = Integer.parseInt(in.readLine());
-        clientAddress = clientSocket.getInetAddress();
+        int clientPort = Integer.parseInt(in.readLine());
+        InetAddress clientAddress = clientSocket.getInetAddress();
         ThreadConnection threadConnection = new ThreadConnection(clientAddress, clientPort);
         threadConnection.start();
     }

@@ -7,6 +7,7 @@ import com.sun.net.httpserver.HttpsExchange;
 import java.io.IOException;
 import java.io.OutputStream;
 
+@SuppressWarnings("WeakerAccess")
 public class HTTPSHandlers {
 
     static class ServerHandlers {

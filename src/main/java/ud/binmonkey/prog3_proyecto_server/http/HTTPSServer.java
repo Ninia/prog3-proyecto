@@ -22,14 +22,10 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+@SuppressWarnings("WeakerAccess")
 public class HTTPSServer {
 
     private HttpsServer httpsServer;
-    private HashMap<String, HttpHandler> contexts = new HashMap<String, HttpHandler>() {{
-        put("/", new HTTPSHandlers.ServerHandlers.TestHandler());
-        put("/test", new HTTPSHandlers.ServerHandlers.TestHandler());
-        put("/antigravity", new HTTPSHandlers.ServerHandlers.AntigravityHandler());
-    }};
 
 
     public HTTPSServer() throws IOException {
@@ -91,6 +87,11 @@ public class HTTPSServer {
             });
 
             /* assign contexts*/
+            HashMap<String, HttpHandler> contexts = new HashMap<String, HttpHandler>() {{
+                put("/", new HTTPSHandlers.ServerHandlers.TestHandler());
+                put("/test", new HTTPSHandlers.ServerHandlers.TestHandler());
+                put("/antigravity", new HTTPSHandlers.ServerHandlers.AntigravityHandler());
+            }};
             for (String context : contexts.keySet()) {
                 httpsServer.createContext(context, contexts.get(context));
             }

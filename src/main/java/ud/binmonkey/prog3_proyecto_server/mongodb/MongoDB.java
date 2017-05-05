@@ -7,10 +7,9 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
-import ud.binmonkey.prog3_proyecto_server.common.DateUtils;
-import ud.binmonkey.prog3_proyecto_server.common.Language;
-import ud.binmonkey.prog3_proyecto_server.common.Role;
-import ud.binmonkey.prog3_proyecto_server.common.User;
+import ud.binmonkey.prog3_proyecto_server.common.*;
+import ud.binmonkey.prog3_proyecto_server.common.exceptions.AdminEditException;
+import ud.binmonkey.prog3_proyecto_server.common.exceptions.InvalidNameException;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.NewUserExistsException;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.UserNotFoundException;
 
@@ -41,11 +40,15 @@ public class MongoDB {
       * @param oldUserName current username
      * @param newUserName new username
      */
-    public static void changeUserName(String oldUserName, String newUserName) throws UserNotFoundException, NewUserExistsException {
+    public static void changeUserName(String oldUserName, String newUserName)
+            throws UserNotFoundException, NewUserExistsException, AdminEditException, InvalidNameException {
 
         /* lowercase usernames */
         oldUserName = oldUserName.toLowerCase();
         newUserName = newUserName.toLowerCase();
+
+        Security.checkAdmin(oldUserName, newUserName);
+        Security.isValidName(newUserName);
 
         if(userExists(oldUserName)) {
             if (!userExists(newUserName)) {
@@ -70,12 +73,14 @@ public class MongoDB {
     /**
      * @return User MongoDatabase object
      */
-    public static MongoDatabase getUsersDB(){
+    private static MongoDatabase getUsersDB(){
         MongoClient mongoClient = new MongoClient("localhost", 27017);
         MongoDatabase db = mongoClient.getDatabase(COLLECTION);
         try {
             db.createCollection(COLLECTION);
-        } catch (MongoCommandException e) {}
+        } catch (MongoCommandException e) {
+            /* Database is already created */
+        }
         return db;
     }
 
@@ -107,7 +112,7 @@ public class MongoDB {
      * @param userName username to be checked
      * @return true if it exists, false if not
      */
-    public static boolean userExists(String userName) {
+    private static boolean userExists(String userName) {
 
         /* lowercase usernames */
         userName = userName.toLowerCase();
@@ -126,10 +131,13 @@ public class MongoDB {
      * Creates a Document in MongoDB with the Object passed as arg, if one with same username does not already exist
      * @param user user (as an object) to be created
      */
-    public static void createUser(User user) throws NewUserExistsException {
+    @SuppressWarnings("unchecked")
+    public static void createUser(User user) throws NewUserExistsException, AdminEditException, InvalidNameException {
 
         /* lowercase usernames */
         user.setUserName(user.getUserName().toLowerCase());
+        Security.checkAdmin(user.getUserName());
+        Security.isValidName(user.getUserName());
 
         if (!userExists(user.getUserName())) {
             MongoDatabase db = getUsersDB();
@@ -142,12 +150,12 @@ public class MongoDB {
                     .append("preferred_language", user.getPreferredLanguage().toString())
                     .append("role", user.getRole().toString());
             collection.insertOne(Document.parse(doc.toJson()));
-            String logInfo = "";
+            StringBuilder logInfo = new StringBuilder();
             int i = 1;
             for(String key: doc.keySet()) {
-                logInfo += "\n" + key + ": '" + doc.get(key) + "'";
+                logInfo.append("\n").append(key).append(": '").append(doc.get(key)).append("'");
                 if (i < doc.size()) {
-                    logInfo += ",";
+                    logInfo.append(",");
                 }
                 i++;
             }
@@ -157,6 +165,11 @@ public class MongoDB {
         }
     }
 
+    /**
+     * Create user from document
+     * @param user Document containing user
+     */
+    @SuppressWarnings("unchecked")
     public static void createUser(Document user) {
         MongoDatabase db = getUsersDB();
         MongoCollection collection = db.getCollection(COLLECTION);
@@ -166,7 +179,7 @@ public class MongoDB {
     /**
      * DON'T CALL DIRECTLY UNLESS IT'S FROM UserManager TO AVOID CONFLICT WITH FTP
      * Removes all users with username in args (which should only be one)
-     * @param userName
+     * @param userName username of user to be deleted
      */
     public static void deleteUser(String userName) throws UserNotFoundException {
 
@@ -185,13 +198,18 @@ public class MongoDB {
         }
     }
 
-    public static void main(String[] args) throws UserNotFoundException, NewUserExistsException {
+    public static void main(String[] args) throws UserNotFoundException,
+            NewUserExistsException, InvalidNameException, AdminEditException {
         try {
             deleteUser("ben10");
-        } catch (UserNotFoundException e) {}
+        } catch (UserNotFoundException e) {
+            /* Intentionally empty */
+        }
         try {
             deleteUser("10ben");
-        } catch (UserNotFoundException e) {}
+        } catch (UserNotFoundException e) {
+            /* Intentionally empty */
+        }
 
         MongoDB.createUser(new User(
                 "10-10-2010", "Ben Ten", "ben10@ben.ten", "Male",

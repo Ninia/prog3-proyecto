@@ -7,19 +7,15 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
+@SuppressWarnings("WeakerAccess")
 public class ThreadConnection extends Thread {
-
-    private InetAddress clientAddress;
-    private int clientPort;
 
     private Socket clientSocket;
 
     public ThreadConnection(InetAddress address, int port) {
 
-        clientAddress = address;
-        clientPort = port;
         try {
-            clientSocket = new Socket(address, clientPort);
+            clientSocket = new Socket(address, port);
             System.out.println("Server: Thread - established connection with " + address);
         } catch (IOException e) {
             System.err.println("Server: Thread - Could not establish connection to " + address);

@@ -1,5 +1,6 @@
 package ud.binmonkey.prog3_proyecto_server.common;
 
+@SuppressWarnings("unused")
 public class User {
     private String birthdDate;
     private String displayName;
@@ -66,7 +67,7 @@ public class User {
         return preferredLanguage;
     }
 
-    public void setPreferredLanguage(Language preferredLanguage) {
+    void setPreferredLanguage(Language preferredLanguage) {
         this.preferredLanguage = preferredLanguage;
     }
 
@@ -74,7 +75,7 @@ public class User {
         return role;
     }
 
-    public void setRole(Role role) {
+    void setRole(Role role) {
         this.role = role;
     }
 

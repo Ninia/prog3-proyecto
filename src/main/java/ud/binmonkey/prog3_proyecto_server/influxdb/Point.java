@@ -2,11 +2,12 @@ package ud.binmonkey.prog3_proyecto_server.influxdb;
 
 import java.util.HashMap;
 
+@SuppressWarnings("WeakerAccess")
 public class Point {
     protected long time;
-    protected String measurement;
-    protected HashMap<String, ?> tags;
-    protected HashMap<String, ?> fields;
+    private String measurement;
+    private HashMap<String, ?> tags;
+    private HashMap<String, ?> fields;
 
     public Point() {
         this.tags = new HashMap<>();
@@ -39,33 +40,33 @@ public class Point {
 
     @Override
     public String toString() {
-        String out = "";
-        out += "measurement: \"" + measurement + "\",\n";
-        out += "time: " + time + " ms,\n";
-        out += "fields: {\n";
+        StringBuilder out = new StringBuilder();
+        out.append("measurement: \"").append(measurement).append("\",\n");
+        out.append("time: ").append(time).append(" ms,\n");
+        out.append("fields: {\n");
         short len = (short) fields.size(); /* correct field size shouldn't be too big for short. */
         short count = 1;
         for (String field : fields.keySet()) {
-            out += "\t" + field + ": " + fields.get(field);
+            out.append("\t").append(field).append(": ").append(fields.get(field));
             if (len > count) {
-                out += ",";
+                out.append(",");
                 count += 1; /* primitives. are. immutable. */
             }
-            out += "\n";
+            out.append("\n");
         }
-        out += "},\n";
-        out += "tags: {\n";
+        out.append("},\n");
+        out.append("tags: {\n");
         len = (short) tags.size(); /* correct field size shouldn't be too big for short. */
         count = 1;
         for (String tag : tags.keySet()) {
-            out += "\t" + tag + ": " + tags.get(tag);
+            out.append("\t").append(tag).append(": ").append(tags.get(tag));
             if (len > count) {
-                out += ",";
+                out.append(",");
                 count += 1; /* primitives. are. immutable. */
             }
-            out += "\n";
+            out.append("\n");
         }
-        out += "}\n";
-        return out;
+        out.append("}\n");
+        return out.toString();
     }
 }

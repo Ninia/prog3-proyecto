@@ -26,10 +26,10 @@ public class FTPServerTest {
         testServer = FTPServer.getFtpServer(confLocation, bean);
     }
 
-    @Test
     /**
      *  Check if port specified in configuration is available
      */
+    @Test
     public void portAvailable() {
         try {
             testServer.start();
@@ -63,6 +63,7 @@ public class FTPServerTest {
         /* dirty sorcery to load commands from file*/
         if (Pattern.compile(propertiesRegex).matcher(confFile).find())
         {
+            @SuppressWarnings("SingleCharAlternation" /* characters are '\' and  ' ' */)
             String[] commands = confFile.split("allowedCommonCommands")[1].replaceAll("( |\")", "").split(
                     "value=")[1].split("/>")[0].split(";");
 

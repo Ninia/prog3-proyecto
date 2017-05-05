@@ -24,7 +24,7 @@ public class Security {
         }
     }
 
-    public static boolean secureName(String userName) {
+    private static boolean secureName(String userName) {
         Pattern p = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(userName);
         return !m.find();

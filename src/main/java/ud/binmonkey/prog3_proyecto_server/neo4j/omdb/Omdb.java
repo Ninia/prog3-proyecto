@@ -28,7 +28,8 @@ public class Omdb {
      * @return a HashMap where the key is the IMDBid
      * and the value is another HashMap with basic information about the title
      */
-    public static HashMap search(String title, MediaType type) {
+    @SuppressWarnings({"SameParameterValue", "unchecked"})
+    static HashMap search(String title, MediaType type) {
         try {
 
             HashMap search_results = new HashMap<String, HashMap>();
@@ -104,7 +105,8 @@ public class Omdb {
      * @param list - string received from OMDB
      * @return formatted Arraylist
      */
-    protected static ArrayList listFormatter(Object list) {
+    @SuppressWarnings("unchecked")
+    static ArrayList listFormatter(Object list) {
         ArrayList formattedList = new ArrayList<String>();
         for (String entry : list.toString().split(",")) {
 
@@ -124,7 +126,7 @@ public class Omdb {
      * @param date - String received from OMDB
      * @return formatted Date
      */
-    protected static Date dateFormatter(Object date) {
+    static Date dateFormatter(Object date) {
         if (!(date == null)) {
             {
                 try {
@@ -146,7 +148,7 @@ public class Omdb {
      * @return formatted year
      */
 
-    protected static String yearFormatter(Object year) {
+    static String yearFormatter(Object year) {
         return year.toString().replaceAll("â\u0080\u0093", "-"); /* Fixes encoding problem */
     }
 
@@ -156,7 +158,7 @@ public class Omdb {
      * @param string - String received from OMDB
      * @return formatted int
      */
-    protected static int intergerConversor(Object string) {
+    static int intergerConversor(Object string) {
 
         if (!string.equals("N/A")) {
             String str_int = string.toString();
@@ -175,7 +177,7 @@ public class Omdb {
      * @param string - String received from OMDB
      * @return formatted int
      */
-    protected static double doubleConversor(Object string) {
+    static double doubleConversor(Object string) {
 
         if (!string.equals("N/A")) {
             String str_double = string.toString();

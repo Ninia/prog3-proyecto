@@ -14,6 +14,7 @@ public class OmdbTest {
     public void testSearch() {
 
         HashMap search = Omdb.search("Trainspotting", MediaType.all);
+        assert search != null;
         HashMap movie = (HashMap) search.get("tt0117951");
 
         assertEquals("movie", movie.get("Type"));

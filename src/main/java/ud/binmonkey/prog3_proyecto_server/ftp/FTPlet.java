@@ -9,11 +9,12 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@SuppressWarnings("WeakerAccess")
 public class FTPlet extends DefaultFtplet {
 
-    private static String[] testAllowedCommands; /* only for testing */
-    private String[] allowedCommonCommands;
     private static final Logger LOG = Logger.getLogger(FTPlet.class.getName());
+    private static String[] testAllowedCommands; /* only for testing */
+
     static {
         try {
             LOG.addHandler(new FileHandler(
@@ -22,6 +23,17 @@ public class FTPlet extends DefaultFtplet {
         } catch (SecurityException | IOException e) {
             LOG.log(Level.SEVERE, "Unable to create log file.");
         }
+    }
+
+    private String[] allowedCommonCommands;
+
+     /* used in test FTPlet generation from XML file */
+    public static String[] getTestAllowedCommands() {
+        return testAllowedCommands;
+    }
+
+    public static void setTestAllowedCommands(String[] testAllowedCommands) {
+        FTPlet.testAllowedCommands = testAllowedCommands;
     }
 
     @Override
@@ -97,19 +109,6 @@ public class FTPlet extends DefaultFtplet {
         return this.allowedCommonCommands;
     }
 
-    @SuppressWarnings("unused")
-    public String getAllowedCommonCommandsAsString() {
-        String commands = "";
-        int count = 0;
-        for (String cmd: this.allowedCommonCommands) {
-            commands += cmd;
-            if (count < this.allowedCommonCommands.length) {
-                commands += ";";
-            }
-        }
-        return commands;
-    }
-
     /**
      * Sets allowed commands for user `common`
      * @param allowedCommonCommands single string with commands separated by semicolon `;`
@@ -126,12 +125,16 @@ public class FTPlet extends DefaultFtplet {
         }
     }
 
-    @SuppressWarnings("unused") /* used in test FTPlet generation from XML file */
-    public static String[] getTestAllowedCommands() {
-        return testAllowedCommands;
-    }
-
-    public static void setTestAllowedCommands(String[] testAllowedCommands) {
-        FTPlet.testAllowedCommands = testAllowedCommands;
+    @SuppressWarnings("unused")
+    public String getAllowedCommonCommandsAsString() {
+        StringBuilder commands = new StringBuilder();
+        int count = 0;
+        for (String cmd: this.allowedCommonCommands) {
+            commands.append(cmd);
+            if (count < this.allowedCommonCommands.length) {
+                commands.append(";");
+            }
+        }
+        return commands.toString();
     }
 }

@@ -10,6 +10,7 @@ import java.util.logging.Level;
 
 import static org.neo4j.driver.v1.Values.parameters;
 
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class Neo4j {
 
     /* Logger from Neo4j */
@@ -61,6 +62,7 @@ public class Neo4j {
      *
      * @param id - IMDB id of the title
      */
+    @SuppressWarnings("ConstantConditions")
     public void addTitle(String id) {
         if (MediaType.movie.equalsName((String) Omdb.getTitle(id).get("Type"))) {
             addMovie(id);
