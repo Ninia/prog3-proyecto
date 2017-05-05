@@ -60,7 +60,7 @@ public class FTPServer extends DefaultFtpServer{
 
         UserManager userManager = userManagerFactory.createUserManager();
 
-        if (userManager.getUserByName(userName) != null) {
+        if (userManager.getUserByName(userName) == null) {
             /* create basic user */
             BaseUser user = new BaseUser();
             user.setName(userName);
@@ -124,6 +124,7 @@ public class FTPServer extends DefaultFtpServer{
             /* save user */
                 try {
                     userManager.save(newUser);
+                    userManager.delete(oldUserName);
                     LOG.log(Level.INFO, "User `" + oldUserName + "` migrated to user `" + newUserName + "`.");
                     migrateAllFiles(user.getHomeDirectory(), newUser.getHomeDirectory());
                 } catch (FtpException e) {
@@ -162,7 +163,15 @@ public class FTPServer extends DefaultFtpServer{
     }
 
     public static void main(String[] args) throws FtpException {
-        FtpServer ftpServer = FTPServer.getFtpServer("conf/FTPServer.xml", FTPlet.class.getSimpleName());
-        ftpServer.start();
+        String PROPERTIES = "conf/properties/ftpusers.properties";
+        try {
+            FTPServer.createUser("test", "test", PROPERTIES);
+        } catch (NewUserExistsException e) {
+            try {
+                FTPServer.deleteUser("test", PROPERTIES);
+            } catch (UserNotFoundException e1) {
+                e1.printStackTrace();
+            }
+        }
     }
 }

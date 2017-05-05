@@ -9,3 +9,4 @@ keys
 /src/test/resources/ftp/
 logs/*
 !logs/README.txt
+/conf/properties/ftpusers.properties

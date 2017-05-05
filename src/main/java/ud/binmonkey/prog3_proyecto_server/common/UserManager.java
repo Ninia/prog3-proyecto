@@ -108,7 +108,21 @@ public class UserManager {
         }
     }
 
-    public static void main(String[] args) {
-//        FTPServer.createUser("hi", "there", "conf/properties/ftpusers.properties");
+    public static void main(String[] args) throws UserNotFoundException, FtpException, IOException {
+
+        String USERFILE = "conf/properties/ftpusers.properties";
+
+        deleteUser("ben10", USERFILE);
+        deleteUser("10ben", USERFILE);
+
+        createUser(new User(
+                "10-10-2010", "Ben Ten", "ben10@ben.ten", "Male",
+                "10ben".toCharArray(), Language.EN, Role.USER, "ben10"
+        ), USERFILE);
+
+        System.out.println(MongoDB.userExists("ben10"));
+        changeUserName("ben10", "10ben", USERFILE);
+        System.out.println(MongoDB.userExists("10ben"));
+        MongoDB.getUser("10ben");
     }
 }
