@@ -16,6 +16,7 @@ public class CPU {
         );
     }
 
+    @SuppressWarnings("InfiniteLoopStatement")
     public static void main(String[] args) {
 
         while (true) {

@@ -15,7 +15,7 @@ public class Request {
     private static final String USER_AGENT = "Mozilla/5.0";
 
     /* HTTP GET request */
-    public static String httpGET(String targetURL) throws Exception {
+    static String httpGET(String targetURL) throws Exception {
 
         URL obj = new URL(targetURL);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -26,13 +26,11 @@ public class Request {
         /* add request header */
         con.setRequestProperty("User-Agent", USER_AGENT);
 
-        int responseCode = con.getResponseCode();
-
 
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(con.getInputStream()));
         String inputLine;
-        StringBuffer response = new StringBuffer();
+        StringBuilder response = new StringBuilder();
 
         while ((inputLine = in.readLine()) != null) {
             response.append(inputLine);
@@ -52,7 +50,7 @@ public class Request {
      */
 
     /* HTTP POST request */
-    public static String httpPOST(String targetURL, String payload) throws Exception {
+    static String httpPOST(String targetURL, String payload) throws Exception {
 
         URL obj = new URL(targetURL);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -69,12 +67,10 @@ public class Request {
         wr.flush();
         wr.close();
 
-        int responseCode = con.getResponseCode();
-
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(con.getInputStream()));
         String inputLine;
-        StringBuffer response = new StringBuffer();
+        StringBuilder response = new StringBuilder();
 
         while ((inputLine = in.readLine()) != null) {
             response.append(inputLine);
@@ -96,12 +92,9 @@ public class Request {
          * @param path     rest path of target
          * @param args     Rest args, in pairs of <key, value>
          * @return response of server
-         * @throws Exception
-         * @throws RequestTypeException
-         * @throws UnsupportedRequestTypeException
          */
-        public static String sendRequest(HttpMethods request, String host,
-                                         int port, String path, ArrayList<Pair> args)
+        static String sendRequest(HttpMethods request, String host,
+                                  int port, String path, ArrayList<Pair> args)
                 throws Exception { /*General exception overrides specific*/
 
             String response;
@@ -114,7 +107,7 @@ public class Request {
                 case POST:
                     throw new RequestTypeException(request.name());
                 default:
-                    throw new UnsupportedRequestTypeException(request.name());
+                    throw new UnsupportedRequestTypeException();
             }
             return response;
         }
@@ -128,15 +121,13 @@ public class Request {
          * @param path     rest path of target
          * @param args     Rest args, in pairs of <key, value>
          * @return response of server
-         * @throws Exception
-         * @throws RequestTypeException
-         * @throws UnsupportedRequestTypeException
          */
+        @SuppressWarnings({"SameParameterValue", "UnusedReturnValue" /* they may be used in the future */})
         public static String sendRequest(HttpMethods request, String host,
                                          int port, String path, Pair... args)
                 throws Exception { /*General exception overrides specific*/
 
-            return sendRequest(request, host, port, path, new ArrayList<Pair>(Arrays.asList(args)));
+            return sendRequest(request, host, port, path, new ArrayList<>(Arrays.asList(args)));
         }
 
         /**
@@ -149,12 +140,9 @@ public class Request {
          * @param payload payload contained in the request
          * @param args    Rest args, in pairs of <key, value>
          * @return response of server
-         * @throws Exception
-         * @throws RequestTypeException
-         * @throws UnsupportedRequestTypeException
          */
-        public static String sendRequest(HttpMethods request, String host,
-                                         int port, String path, String payload, ArrayList<Pair> args)
+        static String sendRequest(HttpMethods request, String host,
+                                  int port, String path, String payload, ArrayList<Pair> args)
                 throws Exception { /*General exception overrides specific*/
 
             String response;
@@ -167,7 +155,7 @@ public class Request {
                     response = Request.httpPOST(uri, payload);
                     break;
                 default:
-                    throw new UnsupportedRequestTypeException(request.name());
+                    throw new UnsupportedRequestTypeException();
             }
             return response;
         }
@@ -182,38 +170,36 @@ public class Request {
          * @param payload payload contained in the request
          * @param args    Rest args, in pairs of <key, value>
          * @return response of server
-         * @throws Exception
-         * @throws RequestTypeException
-         * @throws UnsupportedRequestTypeException
          */
+        @SuppressWarnings({"SameParameterValue", "UnusedReturnValue" /* they may be used in the future */})
         public static String sendRequest(HttpMethods request, String host,
                                          int port, String path, String payload, Pair... args)
                 throws Exception { /*General exception overrides specific*/
 
-            return sendRequest(request, host, port, path, payload, new ArrayList<Pair>(Arrays.asList(args)));
+            return sendRequest(request, host, port, path, payload, new ArrayList<>(Arrays.asList(args)));
         }
 
-        public static String getURI(String host, int port, String path, ArrayList<Pair> args) {
-            String uri = host + ":" + Integer.toString(port) + path;
+        static String getURI(String host, int port, String path, ArrayList<Pair> args) {
+            StringBuilder uri = new StringBuilder(host + ":" + Integer.toString(port) + path);
             if (args.size() > 0) {
-                uri += "?" + args.get(0).getKey() + "=" + args.get(0).getValue();
+                uri.append("?").append(args.get(0).getKey()).append("=").append(args.get(0).getValue());
                 if (args.size() > 1) {
                     for (Pair pair : args.subList(1, args.size() - 1)) {
-                        uri += "?" + pair.getKey() + "=" + pair.getValue();
+                        uri.append("?").append(pair.getKey()).append("=").append(pair.getValue());
                     }
                 }
             }
-            return uri;
+            return uri.toString();
         }
 
         static class RequestTypeException extends Exception {
-            public RequestTypeException(String type) {
+            RequestTypeException(String type) {
                 super("Wrong 'sendRequest' method for type: " + type);
             }
         }
 
         static class UnsupportedRequestTypeException extends Exception {
-            public UnsupportedRequestTypeException(String type) {
+            UnsupportedRequestTypeException() {
                 super("Request type not supported.");
             }
         }

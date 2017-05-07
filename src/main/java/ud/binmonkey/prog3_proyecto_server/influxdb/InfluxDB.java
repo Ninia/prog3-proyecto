@@ -21,27 +21,27 @@ public class InfluxDB {
     }
 
 
-    public static void writePoints(String db, ArrayList<Point> points) {
+    static void writePoints(String db, ArrayList<Point> points) {
 
-        String payload = "";
+        StringBuilder payload = new StringBuilder();
         boolean notNull = false;
         for (Point point : points) {
             if (point != null) {
                 notNull = true;
-                payload += point.getMeasurement() + " ";
+                payload.append(point.getMeasurement()).append(" ");
                 for (Object key : point.getTags().keySet()) {
-                    payload += "" + key.toString() + "=" + point.getTags().get(key.toString());
+                    payload.append("").append(key.toString()).append("=").append(point.getTags().get(key.toString()));
                 }
                 for (Object key : point.getFields().keySet()) {
-                    payload += "," + key.toString() + "=" + point.getFields().get(key.toString());
+                    payload.append(",").append(key.toString()).append("=").append(point.getFields().get(key.toString()));
                 }
-                payload += " " + point.getTime() + "\n";
+                payload.append(" ").append(point.getTime()).append("\n");
             }
         }
         if (notNull) {
             try {
                 Request.REST.sendRequest(HttpMethods.POST, URI.getHost("influxdb"), URI.getPort("influxdb"),
-                        "/write", payload, new Pair<>("db", db), new Pair<>("precision", "ms"));
+                        "/write", payload.toString(), new Pair<>("db", db), new Pair<>("precision", "ms"));
             } catch (Exception e) {
                 e.printStackTrace();
             }

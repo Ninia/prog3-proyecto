@@ -22,14 +22,10 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+@SuppressWarnings("WeakerAccess")
 public class HTTPSServer {
 
     private HttpsServer httpsServer;
-    private HashMap<String, HttpHandler> contexts = new HashMap<String, HttpHandler>() {{
-        put("/", new HTTPSHandlers.ServerHandlers.TestHandler());
-        put("/test", new HTTPSHandlers.ServerHandlers.TestHandler());
-        put("/antigravity", new HTTPSHandlers.ServerHandlers.AntigravityHandler());
-    }};
 
 
     public HTTPSServer() throws IOException {
@@ -49,7 +45,7 @@ public class HTTPSServer {
 
             /* configure key store */
             KeyStore ks = KeyStore.getInstance("JKS");
-            ks.load(new FileInputStream("src/test/resources/keys/httpserver.jks"), passwd);
+            ks.load(new FileInputStream("src/test/resources/keys/teststore.jks"), passwd);
 
             /* configure key management factory */
             KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
@@ -91,6 +87,16 @@ public class HTTPSServer {
             });
 
             /* assign contexts*/
+            HashMap<String, HttpHandler> contexts = new HashMap<String, HttpHandler>() {{
+                put("/", new HTTPSHandlers.IndexHandler());
+                put("/antigravity", new HTTPSHandlers.AntigravityHandler());
+                put("/favicon.ico", new HTTPSHandlers.FavIcoHandler());
+                put("/images/", new HTTPSHandlers.WebHandler());
+                put("/index", new HTTPSHandlers.IndexHandler());
+                put("/js/", new HTTPSHandlers.WebHandler());
+                put("/test", new HTTPSHandlers.DefaultHandler());
+                put("/vendor/", new HTTPSHandlers.WebHandler());
+            }};
             for (String context : contexts.keySet()) {
                 httpsServer.createContext(context, contexts.get(context));
             }
