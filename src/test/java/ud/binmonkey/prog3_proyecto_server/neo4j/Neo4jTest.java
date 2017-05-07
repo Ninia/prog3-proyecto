@@ -89,6 +89,20 @@ public class Neo4jTest {
     }
 
     /**
+     * Test rename
+     */
+    @Test
+    public void renameTest() {
+
+        /* Star Wars Movies */
+        neo4j.addList("Star Wars Saga", "tt0120915", "tt0121765", "tt2488496", "tt0076759", "tt0080684",
+                "tt0086190", "tt0121766");
+
+        /* Fixes duplicate because of different name */
+        neo4j.renameNode("Twentieth Century Fox", "20th Century Fox", "Producer");
+    }
+
+    /**
      * Test queries
      * TODO better assert equals
      */

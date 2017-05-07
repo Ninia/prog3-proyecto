@@ -341,6 +341,18 @@ public class Neo4j {
             logger.log(Level.WARNING, node + " already exists");
         }
 
+        addRelation(node, node_type, title, relation_type);
+    }
+
+    /**
+     * Add a relation between a node and a title
+     *
+     * @param node          - Node to start the relation with
+     * @param node_type     - Type of node to start the relation with
+     * @param title         - Title to attach the relation to
+     * @param relation_type - Type of relation
+     */
+    private void addRelation(String node, String node_type, String title, String relation_type) {
         if (!checkRelation(node, node_type, title, relation_type)) {
             session.run("MATCH (a:" + node_type + " { name: {name}}), (b { name: {title}}) " +
                     "CREATE (a)-[:" + relation_type + "]->(b)", parameters("name", node, "title", title));
@@ -373,5 +385,68 @@ public class Neo4j {
         }
     }
     /* END Add Methods */
+
+    /* Modify Methods */
+
+    /**
+     * Deletes a node and all its relations
+     *
+     * @param node      - Node to delete
+     * @param node_type - Type of node to delete
+     */
+    public void deleteNode(String node, String node_type) {
+        session.run(
+                "MATCH (n:" + node_type + "{name: {node}})" +
+                        "OPTIONAL MATCH (n)-[r]-()" +
+                        "DELETE n, r",
+                parameters("node", node));
+
+        cleanDB();
+
+        logger.log(Level.INFO, node + " deleted");
+    }
+
+    /**
+     * Renames a node
+     *
+     * @param node      - Node to rename
+     * @param new_name  - New name for the node
+     * @param node_type - Type of node to rename
+     */
+    public void renameNode(String node, String new_name, String node_type) {
+
+        Record record;
+
+        if (checkNode(node, node_type)) {
+            if (!checkNode(new_name, node_type)) {
+                session.run(
+                        "MATCH (n:" + node_type + ")" +
+                                " WHERE n.name={name}" +
+                                " SET n.name={new_name}",
+                        parameters("name", node, "new_name", new_name));
+                logger.log(Level.INFO, "Renamed " + node_type + ": " + node + " to " + new_name);
+            } else {
+                logger.log(Level.WARNING, node + " already exists starting to move relations");
+
+                StatementResult result = session.run(
+                        "MATCH (a:" + node_type + " )-[r]-(b) " +
+                                " WHERE a.name={node}" +
+                                " RETURN b.name as title, TYPE(r) as relation_type",
+                        parameters("node", node));
+
+                while (result.hasNext()) {
+                    record = result.next();
+
+                    addRelation(new_name, node_type, record.get("title").asString(), record.get("relation_type").asString());
+                }
+
+                deleteNode(node, node_type);
+            }
+        } else {
+            logger.log(Level.WARNING, node + " does not exist");
+        }
+
+    }
+    /* END Modify Methods */
 }
 
