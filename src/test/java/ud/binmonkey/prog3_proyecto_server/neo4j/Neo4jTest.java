@@ -136,6 +136,9 @@ public class Neo4jTest {
         neo4j.addTitle("tt3578722"); /* Fargo S01E04 */
         neo4j.addTitle("tt3514096"); /* Fargo S01E05 */
 
+        /* Fixes duplicate because of different name */
+        neo4j.renameNode("Twentieth Century Fox", "20th Century Fox", "Producer");
+
         System.out.println("\nList titles where a certain person acted, ordering them by rating:");
         result = neo4j.getSession().run("MATCH p = (n:Person)-[r:ACTED_IN]->(m) " +
                 " WHERE n.name = 'Ewan McGregor'" +
