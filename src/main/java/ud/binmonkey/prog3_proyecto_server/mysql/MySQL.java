@@ -25,17 +25,18 @@ public class MySQL {
         startSession();
     }
 
+    /* Utility Methods */
+
     /**
      * Deletes all data from the DB
      *
      * @throws SQLException If the database is not properly created
      */
     public void clearDB() throws SQLException {
-        statement.executeUpdate("DELETE FROM choques");
-        statement.executeUpdate("DELETE FROM contador");
+        statement.executeUpdate("DELETE FROM neo4j_titles");
+        statement.executeUpdate("DELETE FROM neo4j_genres");
     }
 
-    /* Utility Methods */
     private void readConfig() {
 
         NodeList nList = DocumentReader.getDoc("conf/MySQLServer.xml").getElementsByTagName("mysql-server");
@@ -86,4 +87,28 @@ public class MySQL {
         } catch (Exception ignored) {
         }
     }
+
+    /* MySQL Methods */
+    public void executeUpdate(String query) throws SQLException {
+        statement.executeUpdate(query);
+    }
+
+    public void updateCounter(String table, String name) throws SQLException {
+        int contador;
+
+        try {
+            resultSet = statement.executeQuery("SELECT COUNT FROM " + table + " WHERE NAME='" + name + "'");
+
+            resultSet.next();
+            contador = resultSet.getInt("COUNT") + 1;
+
+            statement.executeUpdate("UPDATE neo4j_genres SET COUNT=" + contador
+                    + " WHERE NAME='" + name + "';");
+
+        } catch (SQLException e) {
+            statement.executeUpdate("INSERT INTO " + table + " VALUES ('" + name +
+                    "'," + 1 + ");");
+        }
+    }
+    /* END MySQL Methods */
 }

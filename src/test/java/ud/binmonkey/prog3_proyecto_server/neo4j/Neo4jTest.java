@@ -5,6 +5,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.StatementResult;
+import ud.binmonkey.prog3_proyecto_server.mysql.MySQL;
+
+import java.sql.SQLException;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,6 +22,14 @@ public class Neo4jTest {
 
     @Before
     public void setUp() {
+
+        /* Clear DWH */
+        MySQL mySQL = new MySQL();
+        try {
+            mySQL.clearDB();
+        } catch (SQLException ignored) {
+        }
+
         neo4j = new Neo4j();
         neo4j.clearDB();
     }

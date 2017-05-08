@@ -1,9 +1,20 @@
-CREATE DATABASE dwh;
-USE choques;
+CREATE DATABASE IF NOT EXISTS dwh;
+USE dwh;
 
-CREATE USER test
-  IDENTIFIED BY 'test';
+DROP TABLE IF EXISTS neo4j_titles;
 
-GRANT USAGE ON *.* TO test@localhost
-IDENTIFIED BY 'test';
-GRANT ALL PRIVILEGES ON dwh.* TO test@localhost;
+CREATE TABLE neo4j_titles (
+  ID            INT         NOT NULL AUTO_INCREMENT,
+  IMDBID        VARCHAR(10) NOT NULL,
+  TYPE          VARCHAR(5),
+  CREATION_DATE DATE,
+  PRIMARY KEY (ID)
+);
+
+DROP TABLE IF EXISTS neo4j_genres;
+
+CREATE TABLE neo4j_genres (
+  NAME  VARCHAR(10) NOT NULL,
+  COUNT INT,
+  PRIMARY KEY (NAME)
+);

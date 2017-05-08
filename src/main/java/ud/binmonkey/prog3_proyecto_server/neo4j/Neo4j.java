@@ -4,10 +4,14 @@ import org.neo4j.driver.v1.*;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import ud.binmonkey.prog3_proyecto_server.common.Clock;
 import ud.binmonkey.prog3_proyecto_server.common.DocumentReader;
+import ud.binmonkey.prog3_proyecto_server.mysql.MySQL;
 import ud.binmonkey.prog3_proyecto_server.neo4j.omdb.*;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -37,6 +41,10 @@ public class Neo4j {
     private Driver driver;
     private Session session;
 
+    private MySQL mySQL;
+    private ResultSet resultSet = null;
+
+
     /**
      * Constructor for the class Neoj
      */
@@ -52,6 +60,8 @@ public class Neo4j {
             logger.log(Level.SEVERE, ": The client is unauthorized due to authentication failure.");
             System.exit(0);
         }
+
+        startDWH();
     }
 
     /* Utility Methods */
@@ -81,6 +91,7 @@ public class Neo4j {
     public void closeSession() {
         session.close();
         driver.close();
+        mySQL.closeSession();
 
         logger.log(Level.INFO, "Connection to Neo4j server ended");
     }
@@ -147,6 +158,21 @@ public class Neo4j {
     }
     /* END DB utility Methods */
 
+    /* DWH Methods */
+    private void addDB(String id, MediaType type) {
+        try {
+            mySQL.executeUpdate("INSERT INTO neo4j_titles VALUES (default, '" + id + "'," +
+                    " '" + type.toString() + "' ,'" + Clock.getFullTime() + "');");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void startDWH() {
+        mySQL = new MySQL();
+    }
+    /* END DWH Methods */
+
     /* Add Methods */
 
     /**
@@ -186,6 +212,7 @@ public class Neo4j {
                     (Value) movie.toParameters());
 
             logger.log(Level.INFO, "Added Movie: " + movie.getImdbID());
+            addDB(id, MediaType.MOVIE);
 
             addNode(movie.getAgeRating(), "Rating", id, "RATED");
             addNodeList(movie.getLanguage(), "Language", id, "SPOKEN_LANGUAGE");
@@ -197,11 +224,11 @@ public class Neo4j {
             addNodeList(movie.getCountry(), "Country", id, "COUNTRY");
 
 
-        /* ScoreOutles */
+            /* ScoreOutles */
             for (Object outlet : movie.getRatings().keySet()) {
                 addRating(movie, (String) outlet, (Integer) movie.getRatings().get(outlet));
             }
-        /* END Score Outlets */
+            /* END Score Outlets */
         } else {
             logger.log(Level.WARNING, id + " already exists");
         }
@@ -224,12 +251,13 @@ public class Neo4j {
                     (Value) series.toParameters());
 
             logger.log(Level.INFO, "Added Series: " + series.getImdbID());
+            addDB(id, MediaType.SERIES);
 
-        /* Score Outles*/
+            /* Score Outles*/
             addRating(series, "Internet Movie Database", series.getImdbRating());
             if (series.getMetascore() != 0)
                 addRating(series, "Metacritic", series.getMetascore());
-        /* END Score Outlets */
+            /* END Score Outlets */
 
             addNode(series.getAgeRating(), "Rating", id, "RATED");
             addNodeList(series.getLanguage(), "Language", id, "SPOKEN_LANGUAGE");
@@ -257,12 +285,13 @@ public class Neo4j {
                     (Value) episode.toParameters());
 
             logger.log(Level.INFO, "Added Episode: " + episode.getImdbID());
+            addDB(id, MediaType.SERIES);
 
-        /* Score Outles*/
+            /* Score Outles*/
             addRating(episode, "Internet Movie Database", episode.getImdbRating());
             if (episode.getMetascore() != 0)
                 addRating(episode, "Metacritic", episode.getMetascore());
-        /* END Score Outlets */
+            /* END Score Outlets */
 
             addNodeList(episode.getWriter(), "Person", id, "WROTE");
             addNodeList(episode.getDirector(), "Person", id, "DIRECTED");
@@ -360,6 +389,14 @@ public class Neo4j {
                     "CREATE (a)-[:" + relation_type + "]->(b)", parameters("name", node, "title", title));
 
             logger.log(Level.INFO, "Added " + relation_type + ": " + node + " -> " + title);
+
+            if (node_type.equals("Genre")) {
+                try {
+                    mySQL.updateCounter("neo4j_genres", node);
+                } catch (SQLException ignored) {
+                }
+            }
+
         } else {
             logger.log(Level.WARNING, relation_type + ": " + node + " -> " + title + " already exists");
         }
