@@ -42,6 +42,17 @@ public class FTPServer extends DefaultFtpServer{
     }
 
     /**
+     * Checks if FTP user exists
+     * @param userName username to be checked
+     * @param userManager userManager to search for user
+     * @return true if user exists, false if not
+     */
+    @SuppressWarnings("WeakerAccess") /* might be useful from outside */
+    static boolean userExists(String userName, UserManager userManager) throws FtpException {
+        return userManager.getUserByName(userName) != null;
+    }
+
+    /**
      * XXX: ONLY USE THIS METHOD FOR USER MANAGEMENT
      * @param userName username of new user
      * @param password password of new user
@@ -60,7 +71,7 @@ public class FTPServer extends DefaultFtpServer{
 
         UserManager userManager = userManagerFactory.createUserManager();
 
-        if (userManager.getUserByName(userName) == null) {
+        if (!userExists(userName, userManager)) {
             /* create basic user */
             BaseUser user = new BaseUser();
             user.setName(userName);
@@ -109,8 +120,8 @@ public class FTPServer extends DefaultFtpServer{
 
         UserManager userManager = userManagerFactory.createUserManager();
 
-        if (userManager.getUserByName(oldUserName) != null) {
-            if (userManager.getUserByName(newUserName) == null) {
+        if (userExists(oldUserName, userManager)) {
+            if (!userExists(newUserName, userManager)) {
             /* create basic user */
                 User user = userManager.getUserByName(oldUserName);
                 BaseUser newUser = new BaseUser();
@@ -152,7 +163,7 @@ public class FTPServer extends DefaultFtpServer{
 
         UserManager userManager = userManagerFactory.createUserManager();
 
-        if (userManager.getUserByName(userName) != null) {
+        if (userExists(userName, userManager)) {
             User user = userManager.getUserByName(userName);
             if (user.getPassword().equals(oldPassword)) {
                 throw new IncorrectPasswordException(userName);
@@ -181,7 +192,7 @@ public class FTPServer extends DefaultFtpServer{
 
         UserManager userManager = userManagerFactory.createUserManager();
 
-        if (userManager.getUserByName(userName) != null) {
+        if (userExists(userName, userManager)) {
             userManager.delete(userName);
         } else {
             throw new UserNotFoundException(userName);
