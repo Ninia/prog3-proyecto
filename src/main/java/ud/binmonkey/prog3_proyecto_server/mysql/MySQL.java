@@ -10,9 +10,9 @@ import java.sql.*;
 
 public class MySQL {
 
-    public Object close;
-    String username;
-    String password;
+    private String username;
+    private String password;
+
     private Connection connect = null;
     private Statement statement = null;
     private ResultSet resultSet = null;
@@ -25,7 +25,7 @@ public class MySQL {
         startSession();
     }
 
-    /* Utility Methods */
+    /* Server Utility Methods */
 
     /**
      * Deletes all data from the DB
@@ -49,22 +49,11 @@ public class MySQL {
     }
 
     public void startSession() {
-        // Loads MySQL driver
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        // Starts connection
         try {
             connect = DriverManager
                     .getConnection("jdbc:mysql://localhost:3306/dwh?"
                             + "user=" + username + "&password=" + password);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
-        try {
             statement = connect.createStatement();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -76,23 +65,31 @@ public class MySQL {
             if (resultSet != null) {
                 resultSet.close();
             }
-
             if (statement != null) {
                 statement.close();
             }
-
             if (connect != null) {
                 connect.close();
             }
-        } catch (Exception ignored) {
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
+    /* Server Utility Methods */
 
     /* MySQL Methods */
-    public void executeUpdate(String query) throws SQLException {
-        statement.executeUpdate(query);
+
+    public Statement getStatement() {
+        return statement;
     }
 
+    /**
+     * Adds 1 to a counter in counter table
+     *
+     * @param table - Table where the counter is located
+     * @param name  - Name of the counter
+     * @throws SQLException - If MySQL DB is not created properly
+     */
     public void updateCounter(String table, String name) throws SQLException {
         int contador;
 
@@ -102,8 +99,8 @@ public class MySQL {
             resultSet.next();
             contador = resultSet.getInt("COUNT") + 1;
 
-            statement.executeUpdate("UPDATE neo4j_genres SET COUNT=" + contador
-                    + " WHERE NAME='" + name + "';");
+            statement.executeUpdate("UPDATE " + table + " SET COUNT=" + contador +
+                    " WHERE NAME='" + name + "';");
 
         } catch (SQLException e) {
             statement.executeUpdate("INSERT INTO " + table + " VALUES ('" + name +

@@ -100,7 +100,7 @@ public class JSONFormatter {
                 }
             }
         }
-        return null;
+        return new Date(); /* TODO */
     }
 
     /**

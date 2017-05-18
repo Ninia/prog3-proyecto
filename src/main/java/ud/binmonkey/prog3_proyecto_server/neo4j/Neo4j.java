@@ -4,21 +4,19 @@ import org.neo4j.driver.v1.*;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import ud.binmonkey.prog3_proyecto_server.common.Clock;
 import ud.binmonkey.prog3_proyecto_server.common.DocumentReader;
 import ud.binmonkey.prog3_proyecto_server.mysql.MySQL;
 import ud.binmonkey.prog3_proyecto_server.neo4j.omdb.*;
 
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 
 import static org.neo4j.driver.v1.Values.parameters;
 
-@SuppressWarnings({"WeakerAccess", "unused"})
 public class Neo4j {
 
     /* Logger for Neo4j */
@@ -42,7 +40,7 @@ public class Neo4j {
     private Session session;
 
     private MySQL mySQL;
-    private ResultSet resultSet = null;
+    private Statement statement;
 
 
     /**
@@ -64,7 +62,7 @@ public class Neo4j {
         startDWH();
     }
 
-    /* Utility Methods */
+    /* Server Utility Methods */
     private void readConfig() {
 
         NodeList nList = DocumentReader.getDoc("conf/Neo4jServer.xml").getElementsByTagName("neo4j-server");
@@ -95,7 +93,7 @@ public class Neo4j {
 
         logger.log(Level.INFO, "Connection to Neo4j server ended");
     }
-    /* END Utility Methods */
+    /* END Server Utility Methods */
 
     /* DB utility Methods */
 
@@ -105,6 +103,7 @@ public class Neo4j {
     public void clearDB() {
         session.run("MATCH (n) DETACH DELETE n;");
         logger.log(Level.INFO, "Cleared DB");
+        dwhLog("CLEAR", "ALL", MediaType.ALL);
     }
 
     /**
@@ -159,18 +158,27 @@ public class Neo4j {
     /* END DB utility Methods */
 
     /* DWH Methods */
-    private void addDB(String id, MediaType type) {
+    private void startDWH() {
+        mySQL = new MySQL();
+        statement = mySQL.getStatement();
+    }
+
+    /**
+     * Logs the creation of a Title in the DWH
+     *
+     * @param id   - imdbID of the Title
+     * @param type - MediaType of the Title
+     */
+    private void dwhLog(String operation, String id, MediaType type) {
         try {
-            mySQL.executeUpdate("INSERT INTO neo4j_titles VALUES (default, '" + id + "'," +
-                    " '" + type.toString() + "' ,'" + Clock.getFullTime() + "');");
+
+            statement.executeUpdate("INSERT INTO neo4j_log VALUES (default, '" + operation + "'," +
+                    " '" + id + "'," + " '" + type.toString() + "', CURRENT_TIMESTAMP);");
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    private void startDWH() {
-        mySQL = new MySQL();
-    }
     /* END DWH Methods */
 
     /* Add Methods */
@@ -180,17 +188,23 @@ public class Neo4j {
      *
      * @param id - IMDB id of the title
      */
-    @SuppressWarnings("ConstantConditions")
     public void addTitle(String id) {
 
         MediaType mediaType = Omdb.getType(id);
-
-        if (MediaType.MOVIE.equals(mediaType)) {
-            addMovie(id);
-        } else if (MediaType.SERIES.equals(mediaType)) {
-            addSeries(id);
-        } else if (MediaType.EPISODE.equals(mediaType)) {
-            addEpisode(id);
+        if (mediaType != null) {
+            switch (mediaType) {
+                case MOVIE:
+                    addMovie(id);
+                    break;
+                case SERIES:
+                    addSeries(id);
+                    break;
+                case EPISODE:
+                    addEpisode(id);
+                    break;
+            }
+        } else {
+            logger.log(Level.SEVERE, "Title " + id + " not found on IMDB");
         }
     }
 
@@ -212,7 +226,7 @@ public class Neo4j {
                     (Value) movie.toParameters());
 
             logger.log(Level.INFO, "Added Movie: " + movie.getImdbID());
-            addDB(id, MediaType.MOVIE);
+            dwhLog("ADD", id, MediaType.MOVIE);
 
             addNode(movie.getAgeRating(), "Rating", id, "RATED");
             addNodeList(movie.getLanguage(), "Language", id, "SPOKEN_LANGUAGE");
@@ -251,7 +265,7 @@ public class Neo4j {
                     (Value) series.toParameters());
 
             logger.log(Level.INFO, "Added Series: " + series.getImdbID());
-            addDB(id, MediaType.SERIES);
+            dwhLog("ADD", id, MediaType.SERIES);
 
             /* Score Outles*/
             addRating(series, "Internet Movie Database", series.getImdbRating());
@@ -285,7 +299,7 @@ public class Neo4j {
                     (Value) episode.toParameters());
 
             logger.log(Level.INFO, "Added Episode: " + episode.getImdbID());
-            addDB(id, MediaType.SERIES);
+            dwhLog("ADD", id, MediaType.EPISODE);
 
             /* Score Outles*/
             addRating(episode, "Internet Movie Database", episode.getImdbRating());
@@ -443,6 +457,17 @@ public class Neo4j {
         cleanDB();
 
         logger.log(Level.INFO, node + " deleted");
+
+        switch (node_type) {
+            case "Movie":
+                dwhLog("DELETE", node, MediaType.MOVIE);
+                break;
+            case "Series":
+                dwhLog("DELETE", node, MediaType.SERIES);
+                break;
+            case "Episode":
+                dwhLog("DELETE", node, MediaType.EPISODE);
+        }
     }
 
     /**
