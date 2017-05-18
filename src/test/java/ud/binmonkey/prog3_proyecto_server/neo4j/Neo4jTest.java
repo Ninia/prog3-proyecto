@@ -19,6 +19,14 @@ public class Neo4jTest {
 
     @Before
     public void setUp() {
+//
+//        /* Clear DWH */
+//        MySQL mySQL = new MySQL();
+//        try {
+//            mySQL.clearDB();
+//        } catch (SQLException ignored) {
+//        }
+
         neo4j = new Neo4j();
         neo4j.clearDB();
     }
