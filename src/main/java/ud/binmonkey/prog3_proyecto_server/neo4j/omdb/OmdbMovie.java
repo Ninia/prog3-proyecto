@@ -1,5 +1,8 @@
 package ud.binmonkey.prog3_proyecto_server.neo4j.omdb;
 
+import org.json.JSONObject;
+import ud.binmonkey.prog3_proyecto_server.common.DateUtils;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,21 +26,16 @@ public class OmdbMovie extends OmdbTitle {
     private ArrayList country;
 
     /**
-     * Constructor for the class OMDBMovie that extends from OMDBTitle
+     * Constructor for the class OmdbMovie that extends from OmdbTitle
      *
-     * @param id - IMDB id of the Movie
+     * @param movie - Map with the info of the Episode
      */
-    public OmdbMovie(String id) {
-
-        super(Omdb.getTitle(id));
-        Map movie = Omdb.getTitle(id);
+    public OmdbMovie(Map movie) {
+        super(movie);
 
         this.dvd = JSONFormatter.dateFormatter(movie.get("DVD"));
         this.boxOffice = JSONFormatter.doubleConversor(movie.get("BoxOffice"));
         this.website = (String) movie.get("Website");
-
-        this.ratings = JSONFormatter.scoreFormatter((ArrayList) movie.get("Ratings"));
-
         this.language = JSONFormatter.listFormatter(movie.get("Language"));
         this.genre = JSONFormatter.listFormatter(movie.get("Genre"));
         this.writer = JSONFormatter.listFormatter(movie.get("Writer"));
@@ -45,9 +43,16 @@ public class OmdbMovie extends OmdbTitle {
         this.actors = JSONFormatter.listFormatter(movie.get("Actors"));
         this.producers = JSONFormatter.listFormatter(movie.get("Production"));
         this.country = JSONFormatter.listFormatter(movie.get("Country"));
+
+        try {
+            this.ratings = (HashMap) movie.get("Ratings");
+        } catch (java.lang.ClassCastException e) { /* If it is not formatted */
+            this.ratings = JSONFormatter.scoreFormatter((ArrayList) movie.get("Ratings"));
+        }
     }
 
-    /* Methods */
+    /* Format Conversion Methods */
+
     public Object toParameters() {
         return parameters(
                 "title", title,
@@ -65,7 +70,29 @@ public class OmdbMovie extends OmdbTitle {
                 "website", website,
                 "poster", poster);
     }
-    /* END Methods */
+
+    /**
+     * @return Return information in JSON format
+     */
+    public JSONObject toJSON() {
+
+        JSONObject episodeJSON = super.toJSON();
+
+        episodeJSON.put("DVD", DateUtils.dateFormatter(dvd));
+        episodeJSON.put("BoxOffice", boxOffice);
+        episodeJSON.put("Website", website);
+        episodeJSON.put("Ratings", ratings);
+        episodeJSON.put("Language", language);
+        episodeJSON.put("Genre", genre);
+        episodeJSON.put("Writer", writer);
+        episodeJSON.put("Director", director);
+        episodeJSON.put("Actors", actors);
+        episodeJSON.put("Production", producers);
+        episodeJSON.put("Country", country);
+
+        return episodeJSON;
+    }
+    /* END Format Conversion Methods */
 
     /* Getters */
 

@@ -36,6 +36,8 @@ public class JSONFormatter {
         ArrayList formattedList = new ArrayList<String>();
         for (String entry : list.toString().split(",")) {
 
+            entry = entry.replaceAll("\\[", "");
+            entry = entry.replaceAll("]", "");
             entry = entry.replaceAll("\\(.*?\\)", ""); /* removes characters between brackets */
             entry = entry.replaceAll("\\s+$", ""); /* removes whitespace at the beginning of the string */
             entry = entry.replaceAll("^\\s+", ""); /* removes whitespace at the end of the string */
@@ -49,10 +51,10 @@ public class JSONFormatter {
     /**
      * Formats Scores in Arraylist received from OMDB to a Hashmap where the key is the outlet, standardizing the scores
      *
-     * @param ratings   - Arraylist of Ratings
+     * @param ratings - Arraylist of Ratings
      * @return formatted Hashmap
      */
-    protected static HashMap scoreFormatter(ArrayList ratings){
+    protected static HashMap scoreFormatter(ArrayList ratings) {
 
         HashMap formatted_ratings = new HashMap<String, Integer>();
         int formatted_value;
@@ -63,16 +65,20 @@ public class JSONFormatter {
             String source = (String) a.get("Source");
             String value = (String) a.get("Value");
 
-            if (source.equals("Internet Movie Database")){
-                value = value.replace("/10", "");
-                value = value.replace(".", "");
-                formatted_value =  Integer.parseInt(value);
-            } else if (source.equals("Metacritic")){
-                value = value.replace("/100", "");
-                formatted_value =  Integer.parseInt(value);
-            } else { /* Rotten Tomatoes */
-                value = value.replace("%", "");
-                formatted_value =  Integer.parseInt(value);
+            switch (source) {
+                case "Internet Movie Database":
+                    value = value.replace("/10", "");
+                    value = value.replace(".", "");
+                    formatted_value = Integer.parseInt(value);
+                    break;
+                case "Metacritic":
+                    value = value.replace("/100", "");
+                    formatted_value = Integer.parseInt(value);
+                    break;
+                default:  /* Rotten Tomatoes */
+                    value = value.replace("%", "");
+                    formatted_value = Integer.parseInt(value);
+                    break;
             }
 
             formatted_ratings.put(source, formatted_value);
@@ -151,4 +157,5 @@ public class JSONFormatter {
         logger.log(Level.SEVERE, "Missing Info"); //TODO Ask for input
         return 0;
     }
+    /* END Formatter Methods */
 }

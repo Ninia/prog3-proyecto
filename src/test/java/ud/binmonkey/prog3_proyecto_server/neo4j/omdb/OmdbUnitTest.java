@@ -4,11 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-public class OmdbTest {
+public class OmdbUnitTest {
 
     /**
-     * Test if the response for the search Trainspotting contains 1996 Trainspotting
+     * Tests method Omdb.search()
      */
     @org.junit.Test
     public void testSearch() {
@@ -22,7 +23,7 @@ public class OmdbTest {
     }
 
     /**
-     * Test if the response for the search Trainspotting's id contains 1996 Trainspotting
+     * Tests method Omdb.getTitle()
      */
     @org.junit.Test
     public void testTitle() {
@@ -36,7 +37,19 @@ public class OmdbTest {
 
         /* Checks info about the movie */
         String actors = (String) movie.get("Actors");
-        assertEquals(true, actors.contains("Ewan McGregor"));
+        assertTrue(actors.contains("Ewan McGregor"));
         assertEquals("UK", movie.get("Country"));
+    }
+
+    /**
+     * Tests method Omdb.getType()
+     */
+    @org.junit.Test
+    public void testType() {
+
+        MediaType mediaType = Omdb.getType("tt0117951");
+
+        /* Checks that the movie is the same as the one searched for */
+        assertEquals(MediaType.MOVIE, mediaType);
     }
 }
