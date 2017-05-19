@@ -1,5 +1,7 @@
 package ud.binmonkey.prog3_proyecto_server.neo4j.omdb;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -15,21 +17,22 @@ public class OmdbSeries extends OmdbTitle {
     private ArrayList country;
 
     /**
-     * Constructor for the class OMDBMovie that extends from OMDBTitle
+     * Constructor for the class OmdbEpisode that extends from OmdbTitle
      *
-     * @param id - IMDB id of the Movie
+     * @param series - Map with the info of the Episode
      */
-    public OmdbSeries(String id) {
+    public OmdbSeries(Map series) {
 
-        super(Omdb.getTitle(id));
-        Map series = Omdb.getTitle(id);
+        super(series);
 
         this.seasons = JSONFormatter.intergerConversor(series.get("totalSeasons"));
         this.language = JSONFormatter.listFormatter(series.get("Language"));
         this.genre = JSONFormatter.listFormatter(series.get("Genre"));
-        this.producers.add("Placeholder"); /* TODO Placeholder */
+        this.producers.add("placeholder"); /* TODO this is a placeholder */
         this.country = JSONFormatter.listFormatter(series.get("Country"));
     }
+
+    /* Format Conversion Methods */
 
     /**
      * @return Return information in org.neo4j.driver.v1.Values.parameters format
@@ -49,6 +52,23 @@ public class OmdbSeries extends OmdbTitle {
                 "runtime", runtime,
                 "poster", poster);
     }
+
+    /**
+     * @return Return information in JSON format
+     */
+    public JSONObject toJSON() {
+
+        JSONObject episodeJSON = super.toJSON();
+
+        episodeJSON.put("totalSeasons", seasons);
+        episodeJSON.put("Language", language);
+        episodeJSON.put("Genre", genre);
+        episodeJSON.put("Production", producers);
+        episodeJSON.put("Country", country);
+
+        return episodeJSON;
+    }
+    /* END Format Conversion Methods */
 
     /* Getters */
 
@@ -71,5 +91,6 @@ public class OmdbSeries extends OmdbTitle {
     public ArrayList getCountry() {
         return country;
     }
+
     /* END Getters */
 }
