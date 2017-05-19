@@ -1,7 +1,7 @@
 package ud.binmonkey.prog3_proyecto_server.ftp;
 
 import org.apache.ftpserver.ftplet.*;
-import ud.binmonkey.prog3_proyecto_server.common.DateUtils;
+import ud.binmonkey.prog3_proyecto_server.common.time.DateUtils;
 
 import java.io.IOException;
 import java.util.Arrays;

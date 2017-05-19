@@ -11,8 +11,8 @@ import org.apache.ftpserver.impl.FtpServerContext;
 import org.apache.ftpserver.usermanager.PropertiesUserManagerFactory;
 import org.apache.ftpserver.usermanager.impl.BaseUser;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
-import ud.binmonkey.prog3_proyecto_server.common.DateUtils;
-import ud.binmonkey.prog3_proyecto_server.common.Security;
+import ud.binmonkey.prog3_proyecto_server.common.time.DateUtils;
+import ud.binmonkey.prog3_proyecto_server.common.security.UserAuthentication;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.*;
 
 import java.io.File;
@@ -63,8 +63,8 @@ public class FTPServer extends DefaultFtpServer{
 
         /* lowercase usernames */
         userName = userName.toLowerCase();
-        Security.checkAdmin(userName);
-        Security.isValidName(userName);
+        UserAuthentication.checkAdmin(userName);
+        UserAuthentication.isValidName(userName);
 
         PropertiesUserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
         userManagerFactory.setFile(new File(userFileLocation));
@@ -112,7 +112,7 @@ public class FTPServer extends DefaultFtpServer{
         oldUserName = oldUserName.toLowerCase();
         newUserName = newUserName.toLowerCase();
 
-        Security.checkAdmin(oldUserName, newUserName);
+        UserAuthentication.checkAdmin(oldUserName, newUserName);
         /* validity of name will be checked at @createUser */
 
         PropertiesUserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
@@ -156,7 +156,7 @@ public class FTPServer extends DefaultFtpServer{
         /* lowercase username */
         userName = userName.toLowerCase();
 
-        Security.checkAdmin(userName);
+        UserAuthentication.checkAdmin(userName);
 
         PropertiesUserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
         userManagerFactory.setFile(new File(userFileLocation));
@@ -185,7 +185,7 @@ public class FTPServer extends DefaultFtpServer{
 
         /* lowercase usernames */
         userName = userName.toLowerCase();
-        Security.checkAdmin(userName);
+        UserAuthentication.checkAdmin(userName);
 
         PropertiesUserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
         userManagerFactory.setFile(new File(userFileLocation));
