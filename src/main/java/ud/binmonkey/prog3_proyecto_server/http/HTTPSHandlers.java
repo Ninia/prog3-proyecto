@@ -4,11 +4,14 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpsExchange;
 import ud.binmonkey.prog3_proyecto_server.common.TextFile;
+import ud.binmonkey.prog3_proyecto_server.common.exceptions.EmptyArgException;
+import ud.binmonkey.prog3_proyecto_server.common.exceptions.UriUnescapedArgsException;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
 
 @SuppressWarnings("WeakerAccess")
 public class HTTPSHandlers {
@@ -66,6 +69,48 @@ public class HTTPSHandlers {
             hes.sendResponseHeaders(200, response.length());
             OutputStream os = hes.getResponseBody();
             os.write(response.getBytes());
+            os.close();
+        }
+    }
+
+    static class LoginHandler implements HttpHandler {
+
+        @Override
+        public void handle(HttpExchange he) throws IOException {
+
+            HttpsExchange hes = (HttpsExchange) he;
+            printRequest(hes);
+
+            OutputStream os;
+            try {
+                HashMap<String, String> args = URI.getArgs(hes.getRequestURI().toString());
+
+                if (args == null || args.get("username") == null || args.get("password") == null) {
+                    byte[] response = "Missing arguments.".getBytes();
+                    hes.sendResponseHeaders(403, response.length);
+                    os = hes.getResponseBody();
+                    os.write(response);
+                }
+
+                String username = args.get("username");
+                String password = args.get("password");
+
+                byte[] response =
+                        "HIHIHIHIHI".getBytes();//(username + password).getBytes();
+
+                hes.getResponseHeaders().add("content-type", "text/plain");
+                hes.sendResponseHeaders(200, response.length);
+                os = hes.getResponseBody();
+                os.write(response);
+
+            } catch (UriUnescapedArgsException | EmptyArgException e) {
+
+                byte[] response = e.getMessage().getBytes();
+
+                hes.sendResponseHeaders(400, response.length);
+                os = hes.getResponseBody();
+                os.write(response);
+            }
             os.close();
         }
     }
