@@ -1,4 +1,4 @@
-package ud.binmonkey.prog3_proyecto_server.common;
+package ud.binmonkey.prog3_proyecto_server.common.time;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;

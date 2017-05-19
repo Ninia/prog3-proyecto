@@ -1,8 +1,13 @@
-package ud.binmonkey.prog3_proyecto_server.common;
+package ud.binmonkey.prog3_proyecto_server.users;
 
 import org.apache.ftpserver.ftplet.FtpException;
 import org.bson.Document;
 import org.json.JSONObject;
+import ud.binmonkey.prog3_proyecto_server.common.security.PasswordAuthentication;
+import ud.binmonkey.prog3_proyecto_server.common.time.DateUtils;
+import ud.binmonkey.prog3_proyecto_server.users.attributes.Language;
+import ud.binmonkey.prog3_proyecto_server.users.attributes.Role;
+import ud.binmonkey.prog3_proyecto_server.common.TextFile;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.*;
 import ud.binmonkey.prog3_proyecto_server.ftp.FTPServer;
 import ud.binmonkey.prog3_proyecto_server.mongodb.MongoDB;
@@ -25,6 +30,10 @@ public class UserManager {
         } catch (SecurityException | IOException e) {
             LOG.log(Level.SEVERE, "Unable to create log file.");
         }
+    }
+
+    public static boolean authUser(String userName, char[] password) throws UserNotFoundException, AdminEditException {
+        return (new PasswordAuthentication().authenticate(password, MongoDB.getPassword(userName)));
     }
 
     /**
@@ -52,7 +61,6 @@ public class UserManager {
         } catch (NewUserExistsException e) {
             LOG.log(Level.SEVERE, "MongoDB user `" + newUserName + "` already exists.");
         }
-
     }
 
     /**
@@ -63,9 +71,17 @@ public class UserManager {
     private static void createUser(User user, String ftpUserFileLocation)
             throws FtpException, InvalidNameException, AdminEditException {
         try {
+
+            /* hash user password */
+            PasswordAuthentication passAuth = new PasswordAuthentication();
+            char[] unhashedPassword = user.getPassword();
+            String hashedPassword = passAuth.hash(unhashedPassword);
+
+            user.setPassword(hashedPassword.toCharArray());
             MongoDB.createUser(user);
+
             try {
-                FTPServer.createUser(user.getUserName(), String.valueOf(user.getPassword()), ftpUserFileLocation);
+                FTPServer.createUser(user.getUserName(), new String(unhashedPassword), ftpUserFileLocation);
                 return;
             } catch (NewUserExistsException e) {
                 LOG.log(Level.SEVERE, "FTP user `" + user.getUserName() + "` already exists.");
@@ -89,16 +105,21 @@ public class UserManager {
     public static void changePassword(String userName, String oldPassword, String newPassword,
                                       String ftpUserFileLocation)
             throws UserNotFoundException, IncorrectPasswordException, AdminEditException {
-        MongoDB.changePassword(userName, oldPassword, newPassword);
+
+
+        PasswordAuthentication passAuth = new PasswordAuthentication();
+        MongoDB.changePassword(userName, passAuth.hash(oldPassword.toCharArray()),
+                                         passAuth.hash(newPassword.toCharArray()));
+
         try {
             FTPServer.changePassword(userName, oldPassword, newPassword, ftpUserFileLocation);
         } catch (FtpException | AdminEditException | IncorrectPasswordException | UserNotFoundException e) {
             /* revert chagnes */
-            MongoDB.changePassword(userName, newPassword, oldPassword);
+            MongoDB.changePassword(userName, passAuth.hash(newPassword.toCharArray()),
+                                             passAuth.hash(oldPassword.toCharArray()));
         }
-
-
     }
+
 
     /**
      * Create user on both FTP and MongoDB
@@ -167,30 +188,6 @@ public class UserManager {
         }
     }
 
-    public static void main(String[] args) throws UserNotFoundException, FtpException, IOException,
-            InvalidNameException, AdminEditException {
-
-        String USERFILE = "conf/properties/ftpusers.properties";
-        String userList = "src/main/resources/mongodb/examples/users.json";
-        JSONObject users = new JSONObject(TextFile.read(userList));
-        for (Object o: users.getJSONArray("users")) {
-            if (o instanceof JSONObject) {
-                /* remove user from both ftp and mongodb */
-                try {
-                    MongoDB.deleteUser((String) ((JSONObject) o).get("username"));
-                } catch (UserNotFoundException e) {
-                    /* as expected */
-                }
-                try {
-                    FTPServer.deleteUser((String) ((JSONObject) o).get("username"), USERFILE);
-                } catch (UserNotFoundException e) {
-                    /* as expected */
-                }
-                createUser((JSONObject) o, USERFILE);
-            }
-        }
-    }
-
     /**
      * Change birth date of user
      * @param userName username of user whose birthdate will be changed
@@ -236,5 +233,29 @@ public class UserManager {
      */
     public void changeRole(String userName, String role) throws AdminEditException, InvalidRoleException {
         MongoDB.changeRole(userName, role);
+    }
+
+    public static void main(String[] args) throws UserNotFoundException, FtpException, IOException,
+            InvalidNameException, AdminEditException {
+
+        String USERFILE = "conf/properties/ftpusers.properties";
+        String userList = "src/main/resources/mongodb/examples/users.json";
+        JSONObject users = new JSONObject(TextFile.read(userList));
+        for (Object o: users.getJSONArray("users")) {
+            if (o instanceof JSONObject) {
+                /* remove user from both ftp and mongodb */
+                try {
+                    MongoDB.deleteUser((String) ((JSONObject) o).get("username"));
+                } catch (UserNotFoundException e) {
+                    /* as expected */
+                }
+                try {
+                    FTPServer.deleteUser((String) ((JSONObject) o).get("username"), USERFILE);
+                } catch (UserNotFoundException e) {
+                    /* as expected */
+                }
+                createUser((JSONObject) o, USERFILE);
+            }
+        }
     }
 }
