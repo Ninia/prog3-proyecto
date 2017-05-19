@@ -1,5 +1,7 @@
 package ud.binmonkey.prog3_proyecto_server.neo4j.omdb;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -16,23 +18,23 @@ public class OmdbEpisode extends OmdbTitle {
     private ArrayList director;
 
     /**
-     * Constructor for the class OMDBMovie that extends from OMDBTitle
+     * Constructor for the class OmdbSeries that extends from OmdbBTitle
      *
-     * @param id - IMDB id of the Movie
+     * @param episode - Map with the info of the Episode
      */
-    public OmdbEpisode(String id) {
+    public OmdbEpisode(Map episode) {
 
-        super(Omdb.getTitle(id));
-        Map series = Omdb.getTitle(id);
+        super(episode);
 
-        this.seriesID = (String) series.get("seriesID");
-        this.season = JSONFormatter.intergerConversor(series.get("Season"));
-        this.episode = JSONFormatter.intergerConversor(series.get("Episode"));
-
-        this.actors = JSONFormatter.listFormatter(series.get("Actors"));
-        this.writer = JSONFormatter.listFormatter(series.get("Writer"));
-        this.director = JSONFormatter.listFormatter(series.get("Director"));
+        this.seriesID = (String) episode.get("seriesID");
+        this.season = JSONFormatter.intergerConversor(episode.get("Season"));
+        this.episode = JSONFormatter.intergerConversor(episode.get("Episode"));
+        this.actors = JSONFormatter.listFormatter(episode.get("Actors"));
+        this.writer = JSONFormatter.listFormatter(episode.get("Writer"));
+        this.director = JSONFormatter.listFormatter(episode.get("Director"));
     }
+
+    /* Format Conversion Methods */
 
     /**
      * @return Return information in org.neo4j.driver.v1.Values.parameters format
@@ -51,6 +53,25 @@ public class OmdbEpisode extends OmdbTitle {
                 "runtime", runtime,
                 "poster", poster);
     }
+
+    /**
+     * @return Return information in JSON format
+     */
+    public JSONObject toJSON() {
+
+        JSONObject episodeJSON = super.toJSON();
+
+        episodeJSON.put("seriesID", seriesID);
+        episodeJSON.put("Season", season);
+        episodeJSON.put("Episode", episode);
+
+        episodeJSON.put("Writer", writer);
+        episodeJSON.put("Director", director);
+        episodeJSON.put("Actors", actors);
+
+        return episodeJSON;
+    }
+    /* END Format Conversion Methods */
 
     /* Getters */
 

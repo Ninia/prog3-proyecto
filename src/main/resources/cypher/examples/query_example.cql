@@ -13,7 +13,10 @@ RETURN m.title, r.score
 
 /* List movies produced by a Producer */
 MATCH p = (n:Producer)-[r:PRODUCED]->(m:Movie)
-AND a.name = 'Internet Movie Database'
+  WHERE n.name = '20th Century Fox'
+RETURN m.title, m.year
+  ORDER BY m.year;
+
 
 RETURN m.title, m.year
   ORDER BY m.year DESCENDING;
