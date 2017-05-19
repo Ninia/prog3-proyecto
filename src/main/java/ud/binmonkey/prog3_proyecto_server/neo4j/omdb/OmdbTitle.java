@@ -1,5 +1,8 @@
 package ud.binmonkey.prog3_proyecto_server.neo4j.omdb;
 
+import org.json.JSONObject;
+import ud.binmonkey.prog3_proyecto_server.common.DateUtils;
+
 import java.util.Date;
 import java.util.Map;
 
@@ -33,6 +36,26 @@ public class OmdbTitle {
         this.poster = (String) title.get("Poster");
     }
 
+    public JSONObject toJSON() {
+
+        JSONObject episodeJSON = new JSONObject();
+
+        episodeJSON.put("Title", title);
+        episodeJSON.put("imdbID", imdbID);
+        episodeJSON.put("Year", year);
+        episodeJSON.put("Released", DateUtils.dateFormatter(released));
+        episodeJSON.put("Plot", plot);
+        episodeJSON.put("Rated", ageRating);
+        episodeJSON.put("Awards", awards);
+        episodeJSON.put("Metascore", metascore);
+        episodeJSON.put("imdbRating", imdbRating);
+        episodeJSON.put("imdbVotes", imdbVotes);
+        episodeJSON.put("Runtime", runtime);
+        episodeJSON.put("Poster", poster);
+
+        return episodeJSON;
+    }
+
     /* Getters and Setters */
 
     public String getImdbID() {
@@ -55,21 +78,4 @@ public class OmdbTitle {
         return imdbVotes;
     }
 
-    /* Overridden Methods*/
-    @Override
-    public String toString() {
-        return "OmdbTitle:\n" +
-                "\tTitle=" + title + "\n" +
-                "\tIMDB ID=" + imdbID + "\n" +
-                "\tYear=" + year + "\n" +
-                "\tReleased=" + released + "\n" +
-                "\tPlot=" + plot + "\n" +
-                "\tRated=" + ageRating + "\n" +
-                "\tAward=" + awards + "\n" +
-                "\tMetascore=" + metascore + "\n" +
-                "\tIMDB Rating=" + imdbRating + "\n" +
-                "\tIMDB Votes=" + imdbVotes + "\n" +
-                "\tRuntime=" + runtime + "\n" +
-                "\tPoster=" + poster + "\n";
-    }
 }
