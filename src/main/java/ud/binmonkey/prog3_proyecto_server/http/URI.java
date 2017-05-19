@@ -6,14 +6,11 @@ import ud.binmonkey.prog3_proyecto_server.common.exceptions.UriUnescapedArgsExce
 import java.util.HashMap;
 
 public class URI {
-    public static HashMap<String, String> getArgs(String uri) throws EmptyArgException, UriUnescapedArgsException {
+    public static HashMap<String, String> getArgs(java.net.URI uri) throws EmptyArgException, UriUnescapedArgsException {
         HashMap<String, String> args = new HashMap<>();
 
-        if (!uri.contains("?")) {
-            return null;
-        }
-
-        String[] mixedArgs = uri.split("\\?")[1].split("&");
+        String query = uri.getQuery();
+        String[] mixedArgs = query.split("&");
 
         int kvlength;
         String[] kv;
@@ -23,9 +20,9 @@ public class URI {
             kvlength = arg.split("=").length;
 
             if (kvlength < 2) {
-                throw new EmptyArgException(uri);
+                throw new EmptyArgException(uri.toString());
             } else if (kvlength > 2) {
-                throw new UriUnescapedArgsException(uri);
+                throw new UriUnescapedArgsException(uri.toString());
             }
 
             kv = arg.split("=");

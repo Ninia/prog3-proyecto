@@ -131,7 +131,7 @@ public class MongoDB {
      * @param userName username to be checked
      * @return true if it exists, false if not
      */
-    private static boolean userExists(String userName) {
+    public static boolean userExists(String userName) {
 
         /* lowercase usernames */
         userName = userName.toLowerCase();

@@ -3,14 +3,14 @@ package ud.binmonkey.prog3_proyecto_server.users;
 import org.apache.ftpserver.ftplet.FtpException;
 import org.bson.Document;
 import org.json.JSONObject;
-import ud.binmonkey.prog3_proyecto_server.common.security.PasswordAuthentication;
-import ud.binmonkey.prog3_proyecto_server.common.time.DateUtils;
-import ud.binmonkey.prog3_proyecto_server.users.attributes.Language;
-import ud.binmonkey.prog3_proyecto_server.users.attributes.Role;
 import ud.binmonkey.prog3_proyecto_server.common.TextFile;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.*;
+import ud.binmonkey.prog3_proyecto_server.common.security.PasswordAuthentication;
+import ud.binmonkey.prog3_proyecto_server.common.time.DateUtils;
 import ud.binmonkey.prog3_proyecto_server.ftp.FTPServer;
 import ud.binmonkey.prog3_proyecto_server.mongodb.MongoDB;
+import ud.binmonkey.prog3_proyecto_server.users.attributes.Language;
+import ud.binmonkey.prog3_proyecto_server.users.attributes.Role;
 
 import java.io.IOException;
 import java.util.logging.FileHandler;
@@ -186,6 +186,15 @@ public class UserManager {
         } catch (UserNotFoundException e) {
             LOG.log(Level.SEVERE, "MongoDB user `" + userName + "` not found.");
         }
+    }
+
+    /**
+     * Checks if user exists in MongoDB
+     * @param userName username to check
+     * @return true if exists, false if not
+     */
+    public static boolean userExists(String userName) {
+        return MongoDB.userExists(userName);
     }
 
     /**

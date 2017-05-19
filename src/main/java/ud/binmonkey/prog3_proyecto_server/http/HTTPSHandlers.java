@@ -4,8 +4,12 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpsExchange;
 import ud.binmonkey.prog3_proyecto_server.common.TextFile;
+import ud.binmonkey.prog3_proyecto_server.common.exceptions.AdminEditException;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.EmptyArgException;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.UriUnescapedArgsException;
+import ud.binmonkey.prog3_proyecto_server.common.exceptions.UserNotFoundException;
+import ud.binmonkey.prog3_proyecto_server.common.security.Session;
+import ud.binmonkey.prog3_proyecto_server.users.UserManager;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -24,9 +28,20 @@ public class HTTPSHandlers {
     static void printRequest(HttpExchange he) {
 
         HttpsExchange hes = (HttpsExchange) he;
-        System.out.println(
-                "(" + hes.getProtocol() + ") " + hes.getRequestMethod() + "  -  " + hes.getRequestURI().getPath())
-        ;
+
+        String request = "(" + hes.getProtocol() + ") " + hes.getRequestMethod() + "  -  " + hes.getRequestURI().getPath();
+
+        if (!hes.getRequestURI().toString().endsWith(hes.getRequestURI().getPath())){
+            try {
+                HashMap<String, String> args = URI.getArgs(he.getRequestURI());
+                request += "\t{";
+                for (String key: args.keySet()) {
+                    request += " " + key + ": " + args.get(key) + ",";
+                }
+                request = request.substring(0, request.length() - 1) + " }";
+            } catch (UriUnescapedArgsException | EmptyArgException e) {}
+        }
+        System.out.println(request);
     }
 
     /**
@@ -66,13 +81,17 @@ public class HTTPSHandlers {
             String response = HtmlParser.parse(TextFile.read("src/main/web/default.html"));
 
             HttpsExchange hes = (HttpsExchange) he;
-            hes.sendResponseHeaders(200, response.length());
+            hes.sendResponseHeaders(200, 0);
             OutputStream os = hes.getResponseBody();
             os.write(response.getBytes());
             os.close();
         }
     }
 
+    /**
+     * GET method is deprecated, call with POST instead
+     * Handles log ins, returns token if succeeded
+     */
     static class LoginHandler implements HttpHandler {
 
         @Override
@@ -83,11 +102,11 @@ public class HTTPSHandlers {
 
             OutputStream os;
             try {
-                HashMap<String, String> args = URI.getArgs(hes.getRequestURI().toString());
+                HashMap<String, String> args = URI.getArgs(hes.getRequestURI());
 
                 if (args == null || args.get("username") == null || args.get("password") == null) {
                     byte[] response = "Missing arguments.".getBytes();
-                    hes.sendResponseHeaders(403, response.length);
+                    hes.sendResponseHeaders(403, 0);
                     os = hes.getResponseBody();
                     os.write(response);
                 }
@@ -95,11 +114,21 @@ public class HTTPSHandlers {
                 String username = args.get("username");
                 String password = args.get("password");
 
-                byte[] response =
-                        "HIHIHIHIHI".getBytes();//(username + password).getBytes();
+                byte[] response;
 
-                hes.getResponseHeaders().add("content-type", "text/plain");
-                hes.sendResponseHeaders(200, response.length);
+                if (UserManager.userExists(username) && UserManager.authUser(username, password.toCharArray())) {
+                    String responseToken = Session.generateSessionToken(32);
+                    /**
+                     * Save token and use it to handle requests
+                     */
+                    response = responseToken.getBytes();
+                    hes.getResponseHeaders().add("content-type", "text/plain");
+                    hes.sendResponseHeaders(200, 0);
+                } else {
+                    hes.sendResponseHeaders(401, 0);
+                    response = ("Username " + username + "not found.").getBytes();
+                }
+
                 os = hes.getResponseBody();
                 os.write(response);
 
@@ -107,7 +136,14 @@ public class HTTPSHandlers {
 
                 byte[] response = e.getMessage().getBytes();
 
-                hes.sendResponseHeaders(400, response.length);
+                hes.sendResponseHeaders(400, 0);
+                os = hes.getResponseBody();
+                os.write(response);
+
+            }  catch (UserNotFoundException | AdminEditException e) {
+
+                byte[] response = e.getMessage().getBytes();
+                hes.sendResponseHeaders(401, 0);
                 os = hes.getResponseBody();
                 os.write(response);
             }
@@ -174,41 +210,4 @@ public class HTTPSHandlers {
             os.close();
         }
     }
-
-
-//    static class ServerHandlers {
-//
-//        static class TestHandler implements HttpHandler {
-//            @Override
-//            public void handle(HttpExchange httpExchange) throws IOException {
-//                System.out.println("Hi");
-//                String response = "Hi there";
-//                HttpsExchange httpsExchange = (HttpsExchange) httpExchange;
-//                httpsExchange.sendResponseHeaders(200, response.length());
-//                OutputStream os = httpsExchange.getResponseBody();
-//                os.write(response.getBytes());
-//                os.close();
-//            }
-//        }
-//
-//        static class AntigravityHandler implements HttpHandler {
-//            @Override
-//            public void handle(HttpExchange httpExchange) throws IOException {
-//                String html = "    <html>\n" +
-//                        "    <body><script>\n" +
-//                        "    window.location = \"http://xkcd.com/353/\"\n" +
-//                        "    </script>\n" +
-//                        "    </noscript>\n" +
-//                        "    <h3> <a href=\"http://www.xkcd.com/353/\">http://www.xkcd.com/353/</a> </h3>\n" +
-//                        "    </noscript></body>\n" +
-//                        "    </html>";
-//                HttpsExchange httpsExchange = (HttpsExchange) httpExchange;
-//                httpsExchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
-//                httpsExchange.sendResponseHeaders(200, html.length());
-//                OutputStream os = httpsExchange.getResponseBody();
-//                os.write(html.getBytes());
-//                os.close();
-//            }
-//        }
-//    }
 }
