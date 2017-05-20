@@ -11,8 +11,12 @@ import ud.binmonkey.prog3_proyecto_server.common.exceptions.AdminEditException;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.InvalidNameException;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.UserNotFoundException;
 import ud.binmonkey.prog3_proyecto_server.common.network.URI;
+import ud.binmonkey.prog3_proyecto_server.common.security.SessionHandler;
+import ud.binmonkey.prog3_proyecto_server.common.security.SessionWatcher;
+import ud.binmonkey.prog3_proyecto_server.common.time.DateUtils;
 import ud.binmonkey.prog3_proyecto_server.http.handlers.DefaultHandler;
 import ud.binmonkey.prog3_proyecto_server.http.handlers.LoginHandler;
+import ud.binmonkey.prog3_proyecto_server.http.handlers.SessionInfoHandler;
 import ud.binmonkey.prog3_proyecto_server.http.handlers.WebHandlers;
 import ud.binmonkey.prog3_proyecto_server.users.UserManager;
 
@@ -29,14 +33,32 @@ import java.util.HashMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @SuppressWarnings("WeakerAccess")
-public class HTTPSServer {
+public enum HTTPSServer {
+    INSTANCE;
 
+    private static final Logger LOG = Logger.getLogger(HTTPSServer.class.getName());
+    static {
+        try {
+            LOG.addHandler(new FileHandler(
+                    "logs/" + HTTPSServer.class.getName() + "." +
+                            DateUtils.currentFormattedDate() + ".log.xml", true));
+        } catch (SecurityException | IOException e) {
+            LOG.log(Level.SEVERE, "Unable to create log file.");
+        }
+    }
     private HttpsServer httpsServer;
-    private HashMap<String, HttpHandler> contexts = new HashMap<String, HttpHandler>() {{
+    private final SessionHandler sessionHandler = SessionHandler.INSTANCE;
+    private final SessionWatcher sessionWatcher = new SessionWatcher(sessionHandler);
+    private final Thread watcherThread = new Thread(() -> sessionWatcher.watch());
+    private final HashMap<String, HttpHandler> contexts = new HashMap<String, HttpHandler>() {{
         put("/", new WebHandlers.IndexHandler());
         put("/login", new LoginHandler());
+        put("/sessionInfo", new SessionInfoHandler());
 
         /* extras */
         put("/antigravity", new WebHandlers.AntigravityHandler());
@@ -48,8 +70,10 @@ public class HTTPSServer {
         put("/vendor/", new WebHandlers.WebFileHandler());
     }};
 
-
-    public HTTPSServer() throws IOException {
+    /**
+     * Initializes HTTPS server
+     */
+    void init() throws IOException {
 
         try {
 
@@ -84,6 +108,8 @@ public class HTTPSServer {
                     URI.getPort("http-server")), 0);
 
             System.out.println("Creating HTTPS server in " + URI.getURI("http-server"));
+            LOG.log(Level.INFO, "Created HTTPS server in " + URI.getURI("http-server"));
+            watcherThread.start();
 
             /* set http configurator */
             this.httpsServer.setHttpsConfigurator(new HttpsConfigurator(sslContext) {
@@ -123,8 +149,16 @@ public class HTTPSServer {
 
     }
 
+    public HttpsServer getHttpsServer() {
+        return httpsServer;
+    }
+
+    public SessionHandler getSessionHandler() {
+        return sessionHandler;
+    }
 
     public static void main(String[] args) {
+        /* change to false to avoid creating users each time */
         boolean createUsers = true;
 
         if (createUsers) {
@@ -136,12 +170,11 @@ public class HTTPSServer {
         }
 
         try {
-            HTTPSServer server = new HTTPSServer();
-            server.httpsServer.start();
+            HTTPSServer.INSTANCE.init();
+            HTTPSServer.INSTANCE.getHttpsServer().start();
         } catch (IOException e) {
             e.printStackTrace();
             System.out.printf("Failed to create HTTPS server.");
         }
-
     }
 }
