@@ -4,9 +4,17 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsParameters;
 import com.sun.net.httpserver.HttpsServer;
+import org.apache.ftpserver.ftplet.FtpException;
 import org.w3c.dom.Element;
 import ud.binmonkey.prog3_proyecto_server.common.DocumentReader;
+import ud.binmonkey.prog3_proyecto_server.common.exceptions.AdminEditException;
+import ud.binmonkey.prog3_proyecto_server.common.exceptions.InvalidNameException;
+import ud.binmonkey.prog3_proyecto_server.common.exceptions.UserNotFoundException;
 import ud.binmonkey.prog3_proyecto_server.common.network.URI;
+import ud.binmonkey.prog3_proyecto_server.http.handlers.DefaultHandler;
+import ud.binmonkey.prog3_proyecto_server.http.handlers.LoginHandler;
+import ud.binmonkey.prog3_proyecto_server.http.handlers.WebHandlers;
+import ud.binmonkey.prog3_proyecto_server.users.UserManager;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
@@ -27,17 +35,17 @@ public class HTTPSServer {
 
     private HttpsServer httpsServer;
     private HashMap<String, HttpHandler> contexts = new HashMap<String, HttpHandler>() {{
-        put("/", new HTTPSHandlers.IndexHandler());
-        put("/login", new HTTPSHandlers.LoginHandler());
+        put("/", new WebHandlers.IndexHandler());
+        put("/login", new LoginHandler());
 
         /* extras */
-        put("/antigravity", new HTTPSHandlers.AntigravityHandler());
-        put("/favicon.ico", new HTTPSHandlers.FavIcoHandler());
-        put("/images/", new HTTPSHandlers.WebHandler());
-        put("/index", new HTTPSHandlers.IndexHandler());
-        put("/js/", new HTTPSHandlers.WebHandler());
-        put("/test", new HTTPSHandlers.DefaultHandler());
-        put("/vendor/", new HTTPSHandlers.WebHandler());
+        put("/antigravity", new WebHandlers.AntigravityHandler());
+        put("/favicon.ico", new WebHandlers.FavIcoHandler());
+        put("/images/", new WebHandlers.WebFileHandler());
+        put("/index", new WebHandlers.IndexHandler());
+        put("/js/", new WebHandlers.WebFileHandler());
+        put("/test", new DefaultHandler());
+        put("/vendor/", new WebHandlers.WebFileHandler());
     }};
 
 
@@ -117,6 +125,16 @@ public class HTTPSServer {
 
 
     public static void main(String[] args) {
+        boolean createUsers = true;
+
+        if (createUsers) {
+            try {
+                UserManager.main(null);
+            } catch (UserNotFoundException | FtpException | InvalidNameException | IOException | AdminEditException e) {
+                e.printStackTrace();
+            }
+        }
+
         try {
             HTTPSServer server = new HTTPSServer();
             server.httpsServer.start();
@@ -124,5 +142,6 @@ public class HTTPSServer {
             e.printStackTrace();
             System.out.printf("Failed to create HTTPS server.");
         }
+
     }
 }
