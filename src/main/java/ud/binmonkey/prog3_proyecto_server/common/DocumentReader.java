@@ -1,6 +1,7 @@
 package ud.binmonkey.prog3_proyecto_server.common;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -51,5 +52,20 @@ public class DocumentReader {
         }
 
         return document;
+    }
+
+    /**
+     *
+     * @param doc
+     * @param value
+     * @param attributes
+     * @return
+     */
+    public static Element getAttr(Document doc, String... attributes) {
+        Element element = (Element) doc.getElementsByTagName(attributes[0]).item(0);
+        for (int i = 1; i < attributes.length; i++) {
+            element = (Element) element.getElementsByTagName(attributes[i]).item(0);
+        }
+        return element;
     }
 }

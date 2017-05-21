@@ -77,9 +77,14 @@ public enum HTTPSServer {
 
         try {
 
+            String propertiesFile = "conf/properties.xml";
+
             /* obtain keyword from config xml*/
-            Element settings = (Element) DocumentReader.getDoc(
-                    "conf/Network.xml").getElementsByTagName("http-server").item(0);
+            Element settings = DocumentReader.getAttr(DocumentReader.getDoc(propertiesFile),
+                    "network", "http-server");
+
+            String certFile = DocumentReader.getAttr(DocumentReader.getDoc(propertiesFile),
+                    "ssl", "certfile", "location").getTextContent();
             String keyword = settings.getElementsByTagName("keyword").item(0).getTextContent();
 
             /* initialize ssl context */

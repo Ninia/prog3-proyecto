@@ -94,6 +94,14 @@ public enum SessionHandler {
         return this.generateSessionToken(32, userName);
     }
 
+    public boolean validToken(String userName, String token) {
+        Session s = sessions.get(userName);
+        if (s != null) {
+            return s.getToken().equals(token);
+        }
+        return false;
+    }
+
     public HashMap<String, Session> getSessions() {
         return sessions;
     }
