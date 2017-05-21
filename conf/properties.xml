@@ -21,7 +21,7 @@
         <ftp-server>
             <ftplet-file>conf/ftp/ftplet.xml</ftplet-file>
             <user-file>conf/ftp/users.properties</user-file>
-            <ftpd>"src/test/resources/ftp/ftpd/"</ftpd>
+            <ftpd>src/test/resources/ftp/ftpd/</ftpd>
             <port>8021</port>
         </ftp-server>
 

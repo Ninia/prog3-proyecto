@@ -73,7 +73,7 @@ public enum HTTPSServer {
     /**
      * Initializes HTTPS server
      */
-    void init() throws IOException {
+    public void init() throws IOException {
 
         try {
 

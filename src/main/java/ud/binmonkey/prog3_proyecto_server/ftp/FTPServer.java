@@ -10,6 +10,7 @@ import org.apache.ftpserver.impl.DefaultFtpServer;
 import org.apache.ftpserver.impl.FtpServerContext;
 import org.apache.ftpserver.usermanager.PropertiesUserManagerFactory;
 import org.apache.ftpserver.usermanager.impl.BaseUser;
+import org.apache.ftpserver.usermanager.impl.WritePermission;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 import ud.binmonkey.prog3_proyecto_server.common.DocumentReader;
 import ud.binmonkey.prog3_proyecto_server.common.time.DateUtils;
@@ -18,6 +19,7 @@ import ud.binmonkey.prog3_proyecto_server.common.exceptions.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -44,8 +46,25 @@ public class FTPServer extends DefaultFtpServer{
         }
     }
 
+    /**
+     * Default constructor
+     * @param serverContext FTP context
+     */
     public FTPServer(FtpServerContext serverContext) {
         super(serverContext);
+    }
+
+    /**
+     * Run before @start()
+     * Creates admin and common users
+     */
+    public static void init() {
+        try {
+            createAdmin();
+            createCommon();
+        } catch (FtpException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -81,14 +100,64 @@ public class FTPServer extends DefaultFtpServer{
             /* create basic user */
             BaseUser user = new BaseUser();
             user.setName(userName);
-            user.setHomeDirectory(ftpd + "/" + userName);
             user.setPassword(password);
+
+            /* give permissions */
+            List<Authority> authorities = new ArrayList<>();
+            authorities.add(new WritePermission());
+            user.setAuthorities(authorities);
 
             /* save user */
             userManager.save(user);
             LOG.log(Level.INFO, "New user `" + userName + "` created.");
         } else {
             throw new NewUserExistsException(userName);
+        }
+    }
+
+    /**
+     * Create admin user
+     */
+    public static void createAdmin() throws FtpException {
+        createBaseUser("admin", "admin", ftpd);
+    }
+
+    /**
+     * Create common user
+     */
+    public static void createCommon() throws FtpException {
+        createBaseUser("common", "common", ftpd + "common");
+    }
+
+    /**
+     * Crete ftp user that won't be in MongoDB
+     * @param userName username
+     * @param password password
+     * @param homeDir home directory of user
+     */
+    private static void createBaseUser(String userName, String password, String homeDir) {
+        try {
+            PropertiesUserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
+            userManagerFactory.setFile(new File(userFile));
+
+            UserManager userManager = userManagerFactory.createUserManager();
+
+        /* create basic user */
+            BaseUser user = new BaseUser();
+            user.setName(userName);
+            user.setPassword(password);
+            user.setHomeDirectory(homeDir);
+
+        /* give permissions */
+            List<Authority> authorities = new ArrayList<>();
+            authorities.add(new WritePermission());
+            user.setAuthorities(authorities);
+
+        /* save user */
+            userManager.save(user);
+            LOG.log(Level.INFO, "Admin user `" + userName + "` created.");
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -216,6 +285,7 @@ public class FTPServer extends DefaultFtpServer{
     public static void main(String[] args) throws FtpException, InvalidNameException, AdminEditException {
 
         FtpServer ftpServer = FTPServer.getFtpServer(ftpLetFile, FTPlet.class.getSimpleName());
+        FTPServer.init();
         ftpServer.start();
     }
 }
