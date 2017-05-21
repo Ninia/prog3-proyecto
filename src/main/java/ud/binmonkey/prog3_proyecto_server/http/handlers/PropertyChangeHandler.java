@@ -61,6 +61,8 @@ public class PropertyChangeHandler implements HttpHandler {
             boolean validToken = SessionHandler.INSTANCE.validToken(userName, args.get("token"));
 
             if (validToken) {
+
+                SessionHandler.INSTANCE.userActivity(userName);
                 try {
                     switch (property) {
 

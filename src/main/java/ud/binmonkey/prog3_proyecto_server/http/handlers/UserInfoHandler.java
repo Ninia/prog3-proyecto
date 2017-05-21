@@ -46,6 +46,7 @@ public class UserInfoHandler implements HttpHandler {
 
             if (validToken) {
 
+                SessionHandler.INSTANCE.userActivity(userName);
                 Document user;
                 try {
                     user = MongoDB.getUser(userName);

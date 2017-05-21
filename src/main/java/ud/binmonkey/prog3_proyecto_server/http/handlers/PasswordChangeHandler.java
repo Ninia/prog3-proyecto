@@ -58,6 +58,8 @@ public class PasswordChangeHandler implements HttpHandler {
 
             boolean validToken = SessionHandler.INSTANCE.validToken(userName, token);
             if (validToken) {
+
+                SessionHandler.INSTANCE.userActivity(userName);
                 try {
 
                     UserManager.changePassword(userName, oldPassword, newPassword);
