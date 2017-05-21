@@ -1,7 +1,7 @@
 package ud.binmonkey.prog3_proyecto_server.users.attributes;
 
 public enum Language {
-    EN("en"), ES("es"), EUS("eus");
+    EN("en"), ES("es"), EU("eu");
 
     private final String lang;
 

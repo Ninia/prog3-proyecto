@@ -34,6 +34,8 @@ public class SessionInfoHandler implements HttpHandler {
 
             /* if session did not exists or token wasn't user's token */
             if (session == null || !session.getToken().equals(token)) {
+
+                hes.getResponseHeaders().add("content-type", "text/plain");
                 hes.sendResponseHeaders(403,0);
                 os = hes.getResponseBody();
                 os.write("Unauthorized".getBytes());
@@ -57,19 +59,20 @@ public class SessionInfoHandler implements HttpHandler {
                     .toFormatter();
 
 
-            StringBuilder response = new StringBuilder();
-            response.append("{\n\t\"Username\": \"").append(session.getUserName()).append("\",\n")
-                    .append("\t\"Last Update\": \"").append(updateDate.toString()).append("\",\n")
-                    .append("\t\"Expires In\": \"").append(
-                        formatter.print((new Duration(session.getKeepAlive()).toPeriod()))
-                    ).append("\"\n}");
+            String response = "{\n" +
+                    "\t\"Username\": \"" + session.getUserName() + "\",\n" +
+                    "\t\"Last Update\": \"" + updateDate.toString() + "\",\n" +
+                    "\t\"Expires In\": \"" + formatter.print((new Duration(session.getKeepAlive()).toPeriod())) +
+                    "\"\n}";
 
             hes.getResponseHeaders().add("content-type", "application/json");
             hes.sendResponseHeaders(200, 0);
             os = hes.getResponseBody();
-            os.write(response.toString().getBytes());
+            os.write(response.getBytes());
 
         } catch (EmptyArgException | UriUnescapedArgsException e) {
+
+            hes.getResponseHeaders().add("content-type", "text/plain");
             hes.sendResponseHeaders(400, 0);
             os = hes.getResponseBody();
             os.write(e.getMessage().getBytes());

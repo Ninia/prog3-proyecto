@@ -32,6 +32,7 @@ public class PasswordChangeHandler implements HttpHandler {
         }
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public void handle(HttpExchange he) throws IOException {
         HttpsExchange hes = (HttpsExchange) he;
@@ -46,6 +47,8 @@ public class PasswordChangeHandler implements HttpHandler {
                 hes.sendResponseHeaders(403, 0);
                 os = hes.getResponseBody();
                 os.write(response);
+                os.close();
+                return;
             }
 
             String userName = args.get("username");
@@ -56,11 +59,16 @@ public class PasswordChangeHandler implements HttpHandler {
             boolean validToken = SessionHandler.INSTANCE.validToken(userName, token);
             if (validToken) {
                 try {
+
                     UserManager.changePassword(userName, oldPassword, newPassword);
+                    hes.getResponseHeaders().add("content-type", "text/plain");
                     hes.sendResponseHeaders(200, 0);
                     os = hes.getResponseBody();
                     os.write("OK".getBytes());
+
                 } catch (UserNotFoundException | IncorrectPasswordException | AdminEditException e) {
+
+                    hes.getResponseHeaders().add("content-type", "text/plain");
                     hes.sendResponseHeaders(401, 0);
                     os = hes.getResponseBody();
                     os.write(e.getMessage().getBytes());

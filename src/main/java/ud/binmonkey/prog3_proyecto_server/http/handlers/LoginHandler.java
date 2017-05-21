@@ -38,6 +38,7 @@ public class LoginHandler implements HttpHandler{
         }
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public void handle(HttpExchange he) throws IOException {
 
@@ -50,9 +51,12 @@ public class LoginHandler implements HttpHandler{
 
             if (args == null || args.get("username") == null || args.get("password") == null) {
                 byte[] response = "Missing arguments.".getBytes();
+                hes.getResponseHeaders().add("content-type", "text/plain");
                 hes.sendResponseHeaders(403, 0);
                 os = hes.getResponseBody();
                 os.write(response);
+                os.close();
+                return;
             }
 
             String username = args.get("username");
@@ -71,6 +75,7 @@ public class LoginHandler implements HttpHandler{
                 LOG.log(Level.INFO, "User: `" + username + "` logged with Token: `" + responseToken + "`");
 
             } else {
+                hes.getResponseHeaders().add("content-type", "text/plain");
                 hes.sendResponseHeaders(401, 0);
                 response = ("Username " + username + "not found.").getBytes();
             }
@@ -81,7 +86,7 @@ public class LoginHandler implements HttpHandler{
         } catch (UriUnescapedArgsException | EmptyArgException e) {
 
             byte[] response = e.getMessage().getBytes();
-
+            hes.getResponseHeaders().add("content-type", "text/plain");
             hes.sendResponseHeaders(400, 0);
             os = hes.getResponseBody();
             os.write(response);
@@ -89,6 +94,7 @@ public class LoginHandler implements HttpHandler{
         }  catch (UserNotFoundException | AdminEditException e) {
 
             byte[] response = e.getMessage().getBytes();
+            hes.getResponseHeaders().add("content-type", "text/plain");
             hes.sendResponseHeaders(401, 0);
             os = hes.getResponseBody();
             os.write(response);

@@ -18,7 +18,7 @@ public enum Server {
             "network", "ftp-server", "ftplet-file").getTextContent();
 
     Server() {
-        /* create admin and common users*/
+        /* create admin and common users */
         FTPServer.init();
 
         /* main services */
@@ -38,7 +38,6 @@ public enum Server {
     }
 
     public static void main(String[] args) {
-        Server server = Server.INSTANCE;
-        server.start();
+        Server.INSTANCE.start();
     }
 }

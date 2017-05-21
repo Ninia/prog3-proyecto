@@ -25,6 +25,7 @@ public class DefaultHandler implements HttpHandler {
 
         HttpsExchange hes = (HttpsExchange) he;
         hes.sendResponseHeaders(200, 0);
+        hes.getResponseHeaders().add("content-type", "text/plain");
         OutputStream os = hes.getResponseBody();
         os.write(response.getBytes());
         os.close();

@@ -14,10 +14,7 @@ import ud.binmonkey.prog3_proyecto_server.common.network.URI;
 import ud.binmonkey.prog3_proyecto_server.common.security.SessionHandler;
 import ud.binmonkey.prog3_proyecto_server.common.security.SessionWatcher;
 import ud.binmonkey.prog3_proyecto_server.common.time.DateUtils;
-import ud.binmonkey.prog3_proyecto_server.http.handlers.DefaultHandler;
-import ud.binmonkey.prog3_proyecto_server.http.handlers.LoginHandler;
-import ud.binmonkey.prog3_proyecto_server.http.handlers.SessionInfoHandler;
-import ud.binmonkey.prog3_proyecto_server.http.handlers.WebHandlers;
+import ud.binmonkey.prog3_proyecto_server.http.handlers.*;
 import ud.binmonkey.prog3_proyecto_server.users.UserManager;
 
 import javax.net.ssl.KeyManagerFactory;
@@ -57,8 +54,10 @@ public enum HTTPSServer {
     private final Thread watcherThread = new Thread(() -> sessionWatcher.watch());
     private final HashMap<String, HttpHandler> contexts = new HashMap<String, HttpHandler>() {{
         put("/", new WebHandlers.IndexHandler());
+        put("/changeProperty", new PropertyChangeHandler());
         put("/login", new LoginHandler());
         put("/sessionInfo", new SessionInfoHandler());
+        put("/userInfo", new UserInfoHandler());
 
         /* extras */
         put("/antigravity", new WebHandlers.AntigravityHandler());

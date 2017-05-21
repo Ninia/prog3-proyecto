@@ -29,7 +29,6 @@ public class HandlerUtils {
 
     /**
      * Show request in terminal
-     * TODO: log requests
      */
     public static void printRequest(HttpExchange he) {
         new Thread(() -> {

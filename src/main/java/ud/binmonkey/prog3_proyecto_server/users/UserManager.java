@@ -123,7 +123,7 @@ public class UserManager {
      */
     private static void createUser(JSONObject userJson) throws FtpException, InvalidNameException, AdminEditException {
         User user = new User(
-                    (String) userJson.get("birthdate"),
+                    (String) userJson.get("birth_date"),
                     (String) userJson.get("display_name"),
                     (String) userJson.get("email"),
                     (String) userJson.get("gender"),
@@ -133,7 +133,7 @@ public class UserManager {
                     (String) userJson.get("username"));
 
             /* TODO: there must be a better way of doing this */
-            switch ((String) userJson.get("role")) {
+            switch (userJson.get("role").toString().toLowerCase()) {
                 case "admin":
                     user.setRole(Role.ADMIN);
                     break;
@@ -145,12 +145,12 @@ public class UserManager {
                     break;
             }
 
-            switch ((String) userJson.get("preferred_language")) {
+            switch (userJson.get("preferred_language").toString().toLowerCase()) {
                 case "es":
                     user.setPreferredLanguage(Language.ES);
                     break;
-                case "eus":
-                    user.setPreferredLanguage(Language.EUS);
+                case "eu":
+                    user.setPreferredLanguage(Language.EU);
                     break;
                 default:
                     user.setPreferredLanguage(Language.EN);
@@ -193,11 +193,25 @@ public class UserManager {
 
     /**
      * Change birth date of user
-     * @param userName username of user whose birthdate will be changed
-     * @param birthDate new birthdate
+     * @param userName username of user whose birth_date will be changed
+     * @param birthDate new birth_date
      */
-    public void changeBirthDate(String userName, String birthDate) throws AdminEditException {
-        MongoDB.changeBirthdate(userName, birthDate);
+    public static void changeBirthDate(String userName, String birthDate)
+            throws AdminEditException, IncorrectFormatException {
+        if (birthDate.matches("\\d{2}-\\d{2}-\\d{4}")) {
+            MongoDB.changeBirthdate(userName, birthDate);
+        } else {
+            throw new IncorrectFormatException(birthDate, "\\d{2}-\\d{2}-\\d{4}");
+        }
+    }
+
+    /**
+     * Change gender of user
+     * @param userName username of user changing gender
+     * @param gender new gender
+     */
+    public static void changeGender(String userName, String gender) throws AdminEditException {
+        MongoDB.changeGender(userName, gender);
     }
 
     /**
@@ -205,7 +219,7 @@ public class UserManager {
      * @param userName username of user whose display name will be changed
      * @param displayName new display name
      */
-    public void changeDisplayName(String userName, String displayName) throws AdminEditException {
+    public static void changeDisplayName(String userName, String displayName) throws AdminEditException {
         MongoDB.changeDisplayName(userName, displayName);
     }
 
@@ -214,8 +228,12 @@ public class UserManager {
      * @param userName username of user whose email will be changed
      * @param email new email
      */
-    public void changeEmail(String userName, String email) throws AdminEditException {
-        MongoDB.changeEmail(userName, email);
+    public static void changeEmail(String userName, String email) throws AdminEditException, IncorrectFormatException {
+        if (email.matches("([A-Za-z0-9])+@([A-Za-z0-9])+.([A-Za-z0-9])+")) {
+            MongoDB.changeEmail(userName, email);
+        } else {
+            throw new IncorrectFormatException(email, "([A-Za-z0-9])+@([A-Za-z0-9])+.([A-Za-z0-9])+");
+        }
     }
 
     /**
@@ -223,9 +241,13 @@ public class UserManager {
      * @param userName username of user whose email will be changed
      * @param language new preferred language, MUST BE IN @Language ENUM
      */
-    public void changePreferredLanguage(String userName, String language)
-            throws AdminEditException, UnsupportedLanguageException {
-        MongoDB.changePreferredLanguage(userName, language);
+    public static void changePreferredLanguage(String userName, String language)
+            throws AdminEditException, UnsupportedLanguageException, IncorrectFormatException {
+        if (language.matches("[A-Za-z]{2}")) {
+            MongoDB.changePreferredLanguage(userName, language);
+        } else {
+            throw new IncorrectFormatException(language, "[A-Za-z]{2}");
+        }
     }
 
     /**
@@ -233,7 +255,7 @@ public class UserManager {
      * @param userName username of user whose role will be changed
      * @param role new role. MUST BE IN @Role ENUM
      */
-    public void changeRole(String userName, String role) throws AdminEditException, InvalidRoleException {
+    public static void changeRole(String userName, String role) throws AdminEditException, InvalidRoleException {
         MongoDB.changeRole(userName, role);
     }
 

@@ -29,6 +29,7 @@ public class WebHandlers {
             html = HtmlParser.parse(html);
 
             HttpsExchange hes = (HttpsExchange) he;
+
             hes.sendResponseHeaders(200, html.length());
             hes.getResponseHeaders().add("Content-type", "application/html");
 

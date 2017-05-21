@@ -163,6 +163,7 @@ public class MongoDB {
             MongoCollection collection = db.getCollection(COLLECTION);
             BasicDBObject doc = new BasicDBObject("username", user.getUserName())
                     .append("display_name", user.getDisplayName())
+                    .append("birth_date", user.getBirthdDate())
                     .append("email", user.getEmail())
                     .append("gender", user.getGender())
                     .append("password", new String(user.getPassword()))
@@ -186,8 +187,8 @@ public class MongoDB {
 
     /**
      * Change birth date of user
-     * @param userName username of user whose birthdate will be changed
-     * @param birthDate new birthdate
+     * @param userName username of user whose birth_date will be changed
+     * @param birthDate new birth_date
      */
     public static void changeBirthdate(String userName, String birthDate) throws AdminEditException {
 
@@ -200,7 +201,7 @@ public class MongoDB {
             collection.updateMany(
                     new BasicDBObject("username", userName),
                     new BasicDBObject("$set",
-                            new BasicDBObject("birthdate", birthDate)
+                            new BasicDBObject("birth_date", birthDate)
                     )
             );
         }
