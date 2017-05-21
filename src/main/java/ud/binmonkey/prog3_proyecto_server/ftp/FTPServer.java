@@ -101,6 +101,7 @@ public class FTPServer extends DefaultFtpServer{
             BaseUser user = new BaseUser();
             user.setName(userName);
             user.setPassword(password);
+            user.setHomeDirectory(ftpd + userName);
 
             /* give permissions */
             List<Authority> authorities = new ArrayList<>();
@@ -119,14 +120,14 @@ public class FTPServer extends DefaultFtpServer{
      * Create admin user
      */
     public static void createAdmin() throws FtpException {
-        createBaseUser("admin", "admin", ftpd);
+        createBaseUser("admin", "admin", "");
     }
 
     /**
      * Create common user
      */
     public static void createCommon() throws FtpException {
-        createBaseUser("common", "common", ftpd + "common");
+        createBaseUser("common", "common", "common");
     }
 
     /**
@@ -146,7 +147,7 @@ public class FTPServer extends DefaultFtpServer{
             BaseUser user = new BaseUser();
             user.setName(userName);
             user.setPassword(password);
-            user.setHomeDirectory(homeDir);
+            user.setHomeDirectory(ftpd + homeDir);
 
         /* give permissions */
             List<Authority> authorities = new ArrayList<>();

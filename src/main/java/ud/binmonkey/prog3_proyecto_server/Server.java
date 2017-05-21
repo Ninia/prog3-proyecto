@@ -18,6 +18,10 @@ public enum Server {
             "network", "ftp-server", "ftplet-file").getTextContent();
 
     Server() {
+        /* create admin and common users*/
+        FTPServer.init();
+
+        /* main services */
         this.httpsServer = HTTPSServer.INSTANCE;
         this.ftpServer = FTPServer.getFtpServer(ftpLetFile, FTPlet.class.getSimpleName());
     }
@@ -26,7 +30,6 @@ public enum Server {
         try {
             this.httpsServer.init();
             this.httpsServer.getHttpsServer().start();
-            FTPServer.init();
             this.ftpServer.start();
         } catch (IOException | FtpException e) {
             e.printStackTrace();
