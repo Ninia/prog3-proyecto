@@ -18,6 +18,9 @@ import java.util.HashMap;
 
 import static ud.binmonkey.prog3_proyecto_server.http.handlers.HandlerUtils.printRequest;
 
+/**
+ * Returns info about current session
+ */
 public class SessionInfoHandler implements HttpHandler {
 
     @Override
@@ -57,7 +60,6 @@ public class SessionInfoHandler implements HttpHandler {
                     .appendSeconds()
                     .appendSuffix("s")
                     .toFormatter();
-
 
             String response = "{\n" +
                     "\t\"Username\": \"" + session.getUserName() + "\",\n" +

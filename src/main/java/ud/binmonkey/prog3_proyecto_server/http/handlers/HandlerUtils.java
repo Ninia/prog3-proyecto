@@ -28,7 +28,7 @@ public class HandlerUtils {
     }
 
     /**
-     * Show request in terminal
+     * Log and show request in terminal
      */
     public static void printRequest(HttpExchange he) {
         new Thread(() -> {

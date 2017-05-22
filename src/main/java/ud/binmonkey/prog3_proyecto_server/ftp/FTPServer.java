@@ -13,9 +13,9 @@ import org.apache.ftpserver.usermanager.impl.BaseUser;
 import org.apache.ftpserver.usermanager.impl.WritePermission;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 import ud.binmonkey.prog3_proyecto_server.common.DocumentReader;
-import ud.binmonkey.prog3_proyecto_server.common.time.DateUtils;
-import ud.binmonkey.prog3_proyecto_server.common.security.UserAuthentication;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.*;
+import ud.binmonkey.prog3_proyecto_server.common.security.UserAuthentication;
+import ud.binmonkey.prog3_proyecto_server.common.time.DateUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -255,6 +255,10 @@ public class FTPServer extends DefaultFtpServer{
         }
     }
 
+    /**
+     * Delete a FTP user
+     * @param userName username of user to be deleted
+     */
     public static void deleteUser(String userName) throws FtpException, UserNotFoundException, AdminEditException {
 
         /* lowercase usernames */
@@ -272,6 +276,7 @@ public class FTPServer extends DefaultFtpServer{
             throw new UserNotFoundException(userName);
         }
     }
+
 
 
     @SuppressWarnings("WeakerAccess")  /* for probable later use from outside class*/

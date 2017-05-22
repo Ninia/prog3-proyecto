@@ -3,6 +3,9 @@ package ud.binmonkey.prog3_proyecto_server.users;
 import ud.binmonkey.prog3_proyecto_server.users.attributes.Language;
 import ud.binmonkey.prog3_proyecto_server.users.attributes.Role;
 
+/**
+ * User class with same structure as user json to make user handling easier
+ */
 @SuppressWarnings("unused")
 public class User {
     private String birthdDate;

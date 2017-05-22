@@ -10,6 +10,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Maintained only because @URI depends on it
+ */
+@Deprecated
 public class Request {
 
     private static final String USER_AGENT = "Mozilla/5.0";
