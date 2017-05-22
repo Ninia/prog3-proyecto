@@ -1,4 +1,4 @@
-package ud.binmonkey.prog3_proyecto_server.common;
+package ud.binmonkey.prog3_proyecto_server.common.security;
 
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.AdminEditException;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.InvalidNameException;
@@ -6,7 +6,7 @@ import ud.binmonkey.prog3_proyecto_server.common.exceptions.InvalidNameException
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Security {
+public class UserAuthentication {
 
     private static String ADMIN = "admin";
 

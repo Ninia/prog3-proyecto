@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<log>
-    <influxdb version="1.2.0">
-        <size>10</size>
-        <time>5</time>
-    </influxdb>
-</log>
