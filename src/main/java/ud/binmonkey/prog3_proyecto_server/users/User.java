@@ -1,4 +1,7 @@
-package ud.binmonkey.prog3_proyecto_server.common;
+package ud.binmonkey.prog3_proyecto_server.users;
+
+import ud.binmonkey.prog3_proyecto_server.users.attributes.Language;
+import ud.binmonkey.prog3_proyecto_server.users.attributes.Role;
 
 @SuppressWarnings("unused")
 public class User {

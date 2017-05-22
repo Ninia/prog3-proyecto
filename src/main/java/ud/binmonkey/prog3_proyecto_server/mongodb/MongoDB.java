@@ -7,8 +7,12 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
-import ud.binmonkey.prog3_proyecto_server.common.*;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.*;
+import ud.binmonkey.prog3_proyecto_server.common.security.UserAuthentication;
+import ud.binmonkey.prog3_proyecto_server.common.time.DateUtils;
+import ud.binmonkey.prog3_proyecto_server.users.User;
+import ud.binmonkey.prog3_proyecto_server.users.attributes.Language;
+import ud.binmonkey.prog3_proyecto_server.users.attributes.Role;
 
 import java.io.IOException;
 import java.util.logging.FileHandler;
@@ -45,8 +49,8 @@ public class MongoDB {
         oldUserName = oldUserName.toLowerCase();
         newUserName = newUserName.toLowerCase();
 
-        Security.checkAdmin(oldUserName, newUserName);
-        Security.isValidName(newUserName);
+        UserAuthentication.checkAdmin(oldUserName, newUserName);
+        UserAuthentication.isValidName(newUserName);
 
         if(userExists(oldUserName)) {
             if (!userExists(newUserName)) {
@@ -106,11 +110,28 @@ public class MongoDB {
     }
 
     /**
+     * Returns password of username
+     * @param userName username whose password is to be found
+     * @return password as char array
+     * @throws UserNotFoundException user was not found
+     * @throws AdminEditException tried to get admin password
+     */
+    public static char[] getPassword(String userName) throws UserNotFoundException, AdminEditException {
+        userName = userName.toLowerCase();
+        UserAuthentication.checkAdmin(userName);
+        if (!userExists(userName)) {
+            throw new UserNotFoundException("User " + userName + "not found.");
+        }
+        Document user = getUser(userName);
+        return ((String) user.get("password")).toCharArray();
+    }
+
+    /**
      * Checks if username is already registered in database
      * @param userName username to be checked
      * @return true if it exists, false if not
      */
-    private static boolean userExists(String userName) {
+    public static boolean userExists(String userName) {
 
         /* lowercase usernames */
         userName = userName.toLowerCase();
@@ -134,17 +155,18 @@ public class MongoDB {
 
         /* lowercase usernames */
         user.setUserName(user.getUserName().toLowerCase());
-        Security.checkAdmin(user.getUserName());
-        Security.isValidName(user.getUserName());
+        UserAuthentication.checkAdmin(user.getUserName());
+        UserAuthentication.isValidName(user.getUserName());
 
         if (!userExists(user.getUserName())) {
             MongoDatabase db = getUsersDB();
             MongoCollection collection = db.getCollection(COLLECTION);
             BasicDBObject doc = new BasicDBObject("username", user.getUserName())
                     .append("display_name", user.getDisplayName())
+                    .append("birth_date", user.getBirthdDate())
                     .append("email", user.getEmail())
                     .append("gender", user.getGender())
-                    .append("password", user.getPassword())
+                    .append("password", new String(user.getPassword()))
                     .append("preferred_language", user.getPreferredLanguage().toString())
                     .append("role", user.getRole().toString());
             collection.insertOne(Document.parse(doc.toJson()));
@@ -165,21 +187,21 @@ public class MongoDB {
 
     /**
      * Change birth date of user
-     * @param userName username of user whose birthdate will be changed
-     * @param birthDate new birthdate
+     * @param userName username of user whose birth_date will be changed
+     * @param birthDate new birth_date
      */
     public static void changeBirthdate(String userName, String birthDate) throws AdminEditException {
 
         /*todo: check validity */
         userName = userName.toLowerCase();
-        Security.checkAdmin(userName);
+        UserAuthentication.checkAdmin(userName);
         if (userExists(userName)) {
             MongoDatabase db = getUsersDB();
             MongoCollection collection = db.getCollection(COLLECTION);
             collection.updateMany(
                     new BasicDBObject("username", userName),
                     new BasicDBObject("$set",
-                            new BasicDBObject("birthdate", birthDate)
+                            new BasicDBObject("birth_date", birthDate)
                     )
             );
         }
@@ -187,15 +209,16 @@ public class MongoDB {
     }
 
     /**
-     * Change display name of user
-     * @param userName username of user whose display name will be changed
-     * @param displayName new display name
+     * Change email of user
+     * @param userName username of user whose email will be changed
+     * @param email new email
+     * @throws AdminEditException
      */
     public static void changeEmail(String userName, String email) throws AdminEditException {
 
         /*todo: check validity */
         userName = userName.toLowerCase();
-        Security.checkAdmin(userName);
+        UserAuthentication.checkAdmin(userName);
 
         if (userExists(userName)) {
             MongoDatabase db = getUsersDB();
@@ -211,16 +234,15 @@ public class MongoDB {
     }
 
     /**
-     * Change email of user
-     * @param userName username of user whose email will be changed
-     * @param email new email
-     * @throws AdminEditException
+     * Change display name of user
+     * @param userName username of user whose display name will be changed
+     * @param displayName new display name
      */
     public static void changeDisplayName(String userName, String displayName) throws AdminEditException {
 
         /*todo: check validity */
         userName = userName.toLowerCase();
-        Security.checkAdmin(userName);
+        UserAuthentication.checkAdmin(userName);
 
         if (userExists(userName)) {
             MongoDatabase db = getUsersDB();
@@ -235,16 +257,12 @@ public class MongoDB {
         LOG.log(Level.INFO, "DisplayName of user `" + userName +  "` has been changed to `" + displayName + "''.");
     }
 
-    /**
-     * change preferred language of user
-     * @param userName username of user whose email will be changed
-     * @param language new preferred language, MUST BE IN @Language ENUM
-     */
+
     public static void changeGender(String userName, String gender) throws AdminEditException {
 
         /*todo: check validity */
         userName = userName.toLowerCase();
-        Security.checkAdmin(userName);
+        UserAuthentication.checkAdmin(userName);
 
         if (userExists(userName)) {
             MongoDatabase db = getUsersDB();
@@ -260,16 +278,16 @@ public class MongoDB {
     }
 
     /**
-     * change role of user
-     * @param userName username of user whose role will be changed
-     * @param role new role. MUST BE IN @Role ENUM
+     * change preferred language of user
+     * @param userName username of user whose email will be changed
+     * @param language new preferred language, MUST BE IN @Language ENUM
      */
     public static void changePreferredLanguage(String userName, String language)
             throws AdminEditException, UnsupportedLanguageException {
 
         /*todo: check validity */
         userName = userName.toLowerCase();
-        Security.checkAdmin(userName);
+        UserAuthentication.checkAdmin(userName);
 
         boolean validLang = false;
         for (Language lang: Language.values()) {
@@ -295,11 +313,16 @@ public class MongoDB {
                 "` has been changed to `" + language + "''.");
     }
 
+    /**
+     * change role of user
+     * @param userName username of user whose role will be changed
+     * @param role new role. MUST BE IN @Role ENUM
+     */
     public static void changeRole(String userName, String role) throws AdminEditException, InvalidRoleException {
 
         /*todo: check validity */
         userName = userName.toLowerCase();
-        Security.checkAdmin(userName);
+        UserAuthentication.checkAdmin(userName);
 
         boolean validRole = false;
         for(Role r: Role.values()) {
@@ -335,7 +358,7 @@ public class MongoDB {
             throws UserNotFoundException, IncorrectPasswordException, AdminEditException {
 
         userName = userName.toLowerCase();
-        Security.checkAdmin(userName);
+        UserAuthentication.checkAdmin(userName);
 
         if(userExists(userName)) {
             if (getUser(userName).get("password").equals(oldPassword)) {
@@ -354,6 +377,11 @@ public class MongoDB {
         } else {
             throw new UserNotFoundException(userName);
         }
+    }
+
+    public static void changePassword(String userName, char[] oldPassword, char[] newPassword)
+            throws UserNotFoundException, IncorrectPasswordException, AdminEditException {
+        changePassword(userName, new String(oldPassword), new String(newPassword));
     }
 
     /**

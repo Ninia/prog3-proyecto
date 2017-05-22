@@ -1,7 +1,7 @@
 package ud.binmonkey.prog3_proyecto_server.ftp;
 
 import org.apache.ftpserver.ftplet.*;
-import ud.binmonkey.prog3_proyecto_server.common.DateUtils;
+import ud.binmonkey.prog3_proyecto_server.common.time.DateUtils;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -70,6 +70,10 @@ public class FTPlet extends DefaultFtplet {
                 break;
 
             case "PASS":
+                /* Keep users from changing common password */
+                if (session.isLoggedIn() && session.getUser().equals("common")) {
+                    return FtpletResult.SKIP;
+                }
                 LOG.log(Level.INFO, "PASS request received." /* `" + request.getArgument() + "`" */);
                 break;
 

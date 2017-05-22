@@ -27,7 +27,7 @@
 
 
     <!-- The user manager, choose one -->
-    <file-user-manager file="conf/properties/ftpusers.properties"
+    <file-user-manager file="conf/ftp/users.properties"
                        encrypt-passwords="true" />
 
 

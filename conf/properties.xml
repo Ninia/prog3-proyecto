@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<properties>
+
+    <!-- InfluxDB-->
+    <influxdb-log>
+        <influxdb version="1.2.0">
+            <size>10</size>
+            <time>5</time>
+        </influxdb>
+    </influxdb-log>
+
+    <!--Network-->
+    <network>
+        <!--InfluxDB-->
+        <influxdb version="1.2.0">
+            <host>http://127.0.0.1</host>
+            <port>8086</port>
+        </influxdb>
+
+        <!--FTP-->
+        <ftp-server>
+            <ftplet-file>conf/ftp/ftplet.xml</ftplet-file>
+            <user-file>conf/ftp/users.properties</user-file>
+            <ftpd>src/test/resources/ftp/ftpd/</ftpd>
+            <port>8021</port>
+        </ftp-server>
+
+        <!--HTTP-->
+        <http-server>
+            <host>localhost</host>
+            <port>8080</port>
+            <keyword>changeit</keyword>
+        </http-server>
+
+        <!--Neo4j-->
+        <neo4j-server>
+            <host></host><port></port>
+        </neo4j-server>
+
+        <!--MongoDB-->
+        <mongodb-server>
+            <host></host>
+            <port></port>
+        </mongodb-server>
+    </network>
+
+    <!--SSL-->
+    <ssl>
+        <!--Certificate file location-->
+        <certfile>
+            <location>src/test/resources/keys/keystore.jks</location>
+        </certfile>
+
+        <!--FTP-->
+        <ftp-server>
+            <keypasswd>changeit</keypasswd>
+        </ftp-server>
+    </ssl>
+
+    <system os="posix">
+        <hostname>[hostname]</hostname>
+        <cpu>
+            <core-numer>2</core-numer>
+        </cpu>
+        <ram>
+            <max unit="MB">4000</max>
+        </ram>
+    </system>
+
+</properties>
+
+
