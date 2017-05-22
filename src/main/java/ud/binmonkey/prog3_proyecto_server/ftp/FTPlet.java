@@ -73,6 +73,10 @@ public class FTPlet extends DefaultFtplet {
                 break;
 
             case "PASS":
+                /* Keep users from changing common password */
+                if (session.isLoggedIn() && session.getUser().equals("common")) {
+                    return FtpletResult.SKIP;
+                }
                 LOG.log(Level.INFO, "PASS request received." /* `" + request.getArgument() + "`" */);
                 break;
 
