@@ -258,6 +258,11 @@ public class MongoDB {
     }
 
 
+    /**
+     * Change gender of user
+     * @param userName username of user
+     * @param gender new gender
+     */
     public static void changeGender(String userName, String gender) throws AdminEditException {
 
         /*todo: check validity */

@@ -12,7 +12,7 @@ import java.io.OutputStream;
 import static ud.binmonkey.prog3_proyecto_server.http.handlers.HandlerUtils.printRequest;
 
 /**
- * Handler for root
+ * Handler for root, replies 200 OK
  */
 public class DefaultHandler implements HttpHandler {
 

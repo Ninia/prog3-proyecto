@@ -32,6 +32,12 @@ public class UserManager {
         }
     }
 
+    /**
+     * Authenticate a user
+     * @param userName username of user
+     * @param password password of user
+     * @return true if user was successfully authenticated
+     */
     public static boolean authUser(String userName, char[] password) throws UserNotFoundException, AdminEditException {
         return (new PasswordAuthentication().authenticate(password, MongoDB.getPassword(userName)));
     }

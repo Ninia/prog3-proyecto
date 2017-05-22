@@ -13,6 +13,9 @@ import java.nio.file.Paths;
 
 import static ud.binmonkey.prog3_proyecto_server.http.handlers.HandlerUtils.printRequest;
 
+/**
+ * Handlers for web services
+ */
 public class WebHandlers {
 
     /**

@@ -13,10 +13,11 @@ import java.io.IOException;
 
 public class DocumentReader {
 
-    /* Logger for DocumentReader */
-    private static final boolean ADD_TO_FIC_LOG = false; /* set false to overwrite */
-    /* END Logger for DocumentReader */
-
+    /**
+     * Reads XML file and returns
+     * @param path @org.w3c.dom.Document
+     * @return @org.w3c.dom.Document
+     */
     public static Document getDoc(String path) {
 
         Document document = null;  /*TODO: find a better way to handle this*/
