@@ -76,12 +76,14 @@ public class PasswordChangeHandler implements HttpHandler {
                     os.write(e.getMessage().getBytes());
                 }
             } else {
+                hes.getResponseHeaders().add("content-type", "text/plain");
                 hes.sendResponseHeaders(401, 0);
                 os = hes.getResponseBody();
                 os.write("Invalid token".getBytes());
             }
 
         } catch (UriUnescapedArgsException | EmptyArgException e) {
+            hes.getResponseHeaders().add("content-type", "text/plain");
             hes.sendResponseHeaders(400, 0);
             os = hes.getResponseBody();
             os.write(e.getMessage().getBytes());

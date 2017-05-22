@@ -19,6 +19,14 @@ import java.util.logging.Logger;
 
 import static ud.binmonkey.prog3_proyecto_server.http.handlers.HandlerUtils.printRequest;
 
+/**
+ * Change properties of one user
+ * Params:
+ *  property: property to be changed
+ *  value: new value of property
+ *  username: username of user
+ *  token: token of current session
+ */
 public class PropertyChangeHandler implements HttpHandler {
 
     private static final Logger LOG = Logger.getLogger(HTTPSServer.class.getName() + ".Properties");

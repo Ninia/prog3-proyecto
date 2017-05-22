@@ -9,6 +9,9 @@ import ud.binmonkey.prog3_proyecto_server.http.HTTPSServer;
 
 import java.io.IOException;
 
+/**
+ * Main class of project
+ */
 public enum Server {
     INSTANCE;
 
@@ -17,6 +20,9 @@ public enum Server {
     String ftpLetFile = DocumentReader.getAttr(DocumentReader.getDoc("conf/properties.xml"),
             "network", "ftp-server", "ftplet-file").getTextContent();
 
+    /**
+     * Create instances of all services
+     */
     Server() {
         /* create admin and common users */
         FTPServer.init();
@@ -26,6 +32,9 @@ public enum Server {
         this.ftpServer = FTPServer.getFtpServer(ftpLetFile, FTPlet.class.getSimpleName());
     }
 
+    /**
+     * Start instances
+     */
     public void start() {
         try {
             this.httpsServer.init();

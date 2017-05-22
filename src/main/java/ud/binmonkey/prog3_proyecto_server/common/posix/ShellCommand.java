@@ -4,6 +4,12 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 public class ShellCommand {
+
+    /**
+     * Run a shell command
+     * @param command command to be run
+     * @return stout of command
+     */
     public static String executeCommand(String command) {
 
         StringBuilder output = new StringBuilder();

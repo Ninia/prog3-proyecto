@@ -9,6 +9,9 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Ftplet that will handle all requests
+ */
 @SuppressWarnings("WeakerAccess")
 public class FTPlet extends DefaultFtplet {
 
