@@ -2,6 +2,7 @@ package ud.binmonkey.prog3_proyecto_server.neo4j.omdb;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import ud.binmonkey.prog3_proyecto_server.common.DocumentReader;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -18,6 +19,10 @@ import java.util.Scanner;
 public class Omdb {
 
     private static String url = "";
+    private static final String keyFile = "conf/keys.xml";
+    private static final String KEY = DocumentReader.getAttr(DocumentReader.getDoc(keyFile),
+            "omdb").getTextContent().replaceAll("\n", "").replaceAll(" ", "");
+    private static final String apikey = "&apikey=" + KEY;
 
     /**
      * Searches a title in IMDB, can differentiate between media types.
@@ -33,9 +38,10 @@ public class Omdb {
             HashMap search_results = new HashMap<String, HashMap>();
 
             if (!type.equals(MediaType.ALL))
-                url = "http://www.omdbapi.com/?s=" + title.replace(" ", "%20") + "&type=" + type.name();
+                url = "http://www.omdbapi.com/?s=" + title.replace(" ", "%20") +
+                        "&type=" + type.name() + apikey;
             else
-                url = "http://www.omdbapi.com/?s=" + title.replace(" ", "%20");
+                url = "http://www.omdbapi.com/?s=" + title.replace(" ", "%20") + apikey;
 
             URL query = new URL(url);
 
@@ -79,7 +85,7 @@ public class Omdb {
 
         try {
 
-            url = "http://www.omdbapi.com/?i=" + id + "&plot=full";
+            url = "http://www.omdbapi.com/?i=" + id + "&plot=full" + apikey;
 
             URL query = new URL(url);
 
@@ -93,7 +99,7 @@ public class Omdb {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        System.out.println(Omdb.apikey);
         return null;
     }
 
@@ -107,7 +113,7 @@ public class Omdb {
 
         try {
 
-            url = "http://www.omdbapi.com/?i=" + id;
+            url = "http://www.omdbapi.com/?i=" + id + apikey;
 
             URL query = new URL(url);
 
