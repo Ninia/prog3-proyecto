@@ -1,4 +1,4 @@
-package ud.binmonkey.prog3_proyecto_server.neo4j.omdb;
+package ud.binmonkey.prog3_proyecto_server.omdb;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,11 +18,11 @@ import java.util.Scanner;
  */
 public class Omdb {
 
-    private static String url = "";
     private static final String keyFile = "conf/keys.xml";
     private static final String KEY = DocumentReader.getAttr(DocumentReader.getDoc(keyFile),
             "omdb").getTextContent().replaceAll("\n", "").replaceAll(" ", "");
     private static final String apikey = "&apikey=" + KEY;
+    private static String url = "";
 
     /**
      * Searches a title in IMDB, can differentiate between media types.
