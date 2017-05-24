@@ -1,4 +1,4 @@
-package ud.binmonkey.prog3_proyecto_server.neo4j.omdb;
+package ud.binmonkey.prog3_proyecto_server.omdb;
 
 import org.json.JSONObject;
 
@@ -22,10 +22,6 @@ public class OmdbTitleUnitTest {
         OmdbMovie movie = new OmdbMovie(Omdb.getTitle("tt0117951")); /* Trainspotting */
         OmdbSeries series = new OmdbSeries(Omdb.getTitle("tt2802850")); /* Fargo */
         OmdbEpisode episode = new OmdbEpisode(Omdb.getTitle("tt2169080")); /* Rick and Morty S01E01 */
-
-        System.out.println(movie.toJSON());
-        System.out.println(series.toJSON());
-        System.out.println(episode.toJSON());
 
         assertEquals("tt0117951", movie.getImdbID());
         assertTrue(movie.getActors().contains("Ewan McGregor"));
@@ -55,10 +51,6 @@ public class OmdbTitleUnitTest {
             OmdbMovie movie = new OmdbMovie(jsonMovie.toMap());
             OmdbSeries series = new OmdbSeries(jsonSeries.toMap());
             OmdbEpisode episode = new OmdbEpisode(jsonEpisode.toMap());
-
-            System.out.println(movie.toJSON());
-            System.out.println(series.toJSON());
-            System.out.println(episode.toJSON());
 
             assertEquals("tt0117951", movie.getImdbID());
             assertTrue(movie.getActors().contains("Ewan McGregor"));

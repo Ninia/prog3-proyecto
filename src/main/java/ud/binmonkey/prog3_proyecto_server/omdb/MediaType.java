@@ -1,4 +1,4 @@
-package ud.binmonkey.prog3_proyecto_server.neo4j.omdb;
+package ud.binmonkey.prog3_proyecto_server.omdb;
 
 public enum MediaType {
     MOVIE("movie"),

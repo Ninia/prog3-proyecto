@@ -6,7 +6,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import ud.binmonkey.prog3_proyecto_server.common.DocumentReader;
 import ud.binmonkey.prog3_proyecto_server.mysql.MySQL;
-import ud.binmonkey.prog3_proyecto_server.neo4j.omdb.*;
+import ud.binmonkey.prog3_proyecto_server.omdb.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
