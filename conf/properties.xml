@@ -39,8 +39,8 @@
 
         <!--MongoDB-->
         <mongodb-server>
-            <host></host>
-            <port></port>
+            <host>localhost</host>
+            <port>27017</port>
         </mongodb-server>
     </network>
 
