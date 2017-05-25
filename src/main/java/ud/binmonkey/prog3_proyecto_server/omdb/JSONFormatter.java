@@ -1,4 +1,4 @@
-package ud.binmonkey.prog3_proyecto_server.neo4j.omdb;
+package ud.binmonkey.prog3_proyecto_server.omdb;
 
 import java.io.IOException;
 import java.text.DateFormat;

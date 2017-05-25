@@ -7,6 +7,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
+import ud.binmonkey.prog3_proyecto_server.common.DocumentReader;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.*;
 import ud.binmonkey.prog3_proyecto_server.common.security.UserAuthentication;
 import ud.binmonkey.prog3_proyecto_server.common.time.DateUtils;
@@ -25,6 +26,11 @@ public class MongoDB {
     /* TODO: tests */
     private static final Logger LOG = Logger.getLogger(MongoDB.class.getName());
     private static String COLLECTION = "users";
+    private static final String ns = DocumentReader.getAttr(DocumentReader.getDoc("conf/properties.xml"),
+            "network", "mongodb-server", "host").getTextContent();
+    private static final int port = Integer.parseInt(DocumentReader.getAttr(DocumentReader.getDoc("conf/properties.xml"),
+            "network", "mongodb-server", "port").getTextContent());
+
     static {
         try {
             LOG.addHandler(new FileHandler(
@@ -76,7 +82,7 @@ public class MongoDB {
      * @return User MongoDatabase object
      */
     private static MongoDatabase getUsersDB(){
-        MongoClient mongoClient = new MongoClient("localhost", 27017);
+        MongoClient mongoClient = new MongoClient(ns, port);
         MongoDatabase db = mongoClient.getDatabase(COLLECTION);
         try {
             db.createCollection(COLLECTION);

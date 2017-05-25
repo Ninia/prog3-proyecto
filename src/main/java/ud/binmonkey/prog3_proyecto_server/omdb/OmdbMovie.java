@@ -1,4 +1,4 @@
-package ud.binmonkey.prog3_proyecto_server.neo4j.omdb;
+package ud.binmonkey.prog3_proyecto_server.omdb;
 
 import org.json.JSONObject;
 import ud.binmonkey.prog3_proyecto_server.common.time.DateUtils;
