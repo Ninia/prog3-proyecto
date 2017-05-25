@@ -72,7 +72,7 @@ public class UserManager {
      * Create user on both FTP and MongoDB
      * @param user user to be created
      */
-    private static void createUser(User user)
+    public static void createUser(User user)
             throws FtpException, InvalidNameException, AdminEditException {
         try {
 

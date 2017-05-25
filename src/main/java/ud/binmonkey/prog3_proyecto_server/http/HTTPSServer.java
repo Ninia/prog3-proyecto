@@ -56,6 +56,7 @@ public enum HTTPSServer {
         put("/", new WebHandlers.IndexHandler());
         put("/changeProperty", new PropertyChangeHandler());
         put("/login", new LoginHandler());
+        put("/signUp", new SignUpHandler());
         put("/sessionInfo", new SessionInfoHandler());
         put("/userInfo", new UserInfoHandler());
 
