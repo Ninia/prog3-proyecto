@@ -1,6 +1,16 @@
 {
   "users": [
     {
+      "birth_date": "01-01-1970",
+      "display_name": "Test User",
+      "email": "test@test.test",
+      "gender": "All",
+      "password": "test",
+      "preferred_language": "en",
+      "role": "user",
+      "username": "test"
+    },
+    {
       "birth_date": "26-04-1967",
       "display_name": "Anna Jones",
       "email": "anna.jones@gmail.com",
