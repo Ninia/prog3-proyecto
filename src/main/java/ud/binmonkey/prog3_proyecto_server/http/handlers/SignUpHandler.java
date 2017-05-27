@@ -22,6 +22,10 @@ import java.util.logging.Logger;
 
 import static ud.binmonkey.prog3_proyecto_server.http.handlers.HandlerUtils.printRequest;
 
+/**
+ * Creates user from HTTP request
+ * TODO: documentation
+ */
 public class SignUpHandler implements HttpHandler {
 
     private static final Logger LOG = Logger.getLogger(HTTPSServer.class.getName() + ".SignUp");
@@ -117,7 +121,7 @@ public class SignUpHandler implements HttpHandler {
             } else {
                 hes.getResponseHeaders().add("content-type", "text/plain");
                 hes.sendResponseHeaders(400, 0);
-                response = ("Username " + username + "already found.").getBytes();
+                response = ("Username " + username + " already found.").getBytes();
             }
 
             os = hes.getResponseBody();

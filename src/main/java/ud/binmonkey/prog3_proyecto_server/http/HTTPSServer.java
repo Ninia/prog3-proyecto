@@ -55,6 +55,7 @@ public enum HTTPSServer {
     private final HashMap<String, HttpHandler> contexts = new HashMap<String, HttpHandler>() {{
         put("/", new WebHandlers.IndexHandler());
         put("/changeProperty", new PropertyChangeHandler());
+        put("/listDir", new ShowFileSystemHandler());
         put("/login", new LoginHandler());
         put("/signUp", new SignUpHandler());
         put("/sessionInfo", new SessionInfoHandler());
