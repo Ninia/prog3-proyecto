@@ -68,7 +68,6 @@ public class ShowFileSystemHandler implements HttpHandler {
                     }
                 }
                 try {
-                    System.out.println(Scanner.getFtpd() + userName + directory);
                     String response = Scanner.scanDir(Scanner.getFtpd() + userName + directory).toString();
                     hes.getResponseHeaders().add("content-type", "application/json");
                     hes.sendResponseHeaders(200, 0);
@@ -76,6 +75,7 @@ public class ShowFileSystemHandler implements HttpHandler {
                     os.write(response.getBytes());
 
                 } catch (DirIsFileException e) {
+                    hes.getResponseHeaders().add("content-type", "text/plain");
                     hes.sendResponseHeaders(400, 0);
                     os = hes.getResponseBody();
                     os.write(("Requested directory " + directory + " is a file").getBytes());
