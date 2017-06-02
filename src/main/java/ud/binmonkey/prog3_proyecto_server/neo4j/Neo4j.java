@@ -86,11 +86,11 @@ public class Neo4j {
             LOG.log(Level.INFO, "Connection to Neo4j server started");
             return true;
         } catch (org.neo4j.driver.v1.exceptions.ServiceUnavailableException e) {
-            LOG.log(Level.SEVERE, "Unable to connect to server," +
+            LOG.log(Level.SEVERE, "ServiceUnavailableException: Unable to connect to server," +
                     " ensure the database is running and that there is a working network connection to it.");
             return false;
         } catch (org.neo4j.driver.v1.exceptions.AuthenticationException e) {
-            LOG.log(Level.SEVERE, ": The client is unauthorized due to authentication failure.");
+            LOG.log(Level.SEVERE, "AuthenticationException: The client is unauthorized due to authentication failure.");
             System.exit(0);
         }
 
@@ -185,11 +185,10 @@ public class Neo4j {
      */
     private void dwhLog(String operation, String id, MediaType type) {
         try {
-
             statement.executeUpdate("INSERT INTO neo4j_log VALUES (default, '" + operation + "'," +
                     " '" + id + "'," + " '" + type.toString() + "', CURRENT_TIMESTAMP);");
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOG.log(Level.SEVERE, "SQLException: Error logging " + operation + " " + id + " - " + type);
         }
     }
 
@@ -413,13 +412,6 @@ public class Neo4j {
                     "CREATE (a)-[:" + relation_type + "]->(b)", parameters("name", node, "title", title));
 
             LOG.log(Level.INFO, "Added " + relation_type + ": " + node + " -> " + title);
-
-            if (node_type.equals("Genre")) {
-                try {
-                    mySQL.updateCounter("neo4j_genres", node);
-                } catch (SQLException ignored) {
-                }
-            }
 
         } else {
             LOG.log(Level.WARNING, relation_type + ": " + node + " -> " + title + " already exists");
