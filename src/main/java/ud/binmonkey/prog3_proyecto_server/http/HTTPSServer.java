@@ -77,6 +77,8 @@ public enum HTTPSServer {
         try {
 
             String propertiesFile = "conf/properties.xml";
+            String certPath = DocumentReader.getAttr(DocumentReader.getDoc(propertiesFile),
+                    "ssl", "certfile", "location").getTextContent();
 
             /* obtain keyword from config xml*/
             Element settings = DocumentReader.getAttr(DocumentReader.getDoc(propertiesFile),
@@ -94,7 +96,7 @@ public enum HTTPSServer {
 
             /* configure key store */
             KeyStore ks = KeyStore.getInstance("JKS");
-            ks.load(new FileInputStream("src/test/resources/keys/keystore.jks"), passwd);
+            ks.load(new FileInputStream("conf/ssl/keystore.jks"), passwd);
 
             /* configure key management factory */
             KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
