@@ -33,13 +33,14 @@ public class MySQL {
      * @throws SQLException If the database is not properly created
      */
     public void clearDB() throws SQLException {
-        statement.executeUpdate("DELETE FROM neo4j_titles");
-        statement.executeUpdate("DELETE FROM neo4j_genres");
+        statement.executeUpdate("DELETE FROM neo4j_log");
+        statement.executeUpdate("DELETE FROM user_ratings");
+        statement.executeUpdate("DELETE FROM user_viewing_history");
     }
 
     private void readConfig() {
 
-        NodeList nList = DocumentReader.getDoc("conf/MySQLServer.xml").getElementsByTagName("mysql-server");
+        NodeList nList = DocumentReader.getDoc("conf/properties.xml").getElementsByTagName("mysql-server");
         Node nNode = nList.item(0);
         Element eElement = (Element) nNode;
 
@@ -81,6 +82,10 @@ public class MySQL {
 
     public Statement getStatement() {
         return statement;
+    }
+
+    public Connection getConnect() {
+        return connect;
     }
 
     /**
