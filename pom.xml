@@ -71,7 +71,7 @@
 
         <contributor>
             <name>Saul Segura</name>
-            <email>saul.segura@opendeusto.es </email>
+            <email>saul.segura@opendeusto.es</email>
             <url>https://github.com/luasaul</url>
             <roles>
                 <role>developer</role>
@@ -95,9 +95,9 @@
 
     <dependencies>
         <!--<dependency>-->
-            <!--<groupId>org.slf4j</groupId>-->
-            <!--<artifactId>slf4j-simple</artifactId>-->
-            <!--<version>1.6.1</version>-->
+        <!--<groupId>org.slf4j</groupId>-->
+        <!--<artifactId>slf4j-simple</artifactId>-->
+        <!--<version>1.6.1</version>-->
         <!--</dependency>-->
         <dependency>
             <groupId>org.apache.ftpserver</groupId>

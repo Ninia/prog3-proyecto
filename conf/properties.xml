@@ -34,7 +34,9 @@
 
         <!--Neo4j-->
         <neo4j-server>
-            <host></host><port></port>
+            <server_address>bolt://localhost:7687</server_address>
+            <username>username</username>
+            <password>password</password>
         </neo4j-server>
 
         <!--MongoDB-->
@@ -42,6 +44,12 @@
             <host>localhost</host>
             <port>27017</port>
         </mongodb-server>
+
+        <!--MySQL-->
+        <mysql-server>
+            <username>username</username>
+            <password>password</password>
+        </mysql-server>
     </network>
 
     <!--SSL-->
@@ -68,5 +76,3 @@
     </system>
 
 </properties>
-
-
