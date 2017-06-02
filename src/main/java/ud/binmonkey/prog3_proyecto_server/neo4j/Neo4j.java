@@ -112,6 +112,9 @@ public class Neo4j {
      */
     public void clearDB() {
         session.run("MATCH (n) DETACH DELETE n;");
+
+        cleanDB();
+
         logger.log(Level.INFO, "Cleared DB");
         dwhLog("CLEAR", "ALL", MediaType.ALL);
     }
@@ -448,6 +451,35 @@ public class Neo4j {
     /* Modify Methods */
 
     /**
+     * Removes a single title from the DB
+     *
+     * @param title - Title to remove
+     * @param type  - Omdb type of title
+     */
+    public void removeTitle(String title, String type) {
+        session.run(
+                "MATCH (n:" + type + "{name: {title}})" +
+                        "OPTIONAL MATCH (n)-[r]-()" +
+                        "DELETE n, r",
+                parameters("title", title));
+
+        cleanDB();
+
+        logger.log(Level.INFO, title + " deleted");
+
+        switch (type) {
+            case "Movie":
+                dwhLog("DELETE", title, MediaType.MOVIE);
+                break;
+            case "Series":
+                dwhLog("DELETE", title, MediaType.SERIES);
+                break;
+            case "Episode":
+                dwhLog("DELETE", title, MediaType.EPISODE);
+        }
+    }
+
+    /**
      * Deletes a node and all its relations
      *
      * @param node      - Node to delete
@@ -463,17 +495,6 @@ public class Neo4j {
         cleanDB();
 
         logger.log(Level.INFO, node + " deleted");
-
-        switch (node_type) {
-            case "Movie":
-                dwhLog("DELETE", node, MediaType.MOVIE);
-                break;
-            case "Series":
-                dwhLog("DELETE", node, MediaType.SERIES);
-                break;
-            case "Episode":
-                dwhLog("DELETE", node, MediaType.EPISODE);
-        }
     }
 
     /**
