@@ -59,3 +59,7 @@ https://github.com/Ninia/p3p-vagrant) and go to that folder
 ## License
 This project fall under the GPL 3 license fell free to use it, modify it and let us know of your changes :)
 
+### 3rd Party Licenses
+* ScriptRunner - [Source](https://github.com/BenoitDuffez/ScriptRunner) - [License](https://github.com/BenoitDuffez/ScriptRunner/blob/master/LICENSE)
+
+
