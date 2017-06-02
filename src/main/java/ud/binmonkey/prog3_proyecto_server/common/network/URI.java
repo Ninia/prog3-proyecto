@@ -8,12 +8,12 @@ import ud.binmonkey.prog3_proyecto_server.common.DocumentReader;
 public class URI {
 
     private static NodeList getService(String service) {
-        Document document = DocumentReader.getDoc("conf/Network.xml");
-        return document.getElementsByTagName(service);
+        Document document = DocumentReader.getDoc("conf/properties.xml");
+        return ((Element) document.getElementsByTagName("network").item(0)).getElementsByTagName(service);
     }
 
     /**
-     * Obtain URI of service specified on conf/Network.xml
+     * Obtain URI of service specified on conf/properties.xml
      *
      * @param service wanted service
      * @return string containing URI
@@ -30,7 +30,7 @@ public class URI {
     }
 
     /**
-     * Obtain port of service specified on conf/Network.xml
+     * Obtain port of service specified on conf/properties.xml
      *
      * @param service wanted service
      * @return string containing port
@@ -45,7 +45,7 @@ public class URI {
     }
 
     /**
-     * Obtain of service specified on conf/Network.xml
+     * Obtain of service specified on conf/properties.xml
      *
      * @param service wanted service
      * @return string containing ns

@@ -4,6 +4,9 @@ import ud.binmonkey.prog3_proyecto_server.common.network.URI;
 
 import java.util.HashMap;
 
+/**
+ * Custom html parser
+ */
 @SuppressWarnings("WeakerAccess")
 public class HtmlParser {
 

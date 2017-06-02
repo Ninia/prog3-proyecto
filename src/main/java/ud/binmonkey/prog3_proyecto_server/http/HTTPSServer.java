@@ -4,9 +4,18 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsParameters;
 import com.sun.net.httpserver.HttpsServer;
+import org.apache.ftpserver.ftplet.FtpException;
 import org.w3c.dom.Element;
 import ud.binmonkey.prog3_proyecto_server.common.DocumentReader;
+import ud.binmonkey.prog3_proyecto_server.common.exceptions.AdminEditException;
+import ud.binmonkey.prog3_proyecto_server.common.exceptions.InvalidNameException;
+import ud.binmonkey.prog3_proyecto_server.common.exceptions.UserNotFoundException;
 import ud.binmonkey.prog3_proyecto_server.common.network.URI;
+import ud.binmonkey.prog3_proyecto_server.common.security.SessionHandler;
+import ud.binmonkey.prog3_proyecto_server.common.security.SessionWatcher;
+import ud.binmonkey.prog3_proyecto_server.common.time.DateUtils;
+import ud.binmonkey.prog3_proyecto_server.http.handlers.*;
+import ud.binmonkey.prog3_proyecto_server.users.UserManager;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
@@ -21,20 +30,62 @@ import java.util.HashMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @SuppressWarnings("WeakerAccess")
-public class HTTPSServer {
+public enum HTTPSServer {
+    INSTANCE;
 
+    private static final Logger LOG = Logger.getLogger(HTTPSServer.class.getName());
+    static {
+        try {
+            LOG.addHandler(new FileHandler(
+                    "logs/" + HTTPSServer.class.getName() + "." +
+                            DateUtils.currentFormattedDate() + ".log.xml", true));
+        } catch (SecurityException | IOException e) {
+            LOG.log(Level.SEVERE, "Unable to create log file.");
+        }
+    }
     private HttpsServer httpsServer;
+    private final SessionHandler sessionHandler = SessionHandler.INSTANCE;
+    private final SessionWatcher sessionWatcher = new SessionWatcher(sessionHandler);
+    private final Thread watcherThread = new Thread(() -> sessionWatcher.watch());
+    private final HashMap<String, HttpHandler> contexts = new HashMap<String, HttpHandler>() {{
+        put("/", new WebHandlers.IndexHandler());
+        put("/changeProperty", new PropertyChangeHandler());
+        put("/login", new LoginHandler());
+        put("/sessionInfo", new SessionInfoHandler());
+        put("/userInfo", new UserInfoHandler());
 
+        /* extras */
+        put("/antigravity", new WebHandlers.AntigravityHandler());
+        put("/favicon.ico", new WebHandlers.FavIcoHandler());
+        put("/images/", new WebHandlers.WebFileHandler());
+        put("/index", new WebHandlers.IndexHandler());
+        put("/js/", new WebHandlers.WebFileHandler());
+        put("/test", new DefaultHandler());
+        put("/vendor/", new WebHandlers.WebFileHandler());
+    }};
 
-    public HTTPSServer() throws IOException {
+    /**
+     * Initializes HTTPS server
+     */
+    public void init() throws IOException {
 
         try {
 
+            String propertiesFile = "conf/properties.xml";
+            String certPath = DocumentReader.getAttr(DocumentReader.getDoc(propertiesFile),
+                    "ssl", "certfile", "location").getTextContent();
+
             /* obtain keyword from config xml*/
-            Element settings = (Element) DocumentReader.getDoc(
-                    "conf/Network.xml").getElementsByTagName("http-server").item(0);
+            Element settings = DocumentReader.getAttr(DocumentReader.getDoc(propertiesFile),
+                    "network", "http-server");
+
+            String certFile = DocumentReader.getAttr(DocumentReader.getDoc(propertiesFile),
+                    "ssl", "certfile", "location").getTextContent();
             String keyword = settings.getElementsByTagName("keyword").item(0).getTextContent();
 
             /* initialize ssl context */
@@ -45,7 +96,7 @@ public class HTTPSServer {
 
             /* configure key store */
             KeyStore ks = KeyStore.getInstance("JKS");
-            ks.load(new FileInputStream("src/test/resources/keys/teststore.jks"), passwd);
+            ks.load(new FileInputStream("conf/ssl/keystore.jks"), passwd);
 
             /* configure key management factory */
             KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
@@ -63,6 +114,8 @@ public class HTTPSServer {
                     URI.getPort("http-server")), 0);
 
             System.out.println("Creating HTTPS server in " + URI.getURI("http-server"));
+            LOG.log(Level.INFO, "Created HTTPS server in " + URI.getURI("http-server"));
+            watcherThread.start();
 
             /* set http configurator */
             this.httpsServer.setHttpsConfigurator(new HttpsConfigurator(sslContext) {
@@ -86,17 +139,6 @@ public class HTTPSServer {
                 }
             });
 
-            /* assign contexts*/
-            HashMap<String, HttpHandler> contexts = new HashMap<String, HttpHandler>() {{
-                put("/", new HTTPSHandlers.IndexHandler());
-                put("/antigravity", new HTTPSHandlers.AntigravityHandler());
-                put("/favicon.ico", new HTTPSHandlers.FavIcoHandler());
-                put("/images/", new HTTPSHandlers.WebHandler());
-                put("/index", new HTTPSHandlers.IndexHandler());
-                put("/js/", new HTTPSHandlers.WebHandler());
-                put("/test", new HTTPSHandlers.DefaultHandler());
-                put("/vendor/", new HTTPSHandlers.WebHandler());
-            }};
             for (String context : contexts.keySet()) {
                 httpsServer.createContext(context, contexts.get(context));
             }
@@ -113,11 +155,29 @@ public class HTTPSServer {
 
     }
 
+    public HttpsServer getHttpsServer() {
+        return httpsServer;
+    }
+
+    public SessionHandler getSessionHandler() {
+        return sessionHandler;
+    }
 
     public static void main(String[] args) {
+        /* change to false to avoid creating users each time */
+        boolean createUsers = true;
+
+        if (createUsers) {
+            try {
+                UserManager.main(null);
+            } catch (UserNotFoundException | FtpException | InvalidNameException | IOException | AdminEditException e) {
+                e.printStackTrace();
+            }
+        }
+
         try {
-            HTTPSServer server = new HTTPSServer();
-            server.httpsServer.start();
+            HTTPSServer.INSTANCE.init();
+            HTTPSServer.INSTANCE.getHttpsServer().start();
         } catch (IOException e) {
             e.printStackTrace();
             System.out.printf("Failed to create HTTPS server.");

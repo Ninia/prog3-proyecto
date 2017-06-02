@@ -10,13 +10,16 @@ import org.apache.ftpserver.impl.DefaultFtpServer;
 import org.apache.ftpserver.impl.FtpServerContext;
 import org.apache.ftpserver.usermanager.PropertiesUserManagerFactory;
 import org.apache.ftpserver.usermanager.impl.BaseUser;
+import org.apache.ftpserver.usermanager.impl.WritePermission;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
-import ud.binmonkey.prog3_proyecto_server.common.DateUtils;
-import ud.binmonkey.prog3_proyecto_server.common.Security;
+import ud.binmonkey.prog3_proyecto_server.common.DocumentReader;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.*;
+import ud.binmonkey.prog3_proyecto_server.common.security.UserAuthentication;
+import ud.binmonkey.prog3_proyecto_server.common.time.DateUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -24,8 +27,14 @@ import java.util.logging.Logger;
 
 public class FTPServer extends DefaultFtpServer{
 
+    /* TODO: allow no more than 1 instances of FTPServer */
     private static final Logger LOG = Logger.getLogger(FtpServer.class.getName());
-    private static String ftpdLocation = "src/test/resources/ftp/ftpd";
+    private static final String ftpd = DocumentReader.getAttr(DocumentReader.getDoc("conf/properties.xml"),
+            "network", "ftp-server", "ftpd").getTextContent();
+    private static final String userFile = DocumentReader.getAttr(DocumentReader.getDoc("conf/properties.xml"),
+            "network", "ftp-server", "user-file").getTextContent();
+    private static final String ftpLetFile = DocumentReader.getAttr(DocumentReader.getDoc("conf/properties.xml"),
+            "network", "ftp-server", "ftplet-file").getTextContent();
 
     static {
         try {
@@ -37,41 +46,119 @@ public class FTPServer extends DefaultFtpServer{
         }
     }
 
+    /**
+     * Default constructor
+     * @param serverContext FTP context
+     */
     public FTPServer(FtpServerContext serverContext) {
         super(serverContext);
+    }
+
+    /**
+     * Run before @start()
+     * Creates admin and common users
+     */
+    public static void init() {
+        try {
+            createAdmin();
+            createCommon();
+        } catch (FtpException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Checks if FTP user exists
+     * @param userName username to be checked
+     * @param userManager userManager to search for user
+     * @return true if user exists, false if not
+     */
+    @SuppressWarnings("WeakerAccess") /* might be useful from outside */
+    static boolean userExists(String userName, UserManager userManager) throws FtpException {
+        return userManager.getUserByName(userName) != null;
     }
 
     /**
      * XXX: ONLY USE THIS METHOD FOR USER MANAGEMENT
      * @param userName username of new user
      * @param password password of new user
-     * @param userFileLocation location to user file
      */
-    public static void createUser(String userName, String password, String userFileLocation) throws FtpException,
+    public static void createUser(String userName, String password) throws FtpException,
             NewUserExistsException, AdminEditException, InvalidNameException {
 
         /* lowercase usernames */
         userName = userName.toLowerCase();
-        Security.checkAdmin(userName);
-        Security.isValidName(userName);
+        UserAuthentication.checkAdmin(userName);
+        UserAuthentication.isValidName(userName);
 
         PropertiesUserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
-        userManagerFactory.setFile(new File(userFileLocation));
+        userManagerFactory.setFile(new File(userFile));
 
         UserManager userManager = userManagerFactory.createUserManager();
 
-        if (userManager.getUserByName(userName) == null) {
+        if (!userExists(userName, userManager)) {
             /* create basic user */
             BaseUser user = new BaseUser();
             user.setName(userName);
-            user.setHomeDirectory(ftpdLocation + "/" + userName);
             user.setPassword(password);
+            user.setHomeDirectory(ftpd + userName);
+
+            /* give permissions */
+            List<Authority> authorities = new ArrayList<>();
+            authorities.add(new WritePermission());
+            user.setAuthorities(authorities);
 
             /* save user */
             userManager.save(user);
             LOG.log(Level.INFO, "New user `" + userName + "` created.");
         } else {
             throw new NewUserExistsException(userName);
+        }
+    }
+
+    /**
+     * Create admin user
+     */
+    public static void createAdmin() throws FtpException {
+        createBaseUser("admin", "admin", "");
+    }
+
+    /**
+     * Create common user
+     */
+    public static void createCommon() throws FtpException {
+        createBaseUser("common", "common", "common");
+    }
+
+    /**
+     * Crete ftp user that won't be in MongoDB
+     * @param userName username
+     * @param password password
+     * @param homeDir home directory of user
+     */
+    private static void createBaseUser(String userName, String password, String homeDir) {
+        try {
+            PropertiesUserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
+            userManagerFactory.setFile(new File(userFile));
+
+            UserManager userManager = userManagerFactory.createUserManager();
+
+        /* create basic user */
+            BaseUser user = new BaseUser();
+            user.setName(userName);
+            user.setPassword(password);
+            user.setHomeDirectory(ftpd + homeDir);
+
+        /* give permissions */
+            List<Authority> authorities = new ArrayList<>();
+            authorities.add(new WritePermission());
+            user.setAuthorities(authorities);
+
+        /* save user */
+            userManager.save(user);
+            LOG.log(Level.INFO, "Admin user `" + userName + "` created.");
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -91,9 +178,8 @@ public class FTPServer extends DefaultFtpServer{
      * Renames username and copies all it's files to dir of new user
      * @param oldUserName current username
      * @param newUserName new username
-     * @param userFileLocation location to user properties file
      */
-    public static void renameUser(String oldUserName, String newUserName, String userFileLocation)
+    public static void renameUser(String oldUserName, String newUserName)
             throws FtpException, IOException, NewUserExistsException, UserNotFoundException,
             AdminEditException, InvalidNameException {
 
@@ -101,21 +187,21 @@ public class FTPServer extends DefaultFtpServer{
         oldUserName = oldUserName.toLowerCase();
         newUserName = newUserName.toLowerCase();
 
-        Security.checkAdmin(oldUserName, newUserName);
+        UserAuthentication.checkAdmin(oldUserName, newUserName);
         /* validity of name will be checked at @createUser */
 
         PropertiesUserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
-        userManagerFactory.setFile(new File(userFileLocation));
+        userManagerFactory.setFile(new File(userFile));
 
         UserManager userManager = userManagerFactory.createUserManager();
 
-        if (userManager.getUserByName(oldUserName) != null) {
-            if (userManager.getUserByName(newUserName) == null) {
+        if (userExists(oldUserName, userManager)) {
+            if (!userExists(newUserName, userManager)) {
             /* create basic user */
                 User user = userManager.getUserByName(oldUserName);
                 BaseUser newUser = new BaseUser();
                 newUser.setName(newUserName);
-                newUser.setHomeDirectory(ftpdLocation + "/" + newUserName);
+                newUser.setHomeDirectory(ftpd + "/" + newUserName);
                 newUser.setPassword(user.getPassword());
 
             /* save user */
@@ -136,23 +222,22 @@ public class FTPServer extends DefaultFtpServer{
      * @param userName username of user changing it's password
      * @param oldPassword current password
      * @param newPassword new password
-     * @param userFileLocation location of user properties file
      */
     @SuppressWarnings({"unused", "unchecked"})
-    public static void changePassword(String userName, String oldPassword, String newPassword, String userFileLocation)
+    public static void changePassword(String userName, String oldPassword, String newPassword)
             throws AdminEditException, FtpException, UserNotFoundException, IncorrectPasswordException {
 
         /* lowercase username */
         userName = userName.toLowerCase();
 
-        Security.checkAdmin(userName);
+        UserAuthentication.checkAdmin(userName);
 
         PropertiesUserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
-        userManagerFactory.setFile(new File(userFileLocation));
+        userManagerFactory.setFile(new File(userFile));
 
         UserManager userManager = userManagerFactory.createUserManager();
 
-        if (userManager.getUserByName(userName) != null) {
+        if (userExists(userName, userManager)) {
             User user = userManager.getUserByName(userName);
             if (user.getPassword().equals(oldPassword)) {
                 throw new IncorrectPasswordException(userName);
@@ -162,7 +247,7 @@ public class FTPServer extends DefaultFtpServer{
             newUser.setName(user.getName());
             newUser.setPassword(newPassword);
             newUser.setHomeDirectory(user.getHomeDirectory());
-            deleteUser(userName, userFileLocation);
+            deleteUser(userName);
             userManager.save(newUser);
             LOG.log(Level.INFO, "Changed password of user `" + userName +  "`.");
         } else {
@@ -170,23 +255,28 @@ public class FTPServer extends DefaultFtpServer{
         }
     }
 
-    public static void deleteUser(String userName, String userFileLocation) throws FtpException, UserNotFoundException, AdminEditException {
+    /**
+     * Delete a FTP user
+     * @param userName username of user to be deleted
+     */
+    public static void deleteUser(String userName) throws FtpException, UserNotFoundException, AdminEditException {
 
         /* lowercase usernames */
         userName = userName.toLowerCase();
-        Security.checkAdmin(userName);
+        UserAuthentication.checkAdmin(userName);
 
         PropertiesUserManagerFactory userManagerFactory = new PropertiesUserManagerFactory();
-        userManagerFactory.setFile(new File(userFileLocation));
+        userManagerFactory.setFile(new File(userFile));
 
         UserManager userManager = userManagerFactory.createUserManager();
 
-        if (userManager.getUserByName(userName) != null) {
+        if (userExists(userName, userManager)) {
             userManager.delete(userName);
         } else {
             throw new UserNotFoundException(userName);
         }
     }
+
 
 
     @SuppressWarnings("WeakerAccess")  /* for probable later use from outside class*/
@@ -200,7 +290,8 @@ public class FTPServer extends DefaultFtpServer{
 
     public static void main(String[] args) throws FtpException, InvalidNameException, AdminEditException {
 
-        FtpServer ftpServer = FTPServer.getFtpServer("conf/FTPServer.xml", FTPlet.class.getSimpleName());
+        FtpServer ftpServer = FTPServer.getFtpServer(ftpLetFile, FTPlet.class.getSimpleName());
+        FTPServer.init();
         ftpServer.start();
     }
 }

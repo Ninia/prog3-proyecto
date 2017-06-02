@@ -6,7 +6,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import ud.binmonkey.prog3_proyecto_server.common.DocumentReader;
 import ud.binmonkey.prog3_proyecto_server.mysql.MySQL;
-import ud.binmonkey.prog3_proyecto_server.neo4j.omdb.*;
+import ud.binmonkey.prog3_proyecto_server.omdb.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -48,15 +48,13 @@ public class Neo4j {
      */
     public Neo4j() {
         readConfig();
-        try {
-            startSession();
-        } catch (org.neo4j.driver.v1.exceptions.ServiceUnavailableException e) {
-            logger.log(Level.SEVERE, "Unable to connect to server," +
-                    " ensure the database is running and that there is a working network connection to it.");
-            System.exit(0);
-        } catch (org.neo4j.driver.v1.exceptions.AuthenticationException e) {
-            logger.log(Level.SEVERE, ": The client is unauthorized due to authentication failure.");
-            System.exit(0);
+        while (!startSession()) {
+            logger.log(Level.INFO, " Retrying Connection in 5s");
+            try {
+                Thread.sleep(5000);                 //1000 milliseconds is one second.
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
         }
 
         startDWH();
@@ -79,11 +77,23 @@ public class Neo4j {
         return session;
     }
 
-    public void startSession() {
-        driver = GraphDatabase.driver(server_address, AuthTokens.basic(username, password));
-        session = driver.session();
+    public boolean startSession() {
 
-        logger.log(Level.INFO, "Connection to Neo4j server started");
+        try {
+            driver = GraphDatabase.driver(server_address, AuthTokens.basic(username, password));
+            session = driver.session();
+            logger.log(Level.INFO, "Connection to Neo4j server started");
+            return true;
+        } catch (org.neo4j.driver.v1.exceptions.ServiceUnavailableException e) {
+            logger.log(Level.SEVERE, "Unable to connect to server," +
+                    " ensure the database is running and that there is a working network connection to it.");
+            return false;
+        } catch (org.neo4j.driver.v1.exceptions.AuthenticationException e) {
+            logger.log(Level.SEVERE, ": The client is unauthorized due to authentication failure.");
+            System.exit(0);
+        }
+
+        return false;
     }
 
     public void closeSession() {
@@ -102,6 +112,9 @@ public class Neo4j {
      */
     public void clearDB() {
         session.run("MATCH (n) DETACH DELETE n;");
+
+        cleanDB();
+
         logger.log(Level.INFO, "Cleared DB");
         dwhLog("CLEAR", "ALL", MediaType.ALL);
     }
@@ -184,7 +197,7 @@ public class Neo4j {
     /* Add Methods */
 
     /**
-     * Adds an IMDB title to the DB
+     * Adds an IMDB title to the DB, Automatically getting info from OMDB
      *
      * @param id - IMDB id of the title
      */
@@ -194,13 +207,13 @@ public class Neo4j {
         if (mediaType != null) {
             switch (mediaType) {
                 case MOVIE:
-                    addMovie(id);
+                    addMovie(new OmdbMovie(Omdb.getTitle(id)));
                     break;
                 case SERIES:
-                    addSeries(id);
+                    addSeries(new OmdbSeries(Omdb.getTitle(id)));
                     break;
                 case EPISODE:
-                    addEpisode(id);
+                    addEpisode(new OmdbEpisode(Omdb.getTitle(id)));
                     break;
             }
         } else {
@@ -211,13 +224,10 @@ public class Neo4j {
     /**
      * Adds an IMDB movie to the DB
      *
-     * @param id - IMDB id of the movie
+     * @param movie - OmdbMovie to add to the DB
      */
-    private void addMovie(String id) {
-        if (!checkNode(id, "Movie")) {
-
-            OmdbMovie movie = new OmdbMovie(id);
-
+    private void addMovie(OmdbMovie movie) {
+        if (!checkNode(movie.getImdbID(), "Movie")) {
             session.run(
                     "CREATE (a:Movie {title: {title}, name: {name}, year: {year}, released: {released}, dvd: {dvd}," +
                             " plot: {plot}, awards: {awards}, boxOffice: {boxOffice}," +
@@ -226,16 +236,16 @@ public class Neo4j {
                     (Value) movie.toParameters());
 
             logger.log(Level.INFO, "Added Movie: " + movie.getImdbID());
-            dwhLog("ADD", id, MediaType.MOVIE);
+            dwhLog("ADD", movie.getImdbID(), MediaType.MOVIE);
 
-            addNode(movie.getAgeRating(), "Rating", id, "RATED");
-            addNodeList(movie.getLanguage(), "Language", id, "SPOKEN_LANGUAGE");
-            addNodeList(movie.getGenre(), "Genre", id, "GENRE");
-            addNodeList(movie.getWriter(), "Person", id, "WROTE");
-            addNodeList(movie.getDirector(), "Person", id, "DIRECTED");
-            addNodeList(movie.getActors(), "Person", id, "ACTED_IN");
-            addNodeList(movie.getProducers(), "Producer", id, "PRODUCED");
-            addNodeList(movie.getCountry(), "Country", id, "COUNTRY");
+            addNode(movie.getAgeRating(), "Rating", movie.getImdbID(), "RATED");
+            addNodeList(movie.getLanguage(), "Language", movie.getImdbID(), "SPOKEN_LANGUAGE");
+            addNodeList(movie.getGenre(), "Genre", movie.getImdbID(), "GENRE");
+            addNodeList(movie.getWriter(), "Person", movie.getImdbID(), "WROTE");
+            addNodeList(movie.getDirector(), "Person", movie.getImdbID(), "DIRECTED");
+            addNodeList(movie.getActors(), "Person", movie.getImdbID(), "ACTED_IN");
+            addNodeList(movie.getProducers(), "Producer", movie.getImdbID(), "PRODUCED");
+            addNodeList(movie.getCountry(), "Country", movie.getImdbID(), "COUNTRY");
 
 
             /* ScoreOutles */
@@ -244,18 +254,17 @@ public class Neo4j {
             }
             /* END Score Outlets */
         } else {
-            logger.log(Level.WARNING, id + " already exists");
+            logger.log(Level.WARNING, movie.getImdbID() + " already exists");
         }
     }
 
     /**
      * Adds an IMDB series to the DB
      *
-     * @param id - IMDB id of the series
+     * @param series - OmdbSeries to add to the DB
      */
-    private void addSeries(String id) {
-        if (!checkNode(id, "Series")) {
-            OmdbSeries series = new OmdbSeries(id);
+    private void addSeries(OmdbSeries series) {
+        if (!checkNode(series.getImdbID(), "Series")) {
 
             session.run(
                     "CREATE (a:Series {title: {title}, name: {name}, year: {year}, seasons: {seasons}," +
@@ -265,7 +274,7 @@ public class Neo4j {
                     (Value) series.toParameters());
 
             logger.log(Level.INFO, "Added Series: " + series.getImdbID());
-            dwhLog("ADD", id, MediaType.SERIES);
+            dwhLog("ADD", series.getImdbID(), MediaType.SERIES);
 
             /* Score Outles*/
             addRating(series, "Internet Movie Database", series.getImdbRating());
@@ -273,24 +282,24 @@ public class Neo4j {
                 addRating(series, "Metacritic", series.getMetascore());
             /* END Score Outlets */
 
-            addNode(series.getAgeRating(), "Rating", id, "RATED");
-            addNodeList(series.getLanguage(), "Language", id, "SPOKEN_LANGUAGE");
-            addNodeList(series.getGenre(), "Genre", id, "GENRE");
-            addNodeList(series.getProducers(), "Producer", id, "PRODUCED");
-            addNodeList(series.getCountry(), "Country", id, "COUNTRY");
+            addNode(series.getAgeRating(), "Rating", series.getImdbID(), "RATED");
+            addNodeList(series.getLanguage(), "Language", series.getImdbID(), "SPOKEN_LANGUAGE");
+            addNodeList(series.getGenre(), "Genre", series.getImdbID(), "GENRE");
+            addNodeList(series.getProducers(), "Producer", series.getImdbID(), "PRODUCED");
+            addNodeList(series.getCountry(), "Country", series.getImdbID(), "COUNTRY");
         } else {
-            logger.log(Level.WARNING, id + " already exists");
+            logger.log(Level.WARNING, series.getImdbID() + " already exists");
         }
     }
 
     /**
      * Adds an IMDB episode to the DB
      *
-     * @param id - IMDB id of the episode
+     * @param episode - OmdbEpisode to add to the DB
      */
-    private void addEpisode(String id) {
-        if (!checkNode(id, "Episode")) {
-            OmdbEpisode episode = new OmdbEpisode(id);
+    private void addEpisode(OmdbEpisode episode) {
+        if (!checkNode(episode.getImdbID(), "Episode")) {
+
 
             session.run(
                     "CREATE (a:Episode {title: {title}, name: {name}, year: {year}, released: {released}," +
@@ -299,7 +308,7 @@ public class Neo4j {
                     (Value) episode.toParameters());
 
             logger.log(Level.INFO, "Added Episode: " + episode.getImdbID());
-            dwhLog("ADD", id, MediaType.EPISODE);
+            dwhLog("ADD", episode.getImdbID(), MediaType.EPISODE);
 
             /* Score Outles*/
             addRating(episode, "Internet Movie Database", episode.getImdbRating());
@@ -307,22 +316,22 @@ public class Neo4j {
                 addRating(episode, "Metacritic", episode.getMetascore());
             /* END Score Outlets */
 
-            addNodeList(episode.getWriter(), "Person", id, "WROTE");
-            addNodeList(episode.getDirector(), "Person", id, "DIRECTED");
-            addNodeList(episode.getActors(), "Person", id, "ACTED_IN");
+            addNodeList(episode.getWriter(), "Person", episode.getImdbID(), "WROTE");
+            addNodeList(episode.getDirector(), "Person", episode.getImdbID(), "DIRECTED");
+            addNodeList(episode.getActors(), "Person", episode.getImdbID(), "ACTED_IN");
 
             if (!checkNode(episode.getSeriesID(), "Series")) {
-                addSeries(episode.getSeriesID());
+                addSeries(new OmdbSeries(Omdb.getTitle(episode.getSeriesID())));
             } else {
                 logger.log(Level.WARNING, episode.getImdbID() + " already exists");
             }
 
             session.run("MATCH (a: Episode { name: {name}}), (b:Series { name: {title}}) " +
                             "CREATE (a)-[:BELONGS_TO { season: {season}, episode: {episode}}]->(b)",
-                    parameters("name", id, "title", episode.getSeriesID(), "season",
+                    parameters("name", episode.getImdbID(), "title", episode.getSeriesID(), "season",
                             episode.getSeason(), "episode", episode.getEpisode()));
         } else {
-            logger.log(Level.WARNING, id + " already exists");
+            logger.log(Level.WARNING, episode.getImdbID() + " already exists");
         }
     }
 
@@ -442,6 +451,35 @@ public class Neo4j {
     /* Modify Methods */
 
     /**
+     * Removes a single title from the DB
+     *
+     * @param title - Title to remove
+     * @param type  - Omdb type of title
+     */
+    public void removeTitle(String title, String type) {
+        session.run(
+                "MATCH (n:" + type + "{name: {title}})" +
+                        "OPTIONAL MATCH (n)-[r]-()" +
+                        "DELETE n, r",
+                parameters("title", title));
+
+        cleanDB();
+
+        logger.log(Level.INFO, title + " deleted");
+
+        switch (type) {
+            case "Movie":
+                dwhLog("DELETE", title, MediaType.MOVIE);
+                break;
+            case "Series":
+                dwhLog("DELETE", title, MediaType.SERIES);
+                break;
+            case "Episode":
+                dwhLog("DELETE", title, MediaType.EPISODE);
+        }
+    }
+
+    /**
      * Deletes a node and all its relations
      *
      * @param node      - Node to delete
@@ -457,17 +495,6 @@ public class Neo4j {
         cleanDB();
 
         logger.log(Level.INFO, node + " deleted");
-
-        switch (node_type) {
-            case "Movie":
-                dwhLog("DELETE", node, MediaType.MOVIE);
-                break;
-            case "Series":
-                dwhLog("DELETE", node, MediaType.SERIES);
-                break;
-            case "Episode":
-                dwhLog("DELETE", node, MediaType.EPISODE);
-        }
     }
 
     /**
