@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static ud.binmonkey.prog3_proyecto_server.http.handlers.HandlerUtils.printRequest;
+import static ud.binmonkey.prog3_proyecto_server.http.handlers.HandlerUtils.validateArgs;
 
 /**
  * Change properties of one user
@@ -50,15 +51,9 @@ public class PropertyChangeHandler implements HttpHandler {
         try {
 
             HashMap<String, String> args = URI.getArgs(hes.getRequestURI());
-            if (args == null || args.get("username") == null || args.get("property") == null
-                    || args.get("value") == null || args.get("token") == null) {
-                byte[] response = "Missing arguments.".getBytes();
 
-                hes.getResponseHeaders().add("content-type", "text/plain");
-                hes.sendResponseHeaders(403, 0);
-                os = hes.getResponseBody();
-                os.write(response);
-                os.close();
+            boolean err = validateArgs(hes, args, "username", "property", "value", "token");
+            if (err) {
                 return;
             }
 

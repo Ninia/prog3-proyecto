@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static ud.binmonkey.prog3_proyecto_server.http.handlers.HandlerUtils.printRequest;
+import static ud.binmonkey.prog3_proyecto_server.http.handlers.HandlerUtils.validateArgs;
 
 /**
  * Creates user from HTTP request
@@ -50,13 +51,8 @@ public class SignUpHandler implements HttpHandler {
         try {
             HashMap<String, String> args = URI.getArgs(hes.getRequestURI());
 
-            if (args == null || args.get("username") == null || args.get("password") == null) {
-                byte[] response = "Missing arguments.".getBytes();
-                hes.getResponseHeaders().add("content-type", "text/plain");
-                hes.sendResponseHeaders(403, 0);
-                os = hes.getResponseBody();
-                os.write(response);
-                os.close();
+            boolean err = validateArgs(hes, args, "username", "password");
+            if (err) {
                 return;
             }
 
