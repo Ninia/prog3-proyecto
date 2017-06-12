@@ -3,6 +3,8 @@ package ud.binmonkey.prog3_proyecto_server.http;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.EmptyArgException;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.UriUnescapedArgsException;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 
 public class URI {
@@ -10,6 +12,13 @@ public class URI {
         HashMap<String, String> args = new HashMap<>();
 
         String query = uri.getQuery();
+        try {
+            /* decode unescaped characters in URL */
+            query = URLDecoder.decode(query, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
         String[] mixedArgs = query.split("&");
 
         int kvlength;
