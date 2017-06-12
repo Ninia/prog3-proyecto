@@ -43,7 +43,6 @@ public class ShowFileSystemHandler implements HttpHandler {
             if (err) {
                 return;
             }
-
             String userName = args.get("username");
             String token = args.get("token");
 
