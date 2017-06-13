@@ -16,9 +16,9 @@ public class OmdbUnitTest {
     @org.junit.Test
     public void testSearch() {
 
-        JSONObject search = Omdb.search("Trainspotting", MediaType.ALL);
+        JSONObject search = Omdb.search("Trainspotting", "all");
 
-        HashMap movie = (HashMap) search.toMap().get("tt0117951");
+        Map movie = (Map) search.toMap().get("tt0117951");
 
         assertEquals("movie", movie.get("Type"));
         assertEquals("1996", movie.get("Year"));

@@ -49,14 +49,14 @@ public class Omdb {
      * @return a JSON where the key is the IMDBi and the value is another JSON with
      * basic information about the title
      */
-    public static JSONObject search(String title, MediaType type) {
+    public static JSONObject search(String title, String type) {
         try {
 
             JSONObject search_results = new JSONObject();
 
-            if (!type.equals(MediaType.ALL))
+            if (!type.equals("all"))
                 url = "http://www.omdbapi.com/?s=" + title.replace(" ", "%20") +
-                        "&type=" + type.name() + apikey;
+                        "&type=" + type + apikey;
             else
                 url = "http://www.omdbapi.com/?s=" + title.replace(" ", "%20") + apikey;
 
