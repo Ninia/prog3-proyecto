@@ -8,6 +8,7 @@ import ud.binmonkey.prog3_proyecto_server.common.exceptions.EmptyArgException;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.UriUnescapedArgsException;
 import ud.binmonkey.prog3_proyecto_server.common.security.SessionHandler;
 import ud.binmonkey.prog3_proyecto_server.http.URI;
+import ud.binmonkey.prog3_proyecto_server.omdb.Omdb;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -46,10 +47,7 @@ public class SearchMovieHandler implements HttpHandler {
 
             if (validToken) {
 
-                JSONObject response;
-                /* TODO: modify JSON here*/
-
-
+                JSONObject response = Omdb.search(title, type);
                 hes.getResponseHeaders().add("content-type", "application/json");
                 hes.sendResponseHeaders(200, 0);
                 os = hes.getResponseBody();
