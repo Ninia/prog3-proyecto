@@ -30,7 +30,6 @@ public class MySQLUnitTest {
     @Before
     public void setUp() {
         mySQL = new MySQL();
-        mySQL.clearDB();
     }
 
     @After
