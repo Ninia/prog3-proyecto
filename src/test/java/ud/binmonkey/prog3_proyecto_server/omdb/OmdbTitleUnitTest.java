@@ -11,7 +11,6 @@ import static org.junit.Assert.assertTrue;
 
 public class OmdbTitleUnitTest {
 
-    private static String relative_path = "/home/jailander/Cloud/GitHub/prog3_proyecto/prog3_proyecto_server/";
 
     /**
      * Tests creating OmdbTitle from the API
@@ -41,11 +40,11 @@ public class OmdbTitleUnitTest {
         try {
 
             JSONObject jsonMovie = new JSONObject(new Scanner(new File(
-                    relative_path + "src/test/resources/neo4j/omdb/movie.json")).useDelimiter("\\Z").next());
+                    "src/test/resources/neo4j/omdb/movie.json")).useDelimiter("\\Z").next());
             JSONObject jsonSeries = new JSONObject(new Scanner(new File(
-                    relative_path + "src/test/resources/neo4j/omdb/series.json")).useDelimiter("\\Z").next());
+                    "src/test/resources/neo4j/omdb/series.json")).useDelimiter("\\Z").next());
             JSONObject jsonEpisode = new JSONObject(new Scanner(new File(
-                    relative_path + "src/test/resources/neo4j/omdb/episode.json")).useDelimiter("\\Z").next());
+                    "src/test/resources/neo4j/omdb/episode.json")).useDelimiter("\\Z").next());
 
 
             OmdbMovie movie = new OmdbMovie(jsonMovie.toMap());

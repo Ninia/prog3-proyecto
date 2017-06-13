@@ -5,7 +5,7 @@ import org.neo4j.driver.v1.StatementResult;
 
 public class Neo4jIntegrationTest {
 
-    private static void generateDB(Neo4j neo4j) {
+    private static void generateDB(Neo4jUtils neo4j) {
         /* Adding Movies */
         neo4j.addTitle("tt0117951"); /* Trainspotting */
         neo4j.addTitle("tt0289043"); /* 28 Days Later... */
@@ -36,7 +36,7 @@ public class Neo4jIntegrationTest {
 
     public static void main(String[] args) {
 
-        Neo4j neo4j = new Neo4j();
+        Neo4jUtils neo4j = new Neo4jUtils();
         Record record;
 
         neo4j.clearDB();

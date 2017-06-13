@@ -1,8 +1,10 @@
 package ud.binmonkey.prog3_proyecto_server.omdb;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import ud.binmonkey.prog3_proyecto_server.common.DocumentReader;
+import ud.binmonkey.prog3_proyecto_server.common.time.DateUtils;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -10,6 +12,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
 
 /**
  * Java Implementation of the OMDB api
@@ -18,28 +22,41 @@ import java.util.Scanner;
  */
 public class Omdb {
 
+    /* Logger for Omdb */
+    private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Omdb.class.getName());
     private static final String keyFile = "conf/keys.xml";
+    /* END Logger for Omdb */
     private static final String KEY = DocumentReader.getAttr(DocumentReader.getDoc(keyFile),
             "omdb").getTextContent().replaceAll("\n", "").replaceAll(" ", "");
     private static final String apikey = "&apikey=" + KEY;
     private static String url = "";
+
+    static {
+        try {
+            LOG.addHandler(new FileHandler(
+                    "logs/" + Omdb.class.getName() + "." +
+                            DateUtils.currentFormattedDate() + ".log.xml", true));
+        } catch (SecurityException | IOException e) {
+            LOG.log(Level.SEVERE, "Unable to create log file.");
+        }
+    }
 
     /**
      * Searches a title in IMDB, can differentiate between media types.
      *
      * @param title - Title to search for
      * @param type  - Type of media to search for
-     * @return a HashMap where the key is the IMDBid
-     * and the value is another HashMap with basic information about the title
+     * @return a JSON where the key is the IMDBi and the value is another JSON with
+     * basic information about the title
      */
-    public static HashMap search(String title, MediaType type) {
+    public static JSONObject search(String title, String type) {
         try {
 
-            HashMap search_results = new HashMap<String, HashMap>();
+            JSONObject search_results = new JSONObject();
 
-            if (!type.equals(MediaType.ALL))
+            if (!type.equals("all"))
                 url = "http://www.omdbapi.com/?s=" + title.replace(" ", "%20") +
-                        "&type=" + type.name() + apikey;
+                        "&type=" + type + apikey;
             else
                 url = "http://www.omdbapi.com/?s=" + title.replace(" ", "%20") + apikey;
 
@@ -60,16 +77,22 @@ public class Omdb {
                     entry_info.put("Title", entry.get("Title"));
                     entry_info.put("Type", entry.get("Type"));
 
-                    search_results.put(entry.get("imdbID"), entry_info);
+                    if (!entry_info.get("Type").equals("game")) { /* Recent update of OMDB also supports games */
+                        search_results.put(entry.get("imdbID").toString(), entry_info);
+                    }
                 }
             }
 
+            LOG.log(Level.INFO, "Searched for " + title);
+
             return search_results;
 
+        } catch (JSONException e) {
+            LOG.log(Level.SEVERE, "Malformed or empty JSON");
         } catch (MalformedURLException e) {
-            System.err.println("Malformed URL: " + url);
+            LOG.log(Level.SEVERE, "Malformed URL - " + url);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.log(Level.SEVERE, "IOException - " + e.getMessage());
         }
 
         return null;
@@ -92,14 +115,15 @@ public class Omdb {
             Scanner s = new Scanner(query.openStream());
             JSONObject title = new JSONObject(s.nextLine());
 
+            LOG.log(Level.INFO, "Searched info for " + id);
             return title.toMap();
 
         } catch (MalformedURLException e) {
-            System.err.println("Malformed URL: " + url);
+            LOG.log(Level.SEVERE, "Malformed URL - " + url);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.log(Level.SEVERE, "IOException - " + e.getMessage());
         }
-        System.out.println(Omdb.apikey);
+
         return null;
     }
 
@@ -121,6 +145,7 @@ public class Omdb {
             JSONObject title = new JSONObject(s.nextLine());
 
             String type = (String) title.get("Type");
+            LOG.log(Level.INFO, "Searched type of " + id);
 
             if (MediaType.MOVIE.equalsName(type)) {
                 return MediaType.MOVIE;
@@ -129,13 +154,13 @@ public class Omdb {
             } else if (MediaType.EPISODE.equalsName(type)) {
                 return MediaType.EPISODE;
             }
+
         } catch (MalformedURLException e) {
-            System.err.println("Malformed URL: " + url);
+            LOG.log(Level.SEVERE, "Malformed URL - " + url);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.log(Level.SEVERE, "IOException - " + e.getMessage());
         }
 
         return null;
     }
 }
-

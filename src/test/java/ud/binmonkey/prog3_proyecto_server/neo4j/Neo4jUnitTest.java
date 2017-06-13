@@ -7,6 +7,7 @@ import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.StatementResult;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * Test class for Neo4j class
@@ -14,12 +15,12 @@ import static org.junit.Assert.assertEquals;
  */
 public class Neo4jUnitTest {
 
-    private Neo4j neo4j;
+    private Neo4jUtils neo4j;
 
     @Before
     public void setUp() {
 
-        neo4j = new Neo4j();
+        neo4j = new Neo4jUtils();
         neo4j.clearDB();
     }
 
@@ -86,6 +87,34 @@ public class Neo4jUnitTest {
             Record record = result.next();
 
             assertEquals("Lord of The Rings Saga", record.get("name").asString());
+        }
+    }
+
+    /**
+     * Test manual removal
+     */
+    @Test
+    public void removeTest() {
+
+        /* Star Wars Movies */
+        neo4j.addList("Star Wars Saga", "tt0120915", "tt0121765", "tt2488496", "tt0076759", "tt0080684",
+                "tt0086190", "tt0121766");
+
+        neo4j.removeTitle("tt0120915", "Movie");
+        neo4j.removeTitle("tt0121765", "Movie");
+        neo4j.removeTitle("tt2488496", "Movie");
+        neo4j.removeTitle("tt0076759", "Movie");
+        neo4j.removeTitle("tt0080684", "Movie");
+        neo4j.removeTitle("tt0086190", "Movie");
+        neo4j.removeTitle("tt0121766", "Movie");
+
+        StatementResult result = neo4j.getSession().run("MATCH p=(n:List)-[r:CONTAINS]-(m) " +
+                "WHERE m.name='tt0120915' RETURN n.name AS name");
+
+        while (result.hasNext()) {
+            Record record = result.next();
+
+            assertNotEquals("Star Wars Saga", record.get("name").asString());
         }
     }
 
