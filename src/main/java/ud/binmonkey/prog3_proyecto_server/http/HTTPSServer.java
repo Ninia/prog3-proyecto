@@ -58,8 +58,9 @@ public enum HTTPSServer {
         put("/changeProperty", new PropertyChangeHandler());
         put("/listDir", new ShowFileSystemHandler());
         put("/login", new LoginHandler());
-        put("/signUp", new SignUpHandler());
+        put("/searchMovie", new SearchMovieHandler());
         put("/sessionInfo", new SessionInfoHandler());
+        put("/signUp", new SignUpHandler());
         put("/userInfo", new UserInfoHandler());
 
         /* extras */
