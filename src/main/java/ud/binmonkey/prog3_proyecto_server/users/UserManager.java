@@ -3,6 +3,7 @@ package ud.binmonkey.prog3_proyecto_server.users;
 import org.apache.ftpserver.ftplet.FtpException;
 import org.bson.Document;
 import org.json.JSONObject;
+import ud.binmonkey.prog3_proyecto_server.common.DocumentReader;
 import ud.binmonkey.prog3_proyecto_server.common.TextFile;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.*;
 import ud.binmonkey.prog3_proyecto_server.common.security.PasswordAuthentication;
@@ -12,6 +13,7 @@ import ud.binmonkey.prog3_proyecto_server.mongodb.MongoDB;
 import ud.binmonkey.prog3_proyecto_server.users.attributes.Language;
 import ud.binmonkey.prog3_proyecto_server.users.attributes.Role;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -20,8 +22,9 @@ import java.util.logging.Logger;
 @SuppressWarnings("unused")
 public class UserManager {
 
-    /* todo tests */
     private static final Logger LOG = Logger.getLogger(UserManager.class.getName());
+    private static final String ftpd = DocumentReader.getAttr(DocumentReader.getDoc("conf/properties.xml"),
+            "network", "ftp-server", "ftpd").getTextContent();
     static {
         try {
             LOG.addHandler(new FileHandler(
@@ -86,6 +89,8 @@ public class UserManager {
 
             try {
                 FTPServer.createUser(user.getUserName(), new String(unhashedPassword));
+                java.io.File userDir = new File(ftpd + user.getUserName());
+                userDir.mkdirs();
                 return;
             } catch (NewUserExistsException e) {
                 LOG.log(Level.SEVERE, "FTP user `" + user.getUserName() + "` already exists.");
