@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import ud.binmonkey.prog3_proyecto_server.common.DocumentReader;
+import ud.binmonkey.prog3_proyecto_server.common.time.DateUtils;
 import ud.binmonkey.prog3_proyecto_server.mysql.MySQL;
 import ud.binmonkey.prog3_proyecto_server.omdb.*;
 
@@ -20,15 +21,15 @@ import static org.neo4j.driver.v1.Values.parameters;
 public class Neo4j {
 
     /* Logger for Neo4j */
-    private static final boolean ADD_TO_FIC_LOG = false; /* set false to overwrite */
-    private static java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Neo4j.class.getName());
+    private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Neo4j.class.getName());
 
     static {
         try {
-            logger.addHandler(new FileHandler(
-                    "logs/" + Neo4j.class.getName() + ".log.xml", ADD_TO_FIC_LOG));
+            LOG.addHandler(new FileHandler(
+                    "logs/" + Neo4j.class.getName() + "." +
+                            DateUtils.currentFormattedDate() + ".log.xml", true));
         } catch (SecurityException | IOException e) {
-            logger.log(Level.SEVERE, "Error in log file creation");
+            LOG.log(Level.SEVERE, "Unable to create log file.");
         }
     }
     /* END Logger for Neo4j */
@@ -49,7 +50,7 @@ public class Neo4j {
     public Neo4j() {
         readConfig();
         while (!startSession()) {
-            logger.log(Level.INFO, " Retrying Connection in 5s");
+            LOG.log(Level.INFO, " Retrying Connection in 5s");
             try {
                 Thread.sleep(5000);                 //1000 milliseconds is one second.
             } catch (InterruptedException ex) {
@@ -63,7 +64,7 @@ public class Neo4j {
     /* Server Utility Methods */
     private void readConfig() {
 
-        NodeList nList = DocumentReader.getDoc("conf/Neo4jServer.xml").getElementsByTagName("neo4j-server");
+        NodeList nList = DocumentReader.getDoc("conf/properties.xml").getElementsByTagName("neo4j-server");
         Node nNode = nList.item(0);
         Element eElement = (Element) nNode;
 
@@ -82,14 +83,14 @@ public class Neo4j {
         try {
             driver = GraphDatabase.driver(server_address, AuthTokens.basic(username, password));
             session = driver.session();
-            logger.log(Level.INFO, "Connection to Neo4j server started");
+            LOG.log(Level.INFO, "Connection to Neo4j server started");
             return true;
         } catch (org.neo4j.driver.v1.exceptions.ServiceUnavailableException e) {
-            logger.log(Level.SEVERE, "Unable to connect to server," +
+            LOG.log(Level.SEVERE, "Unable to connect to server," +
                     " ensure the database is running and that there is a working network connection to it.");
             return false;
         } catch (org.neo4j.driver.v1.exceptions.AuthenticationException e) {
-            logger.log(Level.SEVERE, ": The client is unauthorized due to authentication failure.");
+            LOG.log(Level.SEVERE, ": The client is unauthorized due to authentication failure.");
             System.exit(0);
         }
 
@@ -101,7 +102,7 @@ public class Neo4j {
         driver.close();
         mySQL.closeSession();
 
-        logger.log(Level.INFO, "Connection to Neo4j server ended");
+        LOG.log(Level.INFO, "Connection to Neo4j server ended");
     }
     /* END Server Utility Methods */
 
@@ -115,7 +116,7 @@ public class Neo4j {
 
         cleanDB();
 
-        logger.log(Level.INFO, "Cleared DB");
+        LOG.log(Level.INFO, "Cleared DB");
         dwhLog("CLEAR", "ALL", MediaType.ALL);
     }
 
@@ -124,7 +125,7 @@ public class Neo4j {
      */
     public void cleanDB() {
         session.run("MATCH (n) WHERE size((n)--())=0 DELETE (n)");
-        logger.log(Level.INFO, "Cleaned DB");
+        LOG.log(Level.INFO, "Cleaned DB");
     }
 
     /**
@@ -217,7 +218,7 @@ public class Neo4j {
                     break;
             }
         } else {
-            logger.log(Level.SEVERE, "Title " + id + " not found on IMDB");
+            LOG.log(Level.SEVERE, "Title " + id + " not found on IMDB");
         }
     }
 
@@ -235,7 +236,7 @@ public class Neo4j {
                             " runtime: {runtime}, website: {website}, poster: {poster}})",
                     (Value) movie.toParameters());
 
-            logger.log(Level.INFO, "Added Movie: " + movie.getImdbID());
+            LOG.log(Level.INFO, "Added Movie: " + movie.getImdbID());
             dwhLog("ADD", movie.getImdbID(), MediaType.MOVIE);
 
             addNode(movie.getAgeRating(), "Rating", movie.getImdbID(), "RATED");
@@ -254,7 +255,7 @@ public class Neo4j {
             }
             /* END Score Outlets */
         } else {
-            logger.log(Level.WARNING, movie.getImdbID() + " already exists");
+            LOG.log(Level.WARNING, movie.getImdbID() + " already exists");
         }
     }
 
@@ -273,7 +274,7 @@ public class Neo4j {
                             " runtime: {runtime}, poster: {poster}})",
                     (Value) series.toParameters());
 
-            logger.log(Level.INFO, "Added Series: " + series.getImdbID());
+            LOG.log(Level.INFO, "Added Series: " + series.getImdbID());
             dwhLog("ADD", series.getImdbID(), MediaType.SERIES);
 
             /* Score Outles*/
@@ -288,7 +289,7 @@ public class Neo4j {
             addNodeList(series.getProducers(), "Producer", series.getImdbID(), "PRODUCED");
             addNodeList(series.getCountry(), "Country", series.getImdbID(), "COUNTRY");
         } else {
-            logger.log(Level.WARNING, series.getImdbID() + " already exists");
+            LOG.log(Level.WARNING, series.getImdbID() + " already exists");
         }
     }
 
@@ -307,7 +308,7 @@ public class Neo4j {
                             " imdbRating: {imdbRating}, imdbVotes: {imdbVotes}, runtime: {runtime}, poster: {poster}})",
                     (Value) episode.toParameters());
 
-            logger.log(Level.INFO, "Added Episode: " + episode.getImdbID());
+            LOG.log(Level.INFO, "Added Episode: " + episode.getImdbID());
             dwhLog("ADD", episode.getImdbID(), MediaType.EPISODE);
 
             /* Score Outles*/
@@ -323,7 +324,7 @@ public class Neo4j {
             if (!checkNode(episode.getSeriesID(), "Series")) {
                 addSeries(new OmdbSeries(Omdb.getTitle(episode.getSeriesID())));
             } else {
-                logger.log(Level.WARNING, episode.getImdbID() + " already exists");
+                LOG.log(Level.WARNING, episode.getImdbID() + " already exists");
             }
 
             session.run("MATCH (a: Episode { name: {name}}), (b:Series { name: {title}}) " +
@@ -331,7 +332,7 @@ public class Neo4j {
                     parameters("name", episode.getImdbID(), "title", episode.getSeriesID(), "season",
                             episode.getSeason(), "episode", episode.getEpisode()));
         } else {
-            logger.log(Level.WARNING, episode.getImdbID() + " already exists");
+            LOG.log(Level.WARNING, episode.getImdbID() + " already exists");
         }
     }
 
@@ -351,7 +352,7 @@ public class Neo4j {
             session.run("CREATE (a:ScoreOutlet {name: {name}})",
                     parameters("name", outlet));
 
-            logger.log(Level.INFO, "Added ScoreOutlet: " + outlet);
+            LOG.log(Level.INFO, "Added ScoreOutlet: " + outlet);
         }
 
         if (outlet.equals("Internet Movie Database")) { /* IMDB Rating also contain number of votes */
@@ -363,7 +364,7 @@ public class Neo4j {
                     , parameters("name", outlet, "id", id, "score", score,
                             "votes", votes));
 
-            logger.log(Level.INFO, "Added SCORED: " + outlet + " -(" + score + ", "
+            LOG.log(Level.INFO, "Added SCORED: " + outlet + " -(" + score + ", "
                     + votes + ")-> " + id);
 
         } else {
@@ -372,7 +373,7 @@ public class Neo4j {
                             "CREATE (a)-[:SCORED {score: {score}}]->(b)"
                     , parameters("name", outlet, "score", score, "id", id));
 
-            logger.log(Level.INFO, "Added SCORED: " + outlet + " -(" + score + ")-> " + id);
+            LOG.log(Level.INFO, "Added SCORED: " + outlet + " -(" + score + ")-> " + id);
         }
     }
 
@@ -390,9 +391,9 @@ public class Neo4j {
                     "CREATE(p:" + node_type + " {name: {name}})",
                     parameters("name", node));
 
-            logger.log(Level.INFO, "Added " + node_type + ": " + node);
+            LOG.log(Level.INFO, "Added " + node_type + ": " + node);
         } else {
-            logger.log(Level.WARNING, node + " already exists");
+            LOG.log(Level.WARNING, node + " already exists");
         }
 
         addRelation(node, node_type, title, relation_type);
@@ -411,7 +412,7 @@ public class Neo4j {
             session.run("MATCH (a:" + node_type + " { name: {name}}), (b { name: {title}}) " +
                     "CREATE (a)-[:" + relation_type + "]->(b)", parameters("name", node, "title", title));
 
-            logger.log(Level.INFO, "Added " + relation_type + ": " + node + " -> " + title);
+            LOG.log(Level.INFO, "Added " + relation_type + ": " + node + " -> " + title);
 
             if (node_type.equals("Genre")) {
                 try {
@@ -421,7 +422,7 @@ public class Neo4j {
             }
 
         } else {
-            logger.log(Level.WARNING, relation_type + ": " + node + " -> " + title + " already exists");
+            LOG.log(Level.WARNING, relation_type + ": " + node + " -> " + title + " already exists");
         }
     }
 
@@ -465,7 +466,7 @@ public class Neo4j {
 
         cleanDB();
 
-        logger.log(Level.INFO, title + " deleted");
+        LOG.log(Level.INFO, title + " deleted");
 
         switch (type) {
             case "Movie":
@@ -494,7 +495,7 @@ public class Neo4j {
 
         cleanDB();
 
-        logger.log(Level.INFO, node + " deleted");
+        LOG.log(Level.INFO, node + " deleted");
     }
 
     /**
@@ -515,9 +516,9 @@ public class Neo4j {
                                 " WHERE n.name={name}" +
                                 " SET n.name={new_name}",
                         parameters("name", node, "new_name", new_name));
-                logger.log(Level.INFO, "Renamed " + node_type + ": " + node + " to " + new_name);
+                LOG.log(Level.INFO, "Renamed " + node_type + ": " + node + " to " + new_name);
             } else {
-                logger.log(Level.WARNING, node + " already exists starting to move relations");
+                LOG.log(Level.WARNING, node + " already exists starting to move relations");
 
                 StatementResult result = session.run(
                         "MATCH (a:" + node_type + " )-[r]-(b) " +
@@ -534,7 +535,7 @@ public class Neo4j {
                 deleteNode(node, node_type);
             }
         } else {
-            logger.log(Level.WARNING, node + " does not exist");
+            LOG.log(Level.WARNING, node + " does not exist");
         }
 
     }
