@@ -30,7 +30,7 @@ public class SearchMovieHandler implements HttpHandler {
 
         try {
             args = URI.getArgs(hes.getRequestURI());
-            boolean err = validateArgs(hes, args, "username", "token", "movieName");
+            boolean err = validateArgs(hes, args, "username", "token", "title", "type");
             if (err) {
                 return;
             }
@@ -38,8 +38,9 @@ public class SearchMovieHandler implements HttpHandler {
             String userName = args.get("username");
             String token = args.get("token");
 
-            /* Get movie name */
-            String movieName = args.get("movieName");
+            /* Get title and type */
+            String title = args.get("title");
+            String type = args.get("type");
 
             boolean validToken = SessionHandler.INSTANCE.validToken(userName, token);
 
