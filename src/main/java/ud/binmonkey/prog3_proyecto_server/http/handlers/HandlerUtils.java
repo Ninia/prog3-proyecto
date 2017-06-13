@@ -65,7 +65,6 @@ public class HandlerUtils {
         boolean nullArgs = false;
 
         for (String arg: vArgs) {
-            System.out.println(arg);
             if (args.get(arg) == null) {
                 nullArgs = true;
             }
