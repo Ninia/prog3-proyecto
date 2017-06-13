@@ -71,6 +71,7 @@ public class SignUpHandler implements HttpHandler {
             for (int i = 0; i < attrs.length; i++) {
                 if (attrs[i] == null) {
                     if (i == 0 || i == 1 /* username / password */) {
+                        hes.getResponseHeaders().add("content-type", "text/plain");
                         response = "Password and Username can't be empty".getBytes();
                         hes.sendResponseHeaders(401, 0);
                         os = hes.getResponseBody();
@@ -104,6 +105,7 @@ public class SignUpHandler implements HttpHandler {
                 } catch (FtpException | InvalidNameException e) {
                     response = e.getMessage().getBytes();
                     hes.sendResponseHeaders(400, 0);
+                    hes.getResponseHeaders().add("content-type", "text/plain");
                     os = hes.getResponseBody();
                     os.write(response);
                     os.close();
