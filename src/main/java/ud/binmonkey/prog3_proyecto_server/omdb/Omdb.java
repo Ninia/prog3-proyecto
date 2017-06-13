@@ -46,13 +46,13 @@ public class Omdb {
      *
      * @param title - Title to search for
      * @param type  - Type of media to search for
-     * @return a HashMap where the key is the IMDBid
-     * and the value is another HashMap with basic information about the title
+     * @return a JSON where the key is the IMDBi and the value is another JSON with
+     * basic information about the title
      */
-    public static HashMap search(String title, MediaType type) {
+    public static JSONObject search(String title, MediaType type) {
         try {
 
-            HashMap search_results = new HashMap<String, HashMap>();
+            JSONObject search_results = new JSONObject();
 
             if (!type.equals(MediaType.ALL))
                 url = "http://www.omdbapi.com/?s=" + title.replace(" ", "%20") +
@@ -78,7 +78,7 @@ public class Omdb {
                     entry_info.put("Type", entry.get("Type"));
 
                     if (!entry_info.get("Type").equals("game")) { /* Recent update of OMDB also supports games */
-                        search_results.put(entry.get("imdbID"), entry_info);
+                        search_results.put(entry.get("imdbID").toString(), entry_info);
                     }
                 }
             }

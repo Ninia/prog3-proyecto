@@ -1,5 +1,7 @@
 package ud.binmonkey.prog3_proyecto_server.omdb;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,8 +16,9 @@ public class OmdbUnitTest {
     @org.junit.Test
     public void testSearch() {
 
-        HashMap search = Omdb.search("Trainspotting", MediaType.ALL);
-        HashMap movie = (HashMap) search.get("tt0117951");
+        JSONObject search = Omdb.search("Trainspotting", MediaType.ALL);
+
+        HashMap movie = (HashMap) search.toMap().get("tt0117951");
 
         assertEquals("movie", movie.get("Type"));
         assertEquals("1996", movie.get("Year"));
