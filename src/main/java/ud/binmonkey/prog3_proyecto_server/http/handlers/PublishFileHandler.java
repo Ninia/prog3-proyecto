@@ -16,6 +16,9 @@ import java.util.HashMap;
 import static ud.binmonkey.prog3_proyecto_server.http.handlers.HandlerUtils.printRequest;
 import static ud.binmonkey.prog3_proyecto_server.http.handlers.HandlerUtils.validateArgs;
 
+/**
+ * Publishes a file to the common FTP folder
+ */
 public class PublishFileHandler implements HttpHandler {
 
     @Override
@@ -27,19 +30,21 @@ public class PublishFileHandler implements HttpHandler {
         try {
             HashMap<String, String> args = URI.getArgs(hes.getRequestURI());
 
-            boolean err = validateArgs(hes, args, "username", "token", "filePath");
+            boolean err = validateArgs(hes, args, "username", "token", "filePath", "newName"); /* type=movie by default */
             if (err) {
                 return;
             }
 
             String filePath = args.get("filePath");
+            String newName  = args.get("newName");
             String userName = args.get("username");
             String token    = args.get("token");
+            String type     = args.get("type");
 
             boolean validToken = SessionHandler.INSTANCE.validToken(userName, token);
 
             if (validToken) {
-                FileUtils.publishFile(filePath, userName);
+                FileUtils.publishFile(filePath, userName, newName, type);
                 hes.sendResponseHeaders(200, 0);
                 hes.getResponseHeaders().add("content-type", "text/plain");
                 os = hes.getResponseBody();

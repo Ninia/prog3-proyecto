@@ -14,7 +14,7 @@ public class FileUtils {
      * @param filePath path to file
      * @param userName username, used to locate file in complement with @filePath
      */
-    public static void publishFile(String filePath, String userName) throws IOException {
+    public static void publishFile(String filePath, String userName, String newName, String type) throws IOException {
 
         final String ftpd = DocumentReader.getAttr(DocumentReader.getDoc("conf/properties.xml"),
                 "network", "ftp-server", "ftpd").getTextContent();
@@ -23,22 +23,49 @@ public class FileUtils {
             return; /* root not allowed */
         }
 
-        String[] components = filePath.split("/");
+        switch (type.toLowerCase()) {
+            case "movie":
+                newName = "movies/" + newName;
+                break;
 
-        /* Obtain file */
-        String path = "";
-        for (int i = 0; i < components.length - 1; i++) {
-            path += components[i];
-            if (i != components.length - 2) {
-                path += "/";
-            }
+            case "episode":
+                /* TODO */
+                break;
+
+            case "series":
+                /* TODO */
+                break;
+
+            default: /* same as movies */
+                newName = "movies/" + newName;
+                break;
         }
 
-        mkPath(path);
+        mkPath(ftpd + "/common/movies");
+        mkPath(ftpd + "/common/series");
+
         Files.copy(
                 new File(ftpd + "/" + userName + "/" + filePath).toPath(),
-                new File(ftpd + "/common/" + filePath).toPath(),
-                StandardCopyOption.REPLACE_EXISTING); /* should replacing be allowed? */
+                new File(ftpd + "/common/" + newName).toPath(),
+                StandardCopyOption.REPLACE_EXISTING);
+
+//        /* @DEPRECATED */
+//        String[] components = filePath.split("/");
+//
+//        /* Obtain file */
+//        String path = "";
+//        for (int i = 0; i < components.length - 1; i++) {
+//            path += components[i];
+//            if (i != components.length - 2) {
+//                path += "/";
+//            }
+//        }
+//
+//        mkPath(path);
+//        Files.copy(
+//                new File(ftpd + "/" + userName + "/" + filePath).toPath(),
+//                new File(ftpd + "/common/" + filePath).toPath(),
+//                StandardCopyOption.REPLACE_EXISTING); /* should replacing be allowed? */
 
     }
 

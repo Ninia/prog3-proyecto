@@ -7,7 +7,8 @@ import ud.binmonkey.prog3_proyecto_server.common.time.DateUtils;
 import ud.binmonkey.prog3_proyecto_server.mysql.MySQL;
 import ud.binmonkey.prog3_proyecto_server.omdb.*;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -124,6 +125,39 @@ public class Neo4jUtils extends Neo4j {
                 addRating(movie, (String) outlet, (Integer) movie.getRatings().get(outlet));
             }
             /* END Score Outlets */
+
+            /* Download image */
+            String fileName = ((Value) movie.toParameters()).get(1 /* title */) +
+                    "(" + ((Value) movie.toParameters()).get(5 /* year */ ) + ").jpg";
+
+            java.io.File file = new File(fileName);
+            if (!file.exists()) {
+                try {
+                    InputStream in = new BufferedInputStream(new URL(((Value) movie.toParameters()).get(
+                            ((Value) movie.toParameters()).size() - 1) /* poster  */
+                            .toString()).openStream());
+
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    byte[] buf = new byte[1024];
+                    int n;
+
+                    while ((n = in.read(buf))!= -1){
+                        out.write(buf, 0, n);
+                    }
+
+                    out.close();
+                    in.close();
+                    byte[] response = out.toByteArray();
+
+                    FileOutputStream fos = new FileOutputStream(file.getPath());
+                    fos.write(response);
+                    fos.close();
+
+                } catch (IOException e) {
+                    return;
+                }
+            }
+
         } else {
             LOG.log(Level.WARNING, movie.getImdbID() + " already exists");
         }
