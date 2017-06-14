@@ -7,7 +7,8 @@ import org.json.JSONObject;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.EmptyArgException;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.UriUnescapedArgsException;
 import ud.binmonkey.prog3_proyecto_server.http.URI;
-import ud.binmonkey.prog3_proyecto_server.omdb.Omdb;
+import ud.binmonkey.prog3_proyecto_server.neo4j.Neo4jUtils;
+import ud.binmonkey.prog3_proyecto_server.omdb.OmdbMovie;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -16,11 +17,11 @@ import java.util.HashMap;
 import static ud.binmonkey.prog3_proyecto_server.http.handlers.HandlerUtils.printRequest;
 import static ud.binmonkey.prog3_proyecto_server.http.handlers.HandlerUtils.validateArgs;
 
-@SuppressWarnings("Duplicates")
-public class SearchMovieHandler implements HttpHandler {
-
+public class PublishMovieHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange he) throws IOException {
+        System.out.println("0");
+
         HttpsExchange hes = (HttpsExchange) he;
         printRequest(hes);
 
@@ -29,48 +30,35 @@ public class SearchMovieHandler implements HttpHandler {
         HashMap<String, String> args = null;
 
         try {
-            args = URI.getArgs(hes.getRequestURI());
-
-
-
-            boolean err = validateArgs(hes, args
+            try {
+                args = URI.getArgs(hes.getRequestURI());
+                boolean err = validateArgs(hes, args
 //                    ,"username", "token",
-            );
-            if (err) {
-                return;
-            }
+                );
+                if (err) {
+                    return;
+                }
+            } catch (NullPointerException e) {}
+
 
 //            String userName = args.get("username");
 //            String token = args.get("token");
 
-            /* Get title and type */
-            String id = args.get("id");
-            String title = args.get("title");
-            String type = args.get("type");
-            if (type == null) {
-                type = "Movie";
-            }
+
 
 //            boolean validToken = SessionHandler.INSTANCE.validToken(userName, token);
 
 //            if (validToken) {
-                JSONObject response;
-                if (id != null) {
-                    response = Omdb.getTitle(id);
-                } else if (title != null) {
-                    response = Omdb.search(title, type);
-                } else {
-                    hes.getResponseHeaders().add("content-type", "text/plain");
-                    hes.sendResponseHeaders(200, 0);
-                    os = hes.getResponseBody();
-                    os.write("Missing parameters".getBytes());
-                    return;
-                }
 
+                String content = convertStreamToString(hes.getRequestBody());
+                System.out.println(content);
+                OmdbMovie movie = new OmdbMovie(new JSONObject(content));
+                Neo4jUtils utils = new Neo4jUtils();
+                utils.addMovie(movie);
                 hes.getResponseHeaders().add("content-type", "application/json");
                 hes.sendResponseHeaders(200, 0);
                 os = hes.getResponseBody();
-                os.write(response.toString().getBytes());
+                os.write("OK".toString().getBytes());
 //
 //            } else {
 //                hes.getResponseHeaders().add("content-type", "text/plain");
@@ -86,5 +74,9 @@ public class SearchMovieHandler implements HttpHandler {
             os.write(e.getMessage().getBytes());
         }
         os.close();
+    }
+    static String convertStreamToString(java.io.InputStream is) {
+        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
     }
 }

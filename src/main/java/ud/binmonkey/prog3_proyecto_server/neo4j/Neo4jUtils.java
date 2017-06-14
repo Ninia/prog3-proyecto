@@ -101,7 +101,7 @@ public class Neo4jUtils extends Neo4j {
      *
      * @param movie - OmdbMovie to add to the DB
      */
-    private void addMovie(OmdbMovie movie) {
+    public void addMovie(OmdbMovie movie) {
         if (!checkNode(movie.getImdbID(), "Movie")) {
             getSession().run(
                     "CREATE (a:Movie {title: {title}, name: {name}, year: {year}, released: {released}, dvd: {dvd}," +
@@ -170,7 +170,7 @@ public class Neo4jUtils extends Neo4j {
      *
      * @param series - OmdbSeries to add to the DB
      */
-    private void addSeries(OmdbSeries series) {
+    public void addSeries(OmdbSeries series) {
         if (!checkNode(series.getImdbID(), "Series")) {
 
             getSession().run(
@@ -204,7 +204,7 @@ public class Neo4jUtils extends Neo4j {
      *
      * @param episode - OmdbEpisode to add to the DB
      */
-    private void addEpisode(OmdbEpisode episode) {
+    public void addEpisode(OmdbEpisode episode) {
         if (!checkNode(episode.getImdbID(), "Episode")) {
 
 
@@ -249,7 +249,7 @@ public class Neo4jUtils extends Neo4j {
      * @param outlet - Score Outlet
      * @param score  - Score
      */
-    private void addRating(OmdbTitle title, String outlet, int score) {
+    public void addRating(OmdbTitle title, String outlet, int score) {
 
         String id = title.getImdbID();
 
@@ -290,7 +290,7 @@ public class Neo4jUtils extends Neo4j {
      * @param title         - Title the relation is assigned to
      * @param relation_type - Type of the relation between the node and the title
      */
-    private void addNode(String node, String node_type, String title, String relation_type) {
+    public void addNode(String node, String node_type, String title, String relation_type) {
 
         if (!checkNode(node, node_type)) {
             getSession().run(
@@ -313,7 +313,7 @@ public class Neo4jUtils extends Neo4j {
      * @param title         - Title to attach the relation to
      * @param relation_type - Type of relation
      */
-    private void addRelation(String node, String node_type, String title, String relation_type) {
+    public void addRelation(String node, String node_type, String title, String relation_type) {
         if (!checkRelation(node, node_type, title, relation_type)) {
             getSession().run("MATCH (a:" + node_type + " { name: {name}}), (b { name: {title}}) " +
                     "CREATE (a)-[:" + relation_type + "]->(b)", parameters("name", node, "title", title));
@@ -340,7 +340,7 @@ public class Neo4jUtils extends Neo4j {
      * @param title         - Title the relation is assigned to
      * @param relation_type - Type of the relation between the node and the title
      */
-    private void addNodeList(ArrayList list, String node_type, String title, String relation_type) {
+    public void addNodeList(ArrayList list, String node_type, String title, String relation_type) {
         for (Object o : list) {
             String node = o.toString();
             addNode(node, node_type, title, relation_type);
