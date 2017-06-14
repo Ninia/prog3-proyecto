@@ -133,7 +133,7 @@ public class Neo4jUtils extends Neo4j {
             java.io.File file = new File(fileName);
             if (!file.exists()) {
                 try {
-                    InputStream in = new BufferedInputStream(new URL(movie.getWebsite()).openStream());
+                    InputStream in = new BufferedInputStream(new URL(movie.getPoster()).openStream());
 
                     ByteArrayOutputStream out = new ByteArrayOutputStream();
                     byte[] buf = new byte[1024];
