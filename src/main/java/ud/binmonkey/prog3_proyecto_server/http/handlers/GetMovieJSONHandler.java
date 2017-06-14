@@ -8,6 +8,7 @@ import ud.binmonkey.prog3_proyecto_server.common.exceptions.EmptyArgException;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.UriUnescapedArgsException;
 import ud.binmonkey.prog3_proyecto_server.common.security.SessionHandler;
 import ud.binmonkey.prog3_proyecto_server.http.URI;
+import ud.binmonkey.prog3_proyecto_server.omdb.Omdb;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -42,12 +43,18 @@ public class GetMovieJSONHandler implements HttpHandler {
 
             if (validToken) {
 
-                /* TODO: obtain movie JSON */
-                JSONObject response = null;
-                hes.getResponseHeaders().add("content-type", "application/json");
-                hes.sendResponseHeaders(200, 0);
-                os = hes.getResponseBody();
-                os.write(response.toString().getBytes());
+                JSONObject response = Omdb.search(id, "Movie");
+                if (response != null) {
+                    hes.getResponseHeaders().add("content-type", "application/json");
+                    hes.sendResponseHeaders(200, 0);
+                    os = hes.getResponseBody();
+                    os.write(response.toString().getBytes());
+                } else {
+                    hes.getResponseHeaders().add("content-type", "text/plain");
+                    hes.sendResponseHeaders(404, 0);
+                    os = hes.getResponseBody();
+                    os.write("Not found.".getBytes());
+                }
 
             } else {
                 hes.getResponseHeaders().add("content-type", "text/plain");
@@ -62,5 +69,8 @@ public class GetMovieJSONHandler implements HttpHandler {
             os.write(e.getMessage().getBytes());
         }
         os.close();
+    }
+
+    public static void main(String[] args) {
     }
 }
