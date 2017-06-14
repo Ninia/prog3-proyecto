@@ -21,7 +21,10 @@ public class OmdbTitle {
     protected int runtime; /* Minutes */
     protected String poster;
 
-    OmdbTitle(Map title) {
+    OmdbTitle(JSONObject titleJSON) {
+
+        Map title = titleJSON.toMap();
+
         this.title = (String) title.get("Title");
         this.imdbID = (String) title.get("imdbID");
         this.year = JSONFormatter.yearFormatter(title.get("Year"));
@@ -57,6 +60,34 @@ public class OmdbTitle {
     }
 
     /* Getters and Setters */
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public Date getReleased() {
+        return released;
+    }
+
+    public String getPlot() {
+        return plot;
+    }
+
+    public String getAwards() {
+        return awards;
+    }
+
+    public int getRuntime() {
+        return runtime;
+    }
+
+    public String getPoster() {
+        return poster;
+    }
 
     public String getImdbID() {
         return imdbID;

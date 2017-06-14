@@ -127,15 +127,13 @@ public class Neo4jUtils extends Neo4j {
             /* END Score Outlets */
 
             /* Download image */
-            String fileName = ((Value) movie.toParameters()).get(1 /* title */) +
-                    "(" + ((Value) movie.toParameters()).get(5 /* year */ ) + ").jpg";
+            String fileName = (movie.getTitle()) +
+                    "(" + movie.getYear() + ").jpg";
 
             java.io.File file = new File(fileName);
             if (!file.exists()) {
                 try {
-                    InputStream in = new BufferedInputStream(new URL(((Value) movie.toParameters()).get(
-                            ((Value) movie.toParameters()).size() - 1) /* poster  */
-                            .toString()).openStream());
+                    InputStream in = new BufferedInputStream(new URL(movie.getWebsite()).openStream());
 
                     ByteArrayOutputStream out = new ByteArrayOutputStream();
                     byte[] buf = new byte[1024];

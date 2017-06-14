@@ -28,10 +28,12 @@ public class OmdbMovie extends OmdbTitle {
     /**
      * Constructor for the class OmdbMovie that extends from OmdbTitle
      *
-     * @param movie - Map with the info of the Episode
+     * @param movieJSON - JSON with the info of the Episode
      */
-    public OmdbMovie(Map movie) {
-        super(movie);
+    public OmdbMovie(JSONObject movieJSON) {
+        super(movieJSON);
+
+        Map movie = movieJSON.toMap();
 
         this.dvd = JSONFormatter.dateFormatter(movie.get("DVD"));
         this.boxOffice = JSONFormatter.doubleConversor(movie.get("BoxOffice"));
@@ -49,6 +51,18 @@ public class OmdbMovie extends OmdbTitle {
         } catch (java.lang.ClassCastException e) { /* If it is not formatted */
             this.ratings = JSONFormatter.scoreFormatter((ArrayList) movie.get("Ratings"));
         }
+    }
+
+    public Date getDvd() {
+        return dvd;
+    }
+
+    public double getBoxOffice() {
+        return boxOffice;
+    }
+
+    public String getWebsite() {
+        return website;
     }
 
     /* Format Conversion Methods */

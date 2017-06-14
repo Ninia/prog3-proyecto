@@ -20,11 +20,13 @@ public class OmdbEpisode extends OmdbTitle {
     /**
      * Constructor for the class OmdbSeries that extends from OmdbBTitle
      *
-     * @param episode - Map with the info of the Episode
+     * @param episodeJSON - JSON with the info of the Episode
      */
-    public OmdbEpisode(Map episode) {
+    public OmdbEpisode(JSONObject episodeJSON) {
 
-        super(episode);
+        super(episodeJSON);
+
+        Map episode = episodeJSON.toMap();
 
         this.seriesID = (String) episode.get("seriesID");
         this.season = JSONFormatter.intergerConversor(episode.get("Season"));

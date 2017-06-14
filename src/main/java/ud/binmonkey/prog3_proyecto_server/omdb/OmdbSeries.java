@@ -19,11 +19,13 @@ public class OmdbSeries extends OmdbTitle {
     /**
      * Constructor for the class OmdbEpisode that extends from OmdbTitle
      *
-     * @param series - Map with the info of the Episode
+     * @param seriesJSON - JSON with the info of the Episode
      */
-    public OmdbSeries(Map series) {
+    public OmdbSeries(JSONObject seriesJSON) {
 
-        super(series);
+        super(seriesJSON);
+
+        Map series = seriesJSON.toMap();
 
         this.seasons = JSONFormatter.intergerConversor(series.get("totalSeasons"));
         this.language = JSONFormatter.listFormatter(series.get("Language"));
@@ -90,6 +92,10 @@ public class OmdbSeries extends OmdbTitle {
 
     public ArrayList getCountry() {
         return country;
+    }
+
+    public int getSeasons() {
+        return seasons;
     }
 
     /* END Getters */

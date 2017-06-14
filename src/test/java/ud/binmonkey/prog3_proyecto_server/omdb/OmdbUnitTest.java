@@ -31,7 +31,7 @@ public class OmdbUnitTest {
     @org.junit.Test
     public void testTitle() {
 
-        Map movie = Omdb.getTitle("tt0117951");
+        JSONObject movie = Omdb.getTitle("tt0117951");
 
         /* Checks that the movie is the same as the one searched for */
         assertEquals("movie", movie.get("Type"));

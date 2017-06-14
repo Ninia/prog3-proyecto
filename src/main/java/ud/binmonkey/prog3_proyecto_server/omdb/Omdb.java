@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -104,7 +103,7 @@ public class Omdb {
      * @param id - IMDB Title to search for
      * @return a Map where the keys are the names of the values
      */
-    public static Map getTitle(String id) {
+    public static JSONObject getTitle(String id) {
 
         try {
 
@@ -116,7 +115,7 @@ public class Omdb {
             JSONObject title = new JSONObject(s.nextLine());
 
             LOG.log(Level.INFO, "Searched info for " + id);
-            return title.toMap();
+            return title;
 
         } catch (MalformedURLException e) {
             LOG.log(Level.SEVERE, "Malformed URL - " + url);

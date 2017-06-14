@@ -47,9 +47,9 @@ public class OmdbTitleUnitTest {
                     "src/test/resources/neo4j/omdb/episode.json")).useDelimiter("\\Z").next());
 
 
-            OmdbMovie movie = new OmdbMovie(jsonMovie.toMap());
-            OmdbSeries series = new OmdbSeries(jsonSeries.toMap());
-            OmdbEpisode episode = new OmdbEpisode(jsonEpisode.toMap());
+            OmdbMovie movie = new OmdbMovie(jsonMovie);
+            OmdbSeries series = new OmdbSeries(jsonSeries);
+            OmdbEpisode episode = new OmdbEpisode(jsonEpisode);
 
             assertEquals("tt0117951", movie.getImdbID());
             assertTrue(movie.getActors().contains("Ewan McGregor"));
