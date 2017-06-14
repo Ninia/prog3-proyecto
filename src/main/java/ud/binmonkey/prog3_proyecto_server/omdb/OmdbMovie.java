@@ -53,18 +53,6 @@ public class OmdbMovie extends OmdbTitle {
         }
     }
 
-    public Date getDvd() {
-        return dvd;
-    }
-
-    public double getBoxOffice() {
-        return boxOffice;
-    }
-
-    public String getWebsite() {
-        return website;
-    }
-
     /* Format Conversion Methods */
 
     public Object toParameters() {
@@ -108,10 +96,30 @@ public class OmdbMovie extends OmdbTitle {
     }
     /* END Format Conversion Methods */
 
-    /* Getters */
+    /* Getters & Setters */
 
     public Enum getType() {
         return MediaType.MOVIE;
+    }
+
+    public Date getDvd() {
+        return dvd;
+    }
+
+    public void setDvd(Date dvd) {
+        this.dvd = dvd;
+    }
+
+    public double getBoxOffice() {
+        return boxOffice;
+    }
+
+    public void setBoxOffice(double boxOffice) {
+        this.boxOffice = boxOffice;
+    }
+
+    public String getWebsite() {
+        return website;
     }
 
     public HashMap getRatings() {
@@ -122,28 +130,57 @@ public class OmdbMovie extends OmdbTitle {
         return language;
     }
 
+    public void setLanguage(ArrayList language) {
+        this.language = language;
+    }
+
     public ArrayList getGenre() {
         return genre;
+    }
+
+    public void setGenre(ArrayList genre) {
+        this.genre = genre;
     }
 
     public ArrayList getWriter() {
         return writer;
     }
 
+    public void setWriter(ArrayList writer) {
+        this.writer = writer;
+    }
+
     public ArrayList getDirector() {
         return director;
+    }
+
+    public void setDirector(ArrayList director) {
+        this.director = director;
     }
 
     public ArrayList getActors() {
         return actors;
     }
 
+    public void setActors(ArrayList actors) {
+        this.actors = actors;
+    }
+
     public ArrayList getProducers() {
         return producers;
+    }
+
+    public void setProducers(ArrayList producers) {
+        this.producers = producers;
     }
 
     public ArrayList getCountry() {
         return country;
     }
-    /* END Getters*/
+
+    public void setCountry(ArrayList country) {
+        this.country = country;
+    }
+
+/* END Getters & Setters */
 }

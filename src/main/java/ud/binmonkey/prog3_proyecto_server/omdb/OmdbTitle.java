@@ -65,36 +65,52 @@ public class OmdbTitle {
         return title;
     }
 
-    public String getYear() {
-        return year;
-    }
-
-    public Date getReleased() {
-        return released;
-    }
-
-    public String getPlot() {
-        return plot;
-    }
-
-    public String getAwards() {
-        return awards;
-    }
-
-    public int getRuntime() {
-        return runtime;
-    }
-
-    public String getPoster() {
-        return poster;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getImdbID() {
         return imdbID;
     }
 
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public Date getReleased() {
+        return released;
+    }
+
+    public void setReleased(Date released) {
+        this.released = released;
+    }
+
+    public String getPlot() {
+        return plot;
+    }
+
+    public void setPlot(String plot) {
+        this.plot = plot;
+    }
+
     public String getAgeRating() {
         return ageRating;
+    }
+
+    public void setAgeRating(String ageRating) {
+        this.ageRating = ageRating;
+    }
+
+    public String getAwards() {
+        return awards;
+    }
+
+    public void setAwards(String awards) {
+        this.awards = awards;
     }
 
     public int getMetascore() {
@@ -107,6 +123,18 @@ public class OmdbTitle {
 
     public int getImdbVotes() {
         return imdbVotes;
+    }
+
+    public int getRuntime() {
+        return runtime;
+    }
+
+    public void setRuntime(int runtime) {
+        this.runtime = runtime;
+    }
+
+    public String getPoster() {
+        return poster;
     }
 
 }

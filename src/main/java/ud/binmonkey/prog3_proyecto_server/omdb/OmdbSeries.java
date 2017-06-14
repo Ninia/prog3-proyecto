@@ -72,31 +72,51 @@ public class OmdbSeries extends OmdbTitle {
     }
     /* END Format Conversion Methods */
 
-    /* Getters */
+    /* Getters & Setters */
 
     public Enum getType() {
         return MediaType.SERIES;
-    }
-
-    public ArrayList getLanguage() {
-        return language;
-    }
-
-    public ArrayList getGenre() {
-        return genre;
-    }
-
-    public ArrayList getProducers() {
-        return producers;
-    }
-
-    public ArrayList getCountry() {
-        return country;
     }
 
     public int getSeasons() {
         return seasons;
     }
 
-    /* END Getters */
+    public void setSeasons(int seasons) {
+        this.seasons = seasons;
+    }
+
+    public ArrayList getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(ArrayList language) {
+        this.language = language;
+    }
+
+    public ArrayList getGenre() {
+        return genre;
+    }
+
+    public void setGenre(ArrayList genre) {
+        this.genre = genre;
+    }
+
+    public ArrayList getProducers() {
+        return producers;
+    }
+
+    public void setProducers(ArrayList producers) {
+        this.producers = producers;
+    }
+
+    public ArrayList getCountry() {
+        return country;
+    }
+
+    public void setCountry(ArrayList country) {
+        this.country = country;
+    }
+
+/* END Getters & Setters */
 }

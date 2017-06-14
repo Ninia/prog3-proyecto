@@ -75,34 +75,59 @@ public class OmdbEpisode extends OmdbTitle {
     }
     /* END Format Conversion Methods */
 
-    /* Getters */
+    /* Getters & Setters */
 
     public Enum getType() {
         return MediaType.EPISODE;
-    }
-
-    public ArrayList getActors() {
-        return actors;
-    }
-
-    public ArrayList getWriter() {
-        return writer;
-    }
-
-    public ArrayList getDirector() {
-        return director;
     }
 
     public String getSeriesID() {
         return seriesID;
     }
 
+    public void setSeriesID(String seriesID) {
+        this.seriesID = seriesID;
+    }
+
     public int getSeason() {
         return season;
+    }
+
+    public void setSeason(int season) {
+        this.season = season;
     }
 
     public int getEpisode() {
         return episode;
     }
-    /* END Getters */
+
+    public void setEpisode(int episode) {
+        this.episode = episode;
+    }
+
+    public ArrayList getActors() {
+        return actors;
+    }
+
+    public void setActors(ArrayList actors) {
+        this.actors = actors;
+    }
+
+    public ArrayList getWriter() {
+        return writer;
+    }
+
+    public void setWriter(ArrayList writer) {
+        this.writer = writer;
+    }
+
+    public ArrayList getDirector() {
+        return director;
+    }
+
+    public void setDirector(ArrayList director) {
+        this.director = director;
+    }
+
+/* END Getters & Setters */
 }
