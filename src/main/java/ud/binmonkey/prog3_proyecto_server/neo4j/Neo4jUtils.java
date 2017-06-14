@@ -114,7 +114,7 @@ public class Neo4jUtils extends Neo4j {
             dwhLog("ADD", movie.getImdbID(), MediaType.MOVIE);
 
             addNode(movie.getAgeRating(), "Rating", movie.getImdbID(), "RATED");
-            addNodeList(movie.getLanguage(), "Language", movie.getImdbID(), "SPOKEN_LANGUAGE");
+            addLanguage(movie.getLanguage(), movie.getImdbID(), movie.getFilename());
             addNodeList(movie.getGenre(), "Genre", movie.getImdbID(), "GENRE");
             addNodeList(movie.getWriter(), "Person", movie.getImdbID(), "WROTE");
             addNodeList(movie.getDirector(), "Person", movie.getImdbID(), "DIRECTED");
@@ -189,8 +189,8 @@ public class Neo4jUtils extends Neo4j {
                 addRating(series, "Metacritic", series.getMetascore());
             /* END Score Outlets */
 
+            addLanguage(series.getLanguage(), series.getImdbID(), series.getFilename());
             addNode(series.getAgeRating(), "Rating", series.getImdbID(), "RATED");
-            addNodeList(series.getLanguage(), "Language", series.getImdbID(), "SPOKEN_LANGUAGE");
             addNodeList(series.getGenre(), "Genre", series.getImdbID(), "GENRE");
             addNodeList(series.getProducers(), "Producer", series.getImdbID(), "PRODUCED");
             addNodeList(series.getCountry(), "Country", series.getImdbID(), "COUNTRY");
@@ -283,6 +283,30 @@ public class Neo4jUtils extends Neo4j {
         }
     }
 
+    private void addLanguage(String language, String title, String filename) {
+
+        if (!checkNode(language, "Language")) {
+            getSession().run(
+                    "CREATE(p:Language {name: {name}})",
+                    parameters("name", language));
+
+            LOG.log(Level.INFO, "Added Language: " + language);
+        } else {
+            LOG.log(Level.WARNING, language + " already exists");
+        }
+
+        if (!checkRelation(language, "Language", title, "SPOKEN_LANGUAGE")) {
+            getSession().run("MATCH (a:Language { name: {name}}), (b { name: {title}}) " +
+                            "CREATE (a)-[:SPOKEN_LANGUAGE {filename: {filename}}]->(b)",
+                    parameters("name", language, "title", title, "filename", filename));
+
+            LOG.log(Level.INFO, "Added SPOKEN_LANGUAGE: " + filename + "(" + language + ") -> " + title);
+
+        } else {
+            LOG.log(Level.WARNING, "SPOKEN_LANGUAGE: " + language + " -> " + title + " already exists");
+        }
+    }
+
     /**
      * Adds a Node to the DB creating a relation with another node
      *
@@ -319,13 +343,6 @@ public class Neo4jUtils extends Neo4j {
                     "CREATE (a)-[:" + relation_type + "]->(b)", parameters("name", node, "title", title));
 
             LOG.log(Level.INFO, "Added " + relation_type + ": " + node + " -> " + title);
-
-            if (node_type.equals("Genre")) {
-                try {
-                    mySQL.updateCounter("neo4j_genres", node);
-                } catch (SQLException ignored) {
-                }
-            }
 
         } else {
             LOG.log(Level.WARNING, relation_type + ": " + node + " -> " + title + " already exists");

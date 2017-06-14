@@ -12,6 +12,7 @@ public class OmdbTitle {
     protected String imdbID;
     protected String year;
     protected Date released;
+    protected String language;
     protected String plot;
     protected String ageRating;
     protected String awards;
@@ -20,6 +21,7 @@ public class OmdbTitle {
     protected int imdbVotes;
     protected int runtime; /* Minutes */
     protected String poster;
+    private String filename;
 
     OmdbTitle(JSONObject titleJSON) {
 
@@ -29,6 +31,7 @@ public class OmdbTitle {
         this.imdbID = (String) title.get("imdbID");
         this.year = JSONFormatter.yearFormatter(title.get("Year"));
         this.released = JSONFormatter.dateFormatter(title.get("Released"));
+        this.language = "EN"; /* Defaults to English */
         this.plot = (String) title.get("Plot");
         this.ageRating = (String) title.get("Rated");
         this.awards = (String) title.get("Awards");
@@ -37,6 +40,8 @@ public class OmdbTitle {
         this.imdbVotes = JSONFormatter.intergerConversor(title.get("imdbVotes"));
         this.runtime = JSONFormatter.intergerConversor(title.get("Runtime"));
         this.poster = (String) title.get("Poster");
+        this.filename = JSONFormatter.nullConversor(title.get("Filename"));
+
     }
 
     public JSONObject toJSON() {
@@ -55,6 +60,7 @@ public class OmdbTitle {
         episodeJSON.put("imdbVotes", imdbVotes);
         episodeJSON.put("Runtime", runtime);
         episodeJSON.put("Poster", poster);
+        episodeJSON.put("Filename", filename);
 
         return episodeJSON;
     }
@@ -80,6 +86,15 @@ public class OmdbTitle {
     public void setYear(String year) {
         this.year = year;
     }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
 
     public Date getReleased() {
         return released;
@@ -135,6 +150,14 @@ public class OmdbTitle {
 
     public String getPoster() {
         return poster;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public String setFilename() {
+        return filename;
     }
 
 }

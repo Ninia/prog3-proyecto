@@ -12,6 +12,7 @@ public class OmdbEpisode extends OmdbTitle {
     private String seriesID;
     private int season;
     private int episode;
+    private String language;
 
     private ArrayList actors;
     private ArrayList writer;
@@ -28,6 +29,7 @@ public class OmdbEpisode extends OmdbTitle {
 
         Map episode = episodeJSON.toMap();
 
+        this.language = (String) episode.get("Language"); /* Defaults to OV  */
         this.seriesID = (String) episode.get("seriesID");
         this.season = JSONFormatter.intergerConversor(episode.get("Season"));
         this.episode = JSONFormatter.intergerConversor(episode.get("Episode"));
@@ -66,7 +68,7 @@ public class OmdbEpisode extends OmdbTitle {
         episodeJSON.put("seriesID", seriesID);
         episodeJSON.put("Season", season);
         episodeJSON.put("Episode", episode);
-
+        episodeJSON.put("Language", language);
         episodeJSON.put("Writer", writer);
         episodeJSON.put("Director", director);
         episodeJSON.put("Actors", actors);
@@ -76,6 +78,14 @@ public class OmdbEpisode extends OmdbTitle {
     /* END Format Conversion Methods */
 
     /* Getters & Setters */
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
 
     public Enum getType() {
         return MediaType.EPISODE;

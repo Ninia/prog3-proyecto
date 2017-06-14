@@ -11,7 +11,6 @@ public class OmdbSeries extends OmdbTitle {
 
     private int seasons;
 
-    private ArrayList language;
     private ArrayList genre;
     private ArrayList producers = new ArrayList();
     private ArrayList country;
@@ -28,9 +27,8 @@ public class OmdbSeries extends OmdbTitle {
         Map series = seriesJSON.toMap();
 
         this.seasons = JSONFormatter.intergerConversor(series.get("totalSeasons"));
-        this.language = JSONFormatter.listFormatter(series.get("Language"));
         this.genre = JSONFormatter.listFormatter(series.get("Genre"));
-        this.producers.add("placeholder"); /* TODO this is a placeholder */
+        this.producers.add(JSONFormatter.nullConversor(series.get("Producer")));
         this.country = JSONFormatter.listFormatter(series.get("Country"));
     }
 
@@ -63,7 +61,6 @@ public class OmdbSeries extends OmdbTitle {
         JSONObject episodeJSON = super.toJSON();
 
         episodeJSON.put("totalSeasons", seasons);
-        episodeJSON.put("Language", language);
         episodeJSON.put("Genre", genre);
         episodeJSON.put("Production", producers);
         episodeJSON.put("Country", country);
@@ -84,14 +81,6 @@ public class OmdbSeries extends OmdbTitle {
 
     public void setSeasons(int seasons) {
         this.seasons = seasons;
-    }
-
-    public ArrayList getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(ArrayList language) {
-        this.language = language;
     }
 
     public ArrayList getGenre() {

@@ -17,7 +17,7 @@ public class OmdbMovie extends OmdbTitle {
     private String website;
 
     private HashMap ratings = new HashMap<String, Integer>();
-    private ArrayList language;
+    private String language;
     private ArrayList genre;
     private ArrayList writer;
     private ArrayList director;
@@ -35,10 +35,11 @@ public class OmdbMovie extends OmdbTitle {
 
         Map movie = movieJSON.toMap();
 
+
         this.dvd = JSONFormatter.dateFormatter(movie.get("DVD"));
         this.boxOffice = JSONFormatter.doubleConversor(movie.get("BoxOffice"));
         this.website = (String) movie.get("Website");
-        this.language = JSONFormatter.listFormatter(movie.get("Language"));
+        this.language = (String) movie.get("Language"); /* Defaults to OV  */
         this.genre = JSONFormatter.listFormatter(movie.get("Genre"));
         this.writer = JSONFormatter.listFormatter(movie.get("Writer"));
         this.director = JSONFormatter.listFormatter(movie.get("Director"));
@@ -126,11 +127,11 @@ public class OmdbMovie extends OmdbTitle {
         return ratings;
     }
 
-    public ArrayList getLanguage() {
+    public String getLanguage() {
         return language;
     }
 
-    public void setLanguage(ArrayList language) {
+    public void setLanguage(String language) {
         this.language = language;
     }
 
