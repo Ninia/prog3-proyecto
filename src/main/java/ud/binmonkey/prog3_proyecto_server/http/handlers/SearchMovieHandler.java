@@ -6,6 +6,7 @@ import com.sun.net.httpserver.HttpsExchange;
 import org.json.JSONObject;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.EmptyArgException;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.UriUnescapedArgsException;
+import ud.binmonkey.prog3_proyecto_server.common.security.SessionHandler;
 import ud.binmonkey.prog3_proyecto_server.http.URI;
 import ud.binmonkey.prog3_proyecto_server.omdb.Omdb;
 
@@ -34,14 +35,14 @@ public class SearchMovieHandler implements HttpHandler {
 
 
             boolean err = validateArgs(hes, args
-//                    ,"username", "token",
+                    ,"username", "token"
             );
             if (err) {
                 return;
             }
 
-//            String userName = args.get("username");
-//            String token = args.get("token");
+            String userName = args.get("username");
+            String token = args.get("token");
 
             /* Get title and type */
             String id = args.get("id");
@@ -51,9 +52,9 @@ public class SearchMovieHandler implements HttpHandler {
                 type = "Movie";
             }
 
-//            boolean validToken = SessionHandler.INSTANCE.validToken(userName, token);
+            boolean validToken = SessionHandler.INSTANCE.validToken(userName, token);
 
-//            if (validToken) {
+            if (validToken) {
                 JSONObject response;
                 if (id != null) {
                     response = Omdb.getTitle(id);
@@ -71,13 +72,13 @@ public class SearchMovieHandler implements HttpHandler {
                 hes.sendResponseHeaders(200, 0);
                 os = hes.getResponseBody();
                 os.write(response.toString().getBytes());
-//
-//            } else {
-//                hes.getResponseHeaders().add("content-type", "text/plain");
-//                hes.sendResponseHeaders(401, 0);
-//                os = hes.getResponseBody();
-//                os.write("Unauthorized.".getBytes());
-//            }
+
+            } else {
+                hes.getResponseHeaders().add("content-type", "text/plain");
+                hes.sendResponseHeaders(401, 0);
+                os = hes.getResponseBody();
+                os.write("Unauthorized.".getBytes());
+            }
 
         } catch (EmptyArgException | UriUnescapedArgsException e) {
             hes.getResponseHeaders().add("content-type", "text/plain");

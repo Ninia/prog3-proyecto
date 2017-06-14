@@ -6,6 +6,8 @@ import com.sun.net.httpserver.HttpsExchange;
 import org.json.JSONObject;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.EmptyArgException;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.UriUnescapedArgsException;
+import ud.binmonkey.prog3_proyecto_server.common.filesystem.FileUtils;
+import ud.binmonkey.prog3_proyecto_server.common.security.SessionHandler;
 import ud.binmonkey.prog3_proyecto_server.http.URI;
 import ud.binmonkey.prog3_proyecto_server.neo4j.Neo4jUtils;
 import ud.binmonkey.prog3_proyecto_server.omdb.OmdbMovie;
@@ -20,7 +22,6 @@ import static ud.binmonkey.prog3_proyecto_server.http.handlers.HandlerUtils.vali
 public class PublishMovieHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange he) throws IOException {
-        System.out.println("0");
 
         HttpsExchange hes = (HttpsExchange) he;
         printRequest(hes);
@@ -32,40 +33,53 @@ public class PublishMovieHandler implements HttpHandler {
         try {
             try {
                 args = URI.getArgs(hes.getRequestURI());
-                boolean err = validateArgs(hes, args
-//                    ,"username", "token",
+                boolean err = validateArgs(hes, args, "sourceFile"
+                    ,"username", "token"
                 );
                 if (err) {
                     return;
                 }
-            } catch (NullPointerException e) {}
+            } catch (NullPointerException e) {
+
+            }
 
 
-//            String userName = args.get("username");
-//            String token = args.get("token");
+                String userName = args.get("username");
+                String token = args.get("token");
+                String srcFile = args.get("sourceFile");
 
 
 
-//            boolean validToken = SessionHandler.INSTANCE.validToken(userName, token);
+            boolean validToken = SessionHandler.INSTANCE.validToken(userName, token);
 
-//            if (validToken) {
+            if (validToken) {
 
                 String content = convertStreamToString(hes.getRequestBody());
                 System.out.println(content);
+                System.out.println(srcFile);
+
                 OmdbMovie movie = new OmdbMovie(new JSONObject(content));
+                movie.setFilename("movies/" + movie.getFilename());
+
+                try {
+                    FileUtils.publishFile(srcFile, userName, movie.getFilename(), movie.getType().toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 Neo4jUtils utils = new Neo4jUtils();
                 utils.addMovie(movie);
                 hes.getResponseHeaders().add("content-type", "application/json");
                 hes.sendResponseHeaders(200, 0);
                 os = hes.getResponseBody();
                 os.write("OK".toString().getBytes());
-//
-//            } else {
-//                hes.getResponseHeaders().add("content-type", "text/plain");
-//                hes.sendResponseHeaders(401, 0);
-//                os = hes.getResponseBody();
-//                os.write("Unauthorized.".getBytes());
-//            }
+
+            } else {
+                hes.getResponseHeaders().add("content-type", "text/plain");
+                hes.sendResponseHeaders(401, 0);
+                os = hes.getResponseBody();
+                os.write("Unauthorized.".getBytes());
+            }
 
         } catch (EmptyArgException | UriUnescapedArgsException e) {
             hes.getResponseHeaders().add("content-type", "text/plain");

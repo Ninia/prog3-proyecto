@@ -156,8 +156,8 @@ public class OmdbTitle {
         return filename;
     }
 
-    public String setFilename() {
-        return filename;
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 
 }

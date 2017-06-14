@@ -25,7 +25,9 @@ public class FileUtils {
 
         switch (type.toLowerCase()) {
             case "movie":
-                newName = "movies/" + newName;
+                if (!newName.startsWith("movies/")) {
+                    newName = "movies/" + newName;
+                }
                 break;
 
             case "episode":
@@ -43,6 +45,10 @@ public class FileUtils {
 
         mkPath(ftpd + "/common/movies");
         mkPath(ftpd + "/common/series");
+        new File(ftpd + "/common/movies").mkdirs();
+
+        System.out.println(new File(ftpd + "/" + userName + "/" + filePath).exists());
+        System.out.println(new File(ftpd + "/common/" + newName).exists());
 
         Files.copy(
                 new File(ftpd + "/" + userName + "/" + filePath).toPath(),

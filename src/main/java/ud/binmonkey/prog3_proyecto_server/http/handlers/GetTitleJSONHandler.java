@@ -17,7 +17,7 @@ import java.util.HashMap;
 import static ud.binmonkey.prog3_proyecto_server.http.handlers.HandlerUtils.printRequest;
 import static ud.binmonkey.prog3_proyecto_server.http.handlers.HandlerUtils.validateArgs;
 
-public class GetMovieJSONHandler implements HttpHandler {
+public class GetTitleJSONHandler implements HttpHandler {
     @SuppressWarnings("Duplicates")
     @Override
     public void handle(HttpExchange he) throws IOException {
@@ -30,10 +30,13 @@ public class GetMovieJSONHandler implements HttpHandler {
 
         try {
             args = URI.getArgs(hes.getRequestURI());
-            boolean err = validateArgs(hes, args, "username", "token", "id");
+            boolean err = validateArgs(hes, args
+//                    , "username", "token"
+                    ,"id");
             if (err) {
                 return;
             }
+
             String userName = args.get("username");
             String token = args.get("token");
 
@@ -44,7 +47,7 @@ public class GetMovieJSONHandler implements HttpHandler {
 
             if (validToken) {
 
-                JSONObject response = Omdb.search(id, "Movie");
+                JSONObject response = Omdb.getTitle(id);
                 if (response != null) {
                     hes.getResponseHeaders().add("content-type", "application/json");
                     hes.sendResponseHeaders(200, 0);
@@ -70,8 +73,5 @@ public class GetMovieJSONHandler implements HttpHandler {
             os.write(e.getMessage().getBytes());
         }
         os.close();
-    }
-
-    public static void main(String[] args) {
     }
 }

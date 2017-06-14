@@ -57,6 +57,7 @@ public enum HTTPSServer {
         put("/check", new DefaultHandler());
         put("/changeProperty", new PropertyChangeHandler());
         put("/getMovieJson", new GetMovieJSONHandler());
+        put("/getTitleJson", new GetTitleJSONHandler());
         put("/listDir", new ShowFileSystemHandler());
         put("/login", new LoginHandler());
         put("/publishMovie", new PublishMovieHandler());
