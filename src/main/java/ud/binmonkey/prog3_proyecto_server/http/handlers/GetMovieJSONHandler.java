@@ -63,4 +63,7 @@ public class GetMovieJSONHandler implements HttpHandler {
         }
         os.close();
     }
+
+    public static void main(String[] args) {
+    }
 }

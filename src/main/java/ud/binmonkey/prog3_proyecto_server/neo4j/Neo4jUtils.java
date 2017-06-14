@@ -3,6 +3,7 @@ package ud.binmonkey.prog3_proyecto_server.neo4j;
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.StatementResult;
 import org.neo4j.driver.v1.Value;
+import ud.binmonkey.prog3_proyecto_server.common.DocumentReader;
 import ud.binmonkey.prog3_proyecto_server.common.time.DateUtils;
 import ud.binmonkey.prog3_proyecto_server.mysql.MySQL;
 import ud.binmonkey.prog3_proyecto_server.omdb.*;
@@ -20,6 +21,8 @@ import static org.neo4j.driver.v1.Values.parameters;
 public class Neo4jUtils extends Neo4j {
 
     /* Logger for Neo4jUtils */
+    private static final String ftpd = DocumentReader.getAttr(DocumentReader.getDoc("conf/properties.xml"),
+            "network", "ftp-server", "ftpd").getTextContent();
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Neo4jUtils.class.getName());
 
     static {
@@ -127,8 +130,9 @@ public class Neo4jUtils extends Neo4j {
             /* END Score Outlets */
 
             /* Download image */
-            String fileName = (movie.getTitle()) +
-                    "(" + movie.getYear() + ").jpg";
+            String fileName = ftpd + "/common/data/images/" +
+                    (movie.getTitle()) + "(" + movie.getYear() + ").jpg";
+
 
             java.io.File file = new File(fileName);
             if (!file.exists()) {

@@ -62,6 +62,12 @@ public class FTPServer extends DefaultFtpServer{
         try {
             createAdmin();
             createCommon();
+
+            /* create common directory */
+            File commonDir = new File(ftpd + "/common/data/images/");
+            if (!commonDir.exists()) {
+                commonDir.mkdirs();
+            }
             ud.binmonkey.prog3_proyecto_server.common.filesystem.FileUtils.mkPath(ftpd + "/common/data/images");
         } catch (FtpException e) {
             e.printStackTrace();

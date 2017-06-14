@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import ud.binmonkey.prog3_proyecto_server.common.DocumentReader;
+import ud.binmonkey.prog3_proyecto_server.common.network.URLParamEncoder;
 import ud.binmonkey.prog3_proyecto_server.common.time.DateUtils;
 
 import java.io.IOException;
@@ -54,10 +55,10 @@ public class Omdb {
             JSONObject search_results = new JSONObject();
 
             if (!type.equals("all"))
-                url = "http://www.omdbapi.com/?s=" + title.replace(" ", "%20") +
-                        "&type=" + type + apikey;
+                url = "http://www.omdbapi.com/?s=" + URLParamEncoder.encode(title) +
+                        "&type=" + URLParamEncoder.encode(type) + apikey;
             else
-                url = "http://www.omdbapi.com/?s=" + title.replace(" ", "%20") + apikey;
+                url = "http://www.omdbapi.com/?s=" + URLParamEncoder.encode(title) + apikey;
 
             URL query = new URL(url);
 
