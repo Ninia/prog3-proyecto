@@ -77,11 +77,11 @@ public class Neo4j {
             LOG.log(Level.INFO, "Connection to Neo4j server started");
             return true;
         } catch (org.neo4j.driver.v1.exceptions.ServiceUnavailableException e) {
-            LOG.log(Level.SEVERE, "Unable to connect to server," +
+            LOG.log(Level.SEVERE, "ServiceUnavailableException: Unable to connect to server," +
                     " ensure the database is running and that there is a working network connection to it.");
             return false;
         } catch (org.neo4j.driver.v1.exceptions.AuthenticationException e) {
-            LOG.log(Level.SEVERE, ": The client is unauthorized due to authentication failure.");
+            LOG.log(Level.SEVERE, "AuthenticationException: The client is unauthorized due to authentication failure.");
             System.exit(0);
         }
 
