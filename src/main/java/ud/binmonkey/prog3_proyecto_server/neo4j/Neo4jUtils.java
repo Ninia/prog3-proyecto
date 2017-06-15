@@ -45,28 +45,20 @@ public class Neo4jUtils extends Neo4j {
     /* Add Methods */
 
     /**
-     * Adds an IMDB title to the DB, Automatically getting info from OMDB
+     * Adds an IMDB title to the DB
      *
-     * @param id - IMDB id of the title
+     * @param title - OmdbTitle
      */
-    public void addTitle(String id) {
+    public void addTitle(OmdbTitle title) {
 
-        MediaType mediaType = Omdb.getType(id);
-        if (mediaType != null) {
-            switch (mediaType) {
-                case MOVIE:
-                    addMovie(new OmdbMovie(Omdb.getTitle(id)));
-                    break;
-                case SERIES:
-                    addSeries(new OmdbSeries(Omdb.getTitle(id)));
-                    break;
-                case EPISODE:
-                    addEpisode(new OmdbEpisode(Omdb.getTitle(id)));
-                    break;
-            }
-        } else {
-            LOG.log(Level.SEVERE, "Title " + id + " not found on IMDB");
+        if (title instanceof OmdbMovie) {
+            addMovie((OmdbMovie) title);
+        } else if (title instanceof OmdbSeries) {
+            addSeries((OmdbSeries) title);
+        } else if (title instanceof OmdbEpisode) {
+            addEpisode((OmdbEpisode) title);
         }
+
     }
 
     /**
@@ -86,8 +78,9 @@ public class Neo4jUtils extends Neo4j {
             LOG.log(Level.INFO, "Added Movie: " + movie.getImdbID());
             mySQL.dwhLog("ADD", movie.getImdbID(), MediaType.MOVIE);
 
-            addNode(movie.getAgeRating(), "Rating", movie.getImdbID(), "RATED");
             addLanguage(movie.getLanguage(), movie.getImdbID(), movie.getFilename());
+
+            addNode(movie.getAgeRating(), "Rating", movie.getImdbID(), "RATED");
             addNodeList(movie.getGenre(), "Genre", movie.getImdbID(), "GENRE");
             addNodeList(movie.getWriter(), "Person", movie.getImdbID(), "WROTE");
             addNodeList(movie.getDirector(), "Person", movie.getImdbID(), "DIRECTED");
@@ -116,7 +109,7 @@ public class Neo4jUtils extends Neo4j {
                     byte[] buf = new byte[1024];
                     int n;
 
-                    while ((n = in.read(buf))!= -1){
+                    while ((n = in.read(buf)) != -1) {
                         out.write(buf, 0, n);
                     }
 
@@ -162,11 +155,11 @@ public class Neo4jUtils extends Neo4j {
                 addRating(series, "Metacritic", series.getMetascore());
             /* END Score Outlets */
 
-            addLanguage(series.getLanguage(), series.getImdbID(), series.getFilename());
             addNode(series.getAgeRating(), "Rating", series.getImdbID(), "RATED");
             addNodeList(series.getGenre(), "Genre", series.getImdbID(), "GENRE");
             addNodeList(series.getProducers(), "Producer", series.getImdbID(), "PRODUCED");
             addNodeList(series.getCountry(), "Country", series.getImdbID(), "COUNTRY");
+
         } else {
             LOG.log(Level.WARNING, series.getImdbID() + " already exists");
         }
@@ -195,10 +188,10 @@ public class Neo4jUtils extends Neo4j {
             if (episode.getMetascore() != 0)
                 addRating(episode, "Metacritic", episode.getMetascore());
             /* END Score Outlets */
-
             addNodeList(episode.getWriter(), "Person", episode.getImdbID(), "WROTE");
             addNodeList(episode.getDirector(), "Person", episode.getImdbID(), "DIRECTED");
             addNodeList(episode.getActors(), "Person", episode.getImdbID(), "ACTED_IN");
+            addLanguage(episode.getLanguage(), episode.getImdbID(), episode.getFilename());
 
             if (!checkNode(episode.getSeriesID(), "Series")) {
                 addSeries(new OmdbSeries(Omdb.getTitle(episode.getSeriesID())));
@@ -337,10 +330,10 @@ public class Neo4jUtils extends Neo4j {
         }
     }
 
-    public void addList(String name, String... ids) {
-        for (String id : ids) {
-            addTitle(id);
-            addNode(name, "List", id, "CONTAINS");
+    public void addList(String name, OmdbTitle... titles) {
+        for (OmdbTitle title : titles) {
+            addTitle(title);
+            addNode(name, "List", title.getImdbID(), "CONTAINS");
         }
     }
     /* END Add Methods */
