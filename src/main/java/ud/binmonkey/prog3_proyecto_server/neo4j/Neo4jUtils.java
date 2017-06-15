@@ -1,5 +1,6 @@
 package ud.binmonkey.prog3_proyecto_server.neo4j;
 
+import org.apache.commons.lang3.StringUtils;
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.StatementResult;
 import org.neo4j.driver.v1.Value;
@@ -346,9 +347,9 @@ public class Neo4jUtils extends Neo4j {
      * @param title - Title to remove
      * @param type  - Omdb type of title
      */
-    public void removeTitle(String title, String type) {
+    public void removeTitle(String title, MediaType type) {
         getSession().run(
-                "MATCH (n:" + type + "{name: {title}})" +
+                "MATCH (n:" + StringUtils.capitalize(type.toString()) + "{name: {title}})" +
                         "OPTIONAL MATCH (n)-[r]-()" +
                         "DELETE n, r",
                 parameters("title", title));
@@ -357,16 +358,7 @@ public class Neo4jUtils extends Neo4j {
 
         LOG.log(Level.INFO, title + " deleted");
 
-        switch (type) {
-            case "Movie":
-                mySQL.dwhLog("DELETE", title, MediaType.MOVIE);
-                break;
-            case "Series":
-                mySQL.dwhLog("DELETE", title, MediaType.SERIES);
-                break;
-            case "Episode":
-                mySQL.dwhLog("DELETE", title, MediaType.EPISODE);
-        }
+        mySQL.dwhLog("DELETE", title, type);
     }
 
     /**

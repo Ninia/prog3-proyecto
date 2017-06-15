@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.StatementResult;
+import ud.binmonkey.prog3_proyecto_server.omdb.MediaType;
 import ud.binmonkey.prog3_proyecto_server.omdb.Omdb;
 import ud.binmonkey.prog3_proyecto_server.omdb.OmdbEpisode;
 import ud.binmonkey.prog3_proyecto_server.omdb.OmdbMovie;
@@ -107,13 +108,13 @@ public class Neo4jUnitTest {
                 new OmdbMovie(Omdb.getTitle("tt0076759")), new OmdbMovie(Omdb.getTitle("tt0080684")),
                 new OmdbMovie(Omdb.getTitle("tt0086190")), new OmdbMovie(Omdb.getTitle("tt0121766")));
 
-        neo4j.removeTitle("tt0120915", "Movie");
-        neo4j.removeTitle("tt0121765", "Movie");
-        neo4j.removeTitle("tt2488496", "Movie");
-        neo4j.removeTitle("tt0076759", "Movie");
-        neo4j.removeTitle("tt0080684", "Movie");
-        neo4j.removeTitle("tt0086190", "Movie");
-        neo4j.removeTitle("tt0121766", "Movie");
+        neo4j.removeTitle("tt0120915", MediaType.MOVIE);
+        neo4j.removeTitle("tt0121765", MediaType.MOVIE);
+        neo4j.removeTitle("tt2488496", MediaType.MOVIE);
+        neo4j.removeTitle("tt0076759", MediaType.MOVIE);
+        neo4j.removeTitle("tt0080684", MediaType.MOVIE);
+        neo4j.removeTitle("tt0086190", MediaType.MOVIE);
+        neo4j.removeTitle("tt0121766", MediaType.MOVIE);
 
         StatementResult result = neo4j.getSession().run("MATCH p=(n:List)-[r:CONTAINS]-(m) " +
                 "WHERE m.name='tt0120915' RETURN n.name AS name");
