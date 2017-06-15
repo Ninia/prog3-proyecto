@@ -54,9 +54,17 @@ public enum HTTPSServer {
     private final Thread watcherThread = new Thread(() -> sessionWatcher.watch());
     private final HashMap<String, HttpHandler> contexts = new HashMap<String, HttpHandler>() {{
         put("/", new WebHandlers.IndexHandler());
+        put("/check", new DefaultHandler());
         put("/changeProperty", new PropertyChangeHandler());
+        put("/changePassword", new PasswordChangeHandler());
+        put("/getMovieJson", new GetMovieJSONHandler());
+        put("/getTitleJson", new GetTitleJSONHandler());
+        put("/listDir", new ShowFileSystemHandler());
         put("/login", new LoginHandler());
+        put("/publishMovie", new PublishMovieHandler());
+        put("/searchMovie", new SearchMovieHandler());
         put("/sessionInfo", new SessionInfoHandler());
+        put("/signUp", new SignUpHandler());
         put("/userInfo", new UserInfoHandler());
 
         /* extras */

@@ -5,7 +5,7 @@ import org.neo4j.driver.v1.StatementResult;
 
 public class Neo4jIntegrationTest {
 
-    private static void generateDB(Neo4j neo4j) {
+    private static void generateDB(Neo4jUtils neo4j) {
         /* Adding Movies */
         neo4j.addTitle("tt0117951"); /* Trainspotting */
         neo4j.addTitle("tt0289043"); /* 28 Days Later... */
@@ -32,11 +32,19 @@ public class Neo4jIntegrationTest {
 
         /* Fixes duplicate because of different name */
         neo4j.renameNode("Twentieth Century Fox", "20th Century Fox", "Producer");
+
+        /* Changes language to EN */
+        neo4j.renameNode("English, Sindarin, Old English", "EN", "Language");
+        neo4j.renameNode("English, Quenya, Old English, Sindarin", "EN", "Language");
+        neo4j.renameNode("English", "EN", "Language");
+        neo4j.renameNode("English, Spanish", "EN", "Language");
+        neo4j.renameNode("German, English, Russian", "EN", "Language");
+        neo4j.renameNode("English, Sindarin", "EN", "Language");
     }
 
     public static void main(String[] args) {
 
-        Neo4j neo4j = new Neo4j();
+        Neo4jUtils neo4j = new Neo4jUtils();
         Record record;
 
         neo4j.clearDB();

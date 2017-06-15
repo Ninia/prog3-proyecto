@@ -11,6 +11,16 @@
       "username": "test"
     },
     {
+      "birth_date": "01-01-1970",
+      "display_name": "Mikel Solabarrieta",
+      "email": "mikel@example.org",
+      "gender": "Of course",
+      "password": "examplepass",
+      "preferred_language": "en",
+      "role": "user",
+      "username": "mikel"
+    },
+    {
       "birth_date": "26-04-1967",
       "display_name": "Anna Jones",
       "email": "anna.jones@gmail.com",

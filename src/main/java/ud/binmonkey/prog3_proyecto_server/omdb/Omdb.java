@@ -4,13 +4,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import ud.binmonkey.prog3_proyecto_server.common.DocumentReader;
+import ud.binmonkey.prog3_proyecto_server.common.network.URLParamEncoder;
 import ud.binmonkey.prog3_proyecto_server.common.time.DateUtils;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -46,19 +46,19 @@ public class Omdb {
      *
      * @param title - Title to search for
      * @param type  - Type of media to search for
-     * @return a HashMap where the key is the IMDBid
-     * and the value is another HashMap with basic information about the title
+     * @return a JSON where the key is the IMDBi and the value is another JSON with
+     * basic information about the title
      */
-    public static HashMap search(String title, MediaType type) {
+    public static JSONObject search(String title, String type) {
         try {
 
-            HashMap search_results = new HashMap<String, HashMap>();
+            JSONObject search_results = new JSONObject();
 
-            if (!type.equals(MediaType.ALL))
-                url = "http://www.omdbapi.com/?s=" + title.replace(" ", "%20") +
-                        "&type=" + type.name() + apikey;
+            if (!type.equals("all"))
+                url = "http://www.omdbapi.com/?s=" + URLParamEncoder.encode(title) +
+                        "&type=" + URLParamEncoder.encode(type) + apikey;
             else
-                url = "http://www.omdbapi.com/?s=" + title.replace(" ", "%20") + apikey;
+                url = "http://www.omdbapi.com/?s=" + URLParamEncoder.encode(title) + apikey;
 
             URL query = new URL(url);
 
@@ -78,7 +78,7 @@ public class Omdb {
                     entry_info.put("Type", entry.get("Type"));
 
                     if (!entry_info.get("Type").equals("game")) { /* Recent update of OMDB also supports games */
-                        search_results.put(entry.get("imdbID"), entry_info);
+                        search_results.put(entry.get("imdbID").toString(), entry_info);
                     }
                 }
             }
@@ -104,7 +104,7 @@ public class Omdb {
      * @param id - IMDB Title to search for
      * @return a Map where the keys are the names of the values
      */
-    public static Map getTitle(String id) {
+    public static JSONObject getTitle(String id) {
 
         try {
 
@@ -116,7 +116,7 @@ public class Omdb {
             JSONObject title = new JSONObject(s.nextLine());
 
             LOG.log(Level.INFO, "Searched info for " + id);
-            return title.toMap();
+            return title;
 
         } catch (MalformedURLException e) {
             LOG.log(Level.SEVERE, "Malformed URL - " + url);

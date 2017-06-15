@@ -15,12 +15,12 @@ import static org.junit.Assert.assertNotEquals;
  */
 public class Neo4jUnitTest {
 
-    private Neo4j neo4j;
+    private Neo4jUtils neo4j;
 
     @Before
     public void setUp() {
 
-        neo4j = new Neo4j();
+        neo4j = new Neo4jUtils();
         neo4j.clearDB();
     }
 

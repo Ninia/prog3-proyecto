@@ -10,3 +10,5 @@ keys
 logs/*
 !logs/README.txt
 /conf/properties/ftpusers.properties
+/conf/ftp/users.properties
+/conf/keys.xml

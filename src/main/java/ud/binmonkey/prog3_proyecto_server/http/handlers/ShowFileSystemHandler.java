@@ -3,14 +3,14 @@ package ud.binmonkey.prog3_proyecto_server.http.handlers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpsExchange;
-import org.bson.Document;
+import ud.binmonkey.prog3_proyecto_server.common.exceptions.DirIsFileException;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.EmptyArgException;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.UriUnescapedArgsException;
-import ud.binmonkey.prog3_proyecto_server.common.exceptions.UserNotFoundException;
+import ud.binmonkey.prog3_proyecto_server.common.filesystem.Scanner;
 import ud.binmonkey.prog3_proyecto_server.common.security.SessionHandler;
 import ud.binmonkey.prog3_proyecto_server.http.URI;
-import ud.binmonkey.prog3_proyecto_server.mongodb.MongoDB;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
@@ -18,14 +18,23 @@ import java.util.HashMap;
 import static ud.binmonkey.prog3_proyecto_server.http.handlers.HandlerUtils.printRequest;
 import static ud.binmonkey.prog3_proyecto_server.http.handlers.HandlerUtils.validateArgs;
 
-public class UserInfoHandler implements HttpHandler {
-    @SuppressWarnings("Duplicates")
+@SuppressWarnings("Duplicates")
+/**
+ * Returns http response with the following as content:
+ *
+ * A json file representing the directory requested by the user
+ * TODO: documentation
+ */
+public class ShowFileSystemHandler implements HttpHandler {
+
     @Override
     public void handle(HttpExchange he) throws IOException {
+
         HttpsExchange hes = (HttpsExchange) he;
         printRequest(hes);
 
         OutputStream os;
+
         try {
 
             HashMap<String, String> args = URI.getArgs(hes.getRequestURI());
@@ -34,52 +43,51 @@ public class UserInfoHandler implements HttpHandler {
             if (err) {
                 return;
             }
-
             String userName = args.get("username");
             String token = args.get("token");
 
             boolean validToken = SessionHandler.INSTANCE.validToken(userName, token);
 
             if (validToken) {
+                String directory = "";
 
-                SessionHandler.INSTANCE.userActivity(userName);
-                Document user;
-                try {
-                    user = MongoDB.getUser(userName);
-                } catch (UserNotFoundException e) {
-
-                    hes.getResponseHeaders().add("content-type", "text/plain");
-                    hes.sendResponseHeaders(401, 0);
-                    os = hes.getResponseBody();
-                    os.write(("User '" + userName + "' not found").getBytes());
-                    os.close();
-                    return;
+                if (args.get("directory") != null) {
+                    String dir = args.get("directory");
+                    if (dir.contains("/")) {
+                        String[] components = dir.split("/");
+                        if (components.length != 0) {
+                            for (String component: components) {
+                                directory += "/" + component;
+                            }
+                        }
+                    }
                 }
+                try {
+                    String response = Scanner.scanDir(Scanner.getFtpd() + userName + directory).toString();
+                    hes.getResponseHeaders().add("content-type", "application/json");
+                    hes.sendResponseHeaders(200, 0);
+                    os = hes.getResponseBody();
+                    os.write(response.getBytes());
 
-                String response = "{\n" +
-                        "\t\"username\": \"" + userName + "\",\n" +
-                        "\t\"display_name\": \"" + user.getString("display_name") + "\",\n" +
-                        "\t\"email\": \"" + user.getString("email") + "\",\n" +
-                        "\t\"role\": \"" + user.getString("role") + "\",\n" +
-                        "\t\"preferred_language\": \"" + user.getString("preferred_language") + "\",\n" +
-                        "\t\"birth_date\": \"" + user.getString("birth_date") + "\",\n" +
-                        "\t\"gender\": \"" + user.getString("gender") + "\"\n" +
-                        "}";
-                hes.getResponseHeaders().add("content-type", "application/json");
-                hes.sendResponseHeaders(200, 0);
-                os = hes.getResponseBody();
-                os.write(response.getBytes());
+                } catch (DirIsFileException e) {
+                    hes.getResponseHeaders().add("content-type", "text/plain");
+                    hes.sendResponseHeaders(400, 0);
+                    os = hes.getResponseBody();
+                    os.write(("Requested directory " + directory + " is a file").getBytes());
 
+                } catch (FileNotFoundException e) {
+                    hes.sendResponseHeaders(404, 0);
+                    os = hes.getResponseBody();
+                    os.write(("File " + directory + " not found").getBytes());
+                }
             } else {
-
                 hes.getResponseHeaders().add("content-type", "text/plain");
                 hes.sendResponseHeaders(401, 0);
                 os = hes.getResponseBody();
                 os.write("Unauthorized.".getBytes());
             }
 
-        } catch (EmptyArgException | UriUnescapedArgsException e) {
-
+        } catch (UriUnescapedArgsException | EmptyArgException e) {
             hes.getResponseHeaders().add("content-type", "text/plain");
             hes.sendResponseHeaders(400, 0);
             os = hes.getResponseBody();

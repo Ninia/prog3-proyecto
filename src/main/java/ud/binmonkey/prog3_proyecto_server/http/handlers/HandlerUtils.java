@@ -9,6 +9,7 @@ import ud.binmonkey.prog3_proyecto_server.http.HTTPSServer;
 import ud.binmonkey.prog3_proyecto_server.http.URI;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -48,5 +49,40 @@ public class HandlerUtils {
             LOG.log(Level.INFO, request);
             System.out.println(request);
         }).run();
+    }
+
+    /**
+     * Checks if HashMap contains the args passed as parameter (String[]) and writes HTTPS response if any are null
+     * @param hes HttpsExchange of handle
+     * @param args complete HashMap of args
+     * @param vArgs args to check
+     * @return false if none where null, true if any was null
+     * @throws IOException HTTPS error
+     */
+    public static boolean validateArgs(HttpsExchange hes, HashMap<String, String> args, String... vArgs)
+            throws IOException {
+
+        boolean nullArgs = false;
+
+        for (String arg: vArgs) {
+            if (args.get(arg) == null) {
+                nullArgs = true;
+            }
+        }
+
+        if (args == null || nullArgs) {
+
+            byte[] response = "Missing arguments.".getBytes();
+
+            hes.getResponseHeaders().add("content-type", "text/plain");
+            hes.sendResponseHeaders(403, 0);
+
+            OutputStream os = hes.getResponseBody();
+            os.write(response);
+            os.close();
+
+            return true;
+        }
+        return false;
     }
 }

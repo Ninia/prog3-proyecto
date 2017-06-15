@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static ud.binmonkey.prog3_proyecto_server.http.handlers.HandlerUtils.printRequest;
+import static ud.binmonkey.prog3_proyecto_server.http.handlers.HandlerUtils.validateArgs;
 
 public class PasswordChangeHandler implements HttpHandler {
 
@@ -40,14 +41,11 @@ public class PasswordChangeHandler implements HttpHandler {
 
         OutputStream os;
         try {
+
             HashMap<String, String> args = URI.getArgs(hes.getRequestURI());
-            if (args == null || args.get("username") == null ||
-                    args.get("password") == null || args.get("token") == null ) {
-                byte[] response = "Missing arguments.".getBytes();
-                hes.sendResponseHeaders(403, 0);
-                os = hes.getResponseBody();
-                os.write(response);
-                os.close();
+
+            boolean err = validateArgs(hes, args, "username", "password", "token");
+            if (err) {
                 return;
             }
 

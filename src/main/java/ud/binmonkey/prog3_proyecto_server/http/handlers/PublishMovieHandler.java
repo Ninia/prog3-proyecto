@@ -3,13 +3,14 @@ package ud.binmonkey.prog3_proyecto_server.http.handlers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpsExchange;
-import org.bson.Document;
+import org.json.JSONObject;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.EmptyArgException;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.UriUnescapedArgsException;
-import ud.binmonkey.prog3_proyecto_server.common.exceptions.UserNotFoundException;
+import ud.binmonkey.prog3_proyecto_server.common.filesystem.FileUtils;
 import ud.binmonkey.prog3_proyecto_server.common.security.SessionHandler;
 import ud.binmonkey.prog3_proyecto_server.http.URI;
-import ud.binmonkey.prog3_proyecto_server.mongodb.MongoDB;
+import ud.binmonkey.prog3_proyecto_server.neo4j.Neo4jUtils;
+import ud.binmonkey.prog3_proyecto_server.omdb.OmdbMovie;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -18,60 +19,62 @@ import java.util.HashMap;
 import static ud.binmonkey.prog3_proyecto_server.http.handlers.HandlerUtils.printRequest;
 import static ud.binmonkey.prog3_proyecto_server.http.handlers.HandlerUtils.validateArgs;
 
-public class UserInfoHandler implements HttpHandler {
-    @SuppressWarnings("Duplicates")
+public class PublishMovieHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange he) throws IOException {
+
         HttpsExchange hes = (HttpsExchange) he;
         printRequest(hes);
 
         OutputStream os;
+
+        HashMap<String, String> args = null;
+
         try {
+            try {
+                args = URI.getArgs(hes.getRequestURI());
+                boolean err = validateArgs(hes, args, "sourceFile"
+                    ,"username", "token"
+                );
+                if (err) {
+                    return;
+                }
+            } catch (NullPointerException e) {
 
-            HashMap<String, String> args = URI.getArgs(hes.getRequestURI());
-
-            boolean err = validateArgs(hes, args, "username", "token");
-            if (err) {
-                return;
             }
 
-            String userName = args.get("username");
-            String token = args.get("token");
+
+                String userName = args.get("username");
+                String token = args.get("token");
+                String srcFile = args.get("sourceFile");
+
+
 
             boolean validToken = SessionHandler.INSTANCE.validToken(userName, token);
 
             if (validToken) {
 
-                SessionHandler.INSTANCE.userActivity(userName);
-                Document user;
-                try {
-                    user = MongoDB.getUser(userName);
-                } catch (UserNotFoundException e) {
+                String content = convertStreamToString(hes.getRequestBody());
+                System.out.println(content);
+                System.out.println(srcFile);
 
-                    hes.getResponseHeaders().add("content-type", "text/plain");
-                    hes.sendResponseHeaders(401, 0);
-                    os = hes.getResponseBody();
-                    os.write(("User '" + userName + "' not found").getBytes());
-                    os.close();
-                    return;
+                OmdbMovie movie = new OmdbMovie(new JSONObject(content));
+                movie.setFilename("movies/" + movie.getFilename());
+
+                try {
+                    FileUtils.publishFile(srcFile, userName, movie.getFilename(), movie.getType().toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
-                String response = "{\n" +
-                        "\t\"username\": \"" + userName + "\",\n" +
-                        "\t\"display_name\": \"" + user.getString("display_name") + "\",\n" +
-                        "\t\"email\": \"" + user.getString("email") + "\",\n" +
-                        "\t\"role\": \"" + user.getString("role") + "\",\n" +
-                        "\t\"preferred_language\": \"" + user.getString("preferred_language") + "\",\n" +
-                        "\t\"birth_date\": \"" + user.getString("birth_date") + "\",\n" +
-                        "\t\"gender\": \"" + user.getString("gender") + "\"\n" +
-                        "}";
+                Neo4jUtils utils = new Neo4jUtils();
+                utils.addMovie(movie);
                 hes.getResponseHeaders().add("content-type", "application/json");
                 hes.sendResponseHeaders(200, 0);
                 os = hes.getResponseBody();
-                os.write(response.getBytes());
+                os.write("OK".toString().getBytes());
 
             } else {
-
                 hes.getResponseHeaders().add("content-type", "text/plain");
                 hes.sendResponseHeaders(401, 0);
                 os = hes.getResponseBody();
@@ -79,12 +82,15 @@ public class UserInfoHandler implements HttpHandler {
             }
 
         } catch (EmptyArgException | UriUnescapedArgsException e) {
-
             hes.getResponseHeaders().add("content-type", "text/plain");
             hes.sendResponseHeaders(400, 0);
             os = hes.getResponseBody();
             os.write(e.getMessage().getBytes());
         }
         os.close();
+    }
+    static String convertStreamToString(java.io.InputStream is) {
+        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
     }
 }
