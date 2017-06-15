@@ -32,6 +32,14 @@ public class Neo4jIntegrationTest {
 
         /* Fixes duplicate because of different name */
         neo4j.renameNode("Twentieth Century Fox", "20th Century Fox", "Producer");
+
+        /* Changes language to EN */
+        neo4j.renameNode("English, Sindarin, Old English", "EN", "Language");
+        neo4j.renameNode("English, Quenya, Old English, Sindarin", "EN", "Language");
+        neo4j.renameNode("English", "EN", "Language");
+        neo4j.renameNode("English, Spanish", "EN", "Language");
+        neo4j.renameNode("German, English, Russian", "EN", "Language");
+        neo4j.renameNode("English, Sindarin", "EN", "Language");
     }
 
     public static void main(String[] args) {
