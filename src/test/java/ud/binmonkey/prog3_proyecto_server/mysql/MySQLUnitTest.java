@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class MySQLUnitTest {
 
-    private MySQL mySQL;
+    private MySQLUtils mySQL;
     private ArrayList<String> log_desc = new ArrayList<>(Arrays.asList(
             "ID", "OPERATION", "OMDBID", "TYPE", "DATE"));
 
@@ -29,7 +29,7 @@ public class MySQLUnitTest {
 
     @Before
     public void setUp() {
-        mySQL = new MySQL();
+        mySQL = new MySQLUtils();
     }
 
     @After
