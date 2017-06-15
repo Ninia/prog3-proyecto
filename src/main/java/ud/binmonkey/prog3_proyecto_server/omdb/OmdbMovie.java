@@ -17,7 +17,7 @@ public class OmdbMovie extends OmdbTitle {
     private String website;
 
     private HashMap ratings = new HashMap<String, Integer>();
-    private ArrayList language;
+    private String language;
     private ArrayList genre;
     private ArrayList writer;
     private ArrayList director;
@@ -28,15 +28,18 @@ public class OmdbMovie extends OmdbTitle {
     /**
      * Constructor for the class OmdbMovie that extends from OmdbTitle
      *
-     * @param movie - Map with the info of the Episode
+     * @param movieJSON - JSON with the info of the Episode
      */
-    public OmdbMovie(Map movie) {
-        super(movie);
+    public OmdbMovie(JSONObject movieJSON) {
+        super(movieJSON);
+
+        Map movie = movieJSON.toMap();
+
 
         this.dvd = JSONFormatter.dateFormatter(movie.get("DVD"));
         this.boxOffice = JSONFormatter.doubleConversor(movie.get("BoxOffice"));
         this.website = (String) movie.get("Website");
-        this.language = JSONFormatter.listFormatter(movie.get("Language"));
+        this.language = (String) movie.get("Language"); /* Defaults to OV  */
         this.genre = JSONFormatter.listFormatter(movie.get("Genre"));
         this.writer = JSONFormatter.listFormatter(movie.get("Writer"));
         this.director = JSONFormatter.listFormatter(movie.get("Director"));
@@ -94,42 +97,91 @@ public class OmdbMovie extends OmdbTitle {
     }
     /* END Format Conversion Methods */
 
-    /* Getters */
+    /* Getters & Setters */
 
     public Enum getType() {
         return MediaType.MOVIE;
+    }
+
+    public Date getDvd() {
+        return dvd;
+    }
+
+    public void setDvd(Date dvd) {
+        this.dvd = dvd;
+    }
+
+    public double getBoxOffice() {
+        return boxOffice;
+    }
+
+    public void setBoxOffice(double boxOffice) {
+        this.boxOffice = boxOffice;
+    }
+
+    public String getWebsite() {
+        return website;
     }
 
     public HashMap getRatings() {
         return ratings;
     }
 
-    public ArrayList getLanguage() {
+    public String getLanguage() {
         return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public ArrayList getGenre() {
         return genre;
     }
 
+    public void setGenre(ArrayList genre) {
+        this.genre = genre;
+    }
+
     public ArrayList getWriter() {
         return writer;
+    }
+
+    public void setWriter(ArrayList writer) {
+        this.writer = writer;
     }
 
     public ArrayList getDirector() {
         return director;
     }
 
+    public void setDirector(ArrayList director) {
+        this.director = director;
+    }
+
     public ArrayList getActors() {
         return actors;
+    }
+
+    public void setActors(ArrayList actors) {
+        this.actors = actors;
     }
 
     public ArrayList getProducers() {
         return producers;
     }
 
+    public void setProducers(ArrayList producers) {
+        this.producers = producers;
+    }
+
     public ArrayList getCountry() {
         return country;
     }
-    /* END Getters*/
+
+    public void setCountry(ArrayList country) {
+        this.country = country;
+    }
+
+/* END Getters & Setters */
 }

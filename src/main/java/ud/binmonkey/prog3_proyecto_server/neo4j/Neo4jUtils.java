@@ -3,13 +3,13 @@ package ud.binmonkey.prog3_proyecto_server.neo4j;
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.StatementResult;
 import org.neo4j.driver.v1.Value;
+import ud.binmonkey.prog3_proyecto_server.common.DocumentReader;
 import ud.binmonkey.prog3_proyecto_server.common.time.DateUtils;
-import ud.binmonkey.prog3_proyecto_server.mysql.MySQL;
+import ud.binmonkey.prog3_proyecto_server.mysql.MySQLUtils;
 import ud.binmonkey.prog3_proyecto_server.omdb.*;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -19,6 +19,8 @@ import static org.neo4j.driver.v1.Values.parameters;
 public class Neo4jUtils extends Neo4j {
 
     /* Logger for Neo4jUtils */
+    private static final String ftpd = DocumentReader.getAttr(DocumentReader.getDoc("conf/properties.xml"),
+            "network", "ftp-server", "ftpd").getTextContent();
     private static final java.util.logging.Logger LOG = java.util.logging.Logger.getLogger(Neo4jUtils.class.getName());
 
     static {
@@ -32,38 +34,13 @@ public class Neo4jUtils extends Neo4j {
     }
     /* END Logger for Neo4j */
 
-    private MySQL mySQL;
-    private Statement statement;
+    private MySQLUtils mySQL;
 
     public Neo4jUtils() {
         super();
 
-        startDWH();
+        mySQL = new MySQLUtils();
     }
-
-    /* DWH Methods */
-    private void startDWH() {
-        mySQL = new MySQL();
-        statement = mySQL.getStatement();
-    }
-
-    /**
-     * Logs the creation of a Title in the DWH
-     *
-     * @param id   - imdbID of the Title
-     * @param type - MediaType of the Title
-     */
-    private void dwhLog(String operation, String id, MediaType type) {
-        try {
-
-            statement.executeUpdate("INSERT INTO neo4j_log VALUES (default, '" + operation + "'," +
-                    " '" + id + "'," + " '" + type.toString() + "', CURRENT_TIMESTAMP);");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /* END DWH Methods */
 
     /* Add Methods */
 
@@ -97,7 +74,7 @@ public class Neo4jUtils extends Neo4j {
      *
      * @param movie - OmdbMovie to add to the DB
      */
-    private void addMovie(OmdbMovie movie) {
+    public void addMovie(OmdbMovie movie) {
         if (!checkNode(movie.getImdbID(), "Movie")) {
             getSession().run(
                     "CREATE (a:Movie {title: {title}, name: {name}, year: {year}, released: {released}, dvd: {dvd}," +
@@ -107,10 +84,10 @@ public class Neo4jUtils extends Neo4j {
                     (Value) movie.toParameters());
 
             LOG.log(Level.INFO, "Added Movie: " + movie.getImdbID());
-            dwhLog("ADD", movie.getImdbID(), MediaType.MOVIE);
+            mySQL.dwhLog("ADD", movie.getImdbID(), MediaType.MOVIE);
 
             addNode(movie.getAgeRating(), "Rating", movie.getImdbID(), "RATED");
-            addNodeList(movie.getLanguage(), "Language", movie.getImdbID(), "SPOKEN_LANGUAGE");
+            addLanguage(movie.getLanguage(), movie.getImdbID(), movie.getFilename());
             addNodeList(movie.getGenre(), "Genre", movie.getImdbID(), "GENRE");
             addNodeList(movie.getWriter(), "Person", movie.getImdbID(), "WROTE");
             addNodeList(movie.getDirector(), "Person", movie.getImdbID(), "DIRECTED");
@@ -124,6 +101,38 @@ public class Neo4jUtils extends Neo4j {
                 addRating(movie, (String) outlet, (Integer) movie.getRatings().get(outlet));
             }
             /* END Score Outlets */
+
+            /* Download image */
+            String fileName = ftpd + "/common/data/images/" +
+                    (movie.getTitle()) + "(" + movie.getYear() + ").jpg";
+
+
+            java.io.File file = new File(fileName);
+            if (!file.exists()) {
+                try {
+                    InputStream in = new BufferedInputStream(new URL(movie.getPoster()).openStream());
+
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    byte[] buf = new byte[1024];
+                    int n;
+
+                    while ((n = in.read(buf))!= -1){
+                        out.write(buf, 0, n);
+                    }
+
+                    out.close();
+                    in.close();
+                    byte[] response = out.toByteArray();
+
+                    FileOutputStream fos = new FileOutputStream(file.getPath());
+                    fos.write(response);
+                    fos.close();
+
+                } catch (IOException e) {
+                    return;
+                }
+            }
+
         } else {
             LOG.log(Level.WARNING, movie.getImdbID() + " already exists");
         }
@@ -134,7 +143,7 @@ public class Neo4jUtils extends Neo4j {
      *
      * @param series - OmdbSeries to add to the DB
      */
-    private void addSeries(OmdbSeries series) {
+    public void addSeries(OmdbSeries series) {
         if (!checkNode(series.getImdbID(), "Series")) {
 
             getSession().run(
@@ -145,7 +154,7 @@ public class Neo4jUtils extends Neo4j {
                     (Value) series.toParameters());
 
             LOG.log(Level.INFO, "Added Series: " + series.getImdbID());
-            dwhLog("ADD", series.getImdbID(), MediaType.SERIES);
+            mySQL.dwhLog("ADD", series.getImdbID(), MediaType.SERIES);
 
             /* Score Outles*/
             addRating(series, "Internet Movie Database", series.getImdbRating());
@@ -153,8 +162,8 @@ public class Neo4jUtils extends Neo4j {
                 addRating(series, "Metacritic", series.getMetascore());
             /* END Score Outlets */
 
+            addLanguage(series.getLanguage(), series.getImdbID(), series.getFilename());
             addNode(series.getAgeRating(), "Rating", series.getImdbID(), "RATED");
-            addNodeList(series.getLanguage(), "Language", series.getImdbID(), "SPOKEN_LANGUAGE");
             addNodeList(series.getGenre(), "Genre", series.getImdbID(), "GENRE");
             addNodeList(series.getProducers(), "Producer", series.getImdbID(), "PRODUCED");
             addNodeList(series.getCountry(), "Country", series.getImdbID(), "COUNTRY");
@@ -168,7 +177,7 @@ public class Neo4jUtils extends Neo4j {
      *
      * @param episode - OmdbEpisode to add to the DB
      */
-    private void addEpisode(OmdbEpisode episode) {
+    public void addEpisode(OmdbEpisode episode) {
         if (!checkNode(episode.getImdbID(), "Episode")) {
 
 
@@ -179,7 +188,7 @@ public class Neo4jUtils extends Neo4j {
                     (Value) episode.toParameters());
 
             LOG.log(Level.INFO, "Added Episode: " + episode.getImdbID());
-            dwhLog("ADD", episode.getImdbID(), MediaType.EPISODE);
+            mySQL.dwhLog("ADD", episode.getImdbID(), MediaType.EPISODE);
 
             /* Score Outles*/
             addRating(episode, "Internet Movie Database", episode.getImdbRating());
@@ -213,7 +222,7 @@ public class Neo4jUtils extends Neo4j {
      * @param outlet - Score Outlet
      * @param score  - Score
      */
-    private void addRating(OmdbTitle title, String outlet, int score) {
+    public void addRating(OmdbTitle title, String outlet, int score) {
 
         String id = title.getImdbID();
 
@@ -247,6 +256,30 @@ public class Neo4jUtils extends Neo4j {
         }
     }
 
+    private void addLanguage(String language, String title, String filename) {
+
+        if (!checkNode(language, "Language")) {
+            getSession().run(
+                    "CREATE(p:Language {name: {name}})",
+                    parameters("name", language));
+
+            LOG.log(Level.INFO, "Added Language: " + language);
+        } else {
+            LOG.log(Level.WARNING, language + " already exists");
+        }
+
+        if (!checkRelation(language, "Language", title, "SPOKEN_LANGUAGE")) {
+            getSession().run("MATCH (a:Language { name: {name}}), (b { name: {title}}) " +
+                            "CREATE (a)-[:SPOKEN_LANGUAGE {filename: {filename}}]->(b)",
+                    parameters("name", language, "title", title, "filename", filename));
+
+            LOG.log(Level.INFO, "Added SPOKEN_LANGUAGE: " + filename + "(" + language + ") -> " + title);
+
+        } else {
+            LOG.log(Level.WARNING, "SPOKEN_LANGUAGE: " + language + " -> " + title + " already exists");
+        }
+    }
+
     /**
      * Adds a Node to the DB creating a relation with another node
      *
@@ -254,7 +287,7 @@ public class Neo4jUtils extends Neo4j {
      * @param title         - Title the relation is assigned to
      * @param relation_type - Type of the relation between the node and the title
      */
-    private void addNode(String node, String node_type, String title, String relation_type) {
+    public void addNode(String node, String node_type, String title, String relation_type) {
 
         if (!checkNode(node, node_type)) {
             getSession().run(
@@ -277,19 +310,12 @@ public class Neo4jUtils extends Neo4j {
      * @param title         - Title to attach the relation to
      * @param relation_type - Type of relation
      */
-    private void addRelation(String node, String node_type, String title, String relation_type) {
+    public void addRelation(String node, String node_type, String title, String relation_type) {
         if (!checkRelation(node, node_type, title, relation_type)) {
             getSession().run("MATCH (a:" + node_type + " { name: {name}}), (b { name: {title}}) " +
                     "CREATE (a)-[:" + relation_type + "]->(b)", parameters("name", node, "title", title));
 
             LOG.log(Level.INFO, "Added " + relation_type + ": " + node + " -> " + title);
-
-            if (node_type.equals("Genre")) {
-                try {
-                    mySQL.updateCounter("neo4j_genres", node);
-                } catch (SQLException ignored) {
-                }
-            }
 
         } else {
             LOG.log(Level.WARNING, relation_type + ": " + node + " -> " + title + " already exists");
@@ -304,7 +330,7 @@ public class Neo4jUtils extends Neo4j {
      * @param title         - Title the relation is assigned to
      * @param relation_type - Type of the relation between the node and the title
      */
-    private void addNodeList(ArrayList list, String node_type, String title, String relation_type) {
+    public void addNodeList(ArrayList list, String node_type, String title, String relation_type) {
         for (Object o : list) {
             String node = o.toString();
             addNode(node, node_type, title, relation_type);
@@ -340,13 +366,13 @@ public class Neo4jUtils extends Neo4j {
 
         switch (type) {
             case "Movie":
-                dwhLog("DELETE", title, MediaType.MOVIE);
+                mySQL.dwhLog("DELETE", title, MediaType.MOVIE);
                 break;
             case "Series":
-                dwhLog("DELETE", title, MediaType.SERIES);
+                mySQL.dwhLog("DELETE", title, MediaType.SERIES);
                 break;
             case "Episode":
-                dwhLog("DELETE", title, MediaType.EPISODE);
+                mySQL.dwhLog("DELETE", title, MediaType.EPISODE);
         }
     }
 
@@ -427,7 +453,7 @@ public class Neo4jUtils extends Neo4j {
     public void clearDB() {
         super.clearDB();
 
-        dwhLog("CLEAR", "ALL", MediaType.ALL);
+        mySQL.dwhLog("CLEAR", "ALL", MediaType.ALL);
         LOG.log(Level.INFO, "Cleared MySQL DB");
     }
     /**/

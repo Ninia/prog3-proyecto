@@ -3,13 +3,12 @@ package ud.binmonkey.prog3_proyecto_server.http.handlers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpsExchange;
-import org.bson.Document;
+import org.json.JSONObject;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.EmptyArgException;
 import ud.binmonkey.prog3_proyecto_server.common.exceptions.UriUnescapedArgsException;
-import ud.binmonkey.prog3_proyecto_server.common.exceptions.UserNotFoundException;
 import ud.binmonkey.prog3_proyecto_server.common.security.SessionHandler;
 import ud.binmonkey.prog3_proyecto_server.http.URI;
-import ud.binmonkey.prog3_proyecto_server.mongodb.MongoDB;
+import ud.binmonkey.prog3_proyecto_server.omdb.Omdb;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -18,19 +17,26 @@ import java.util.HashMap;
 import static ud.binmonkey.prog3_proyecto_server.http.handlers.HandlerUtils.printRequest;
 import static ud.binmonkey.prog3_proyecto_server.http.handlers.HandlerUtils.validateArgs;
 
-public class UserInfoHandler implements HttpHandler {
-    @SuppressWarnings("Duplicates")
+@SuppressWarnings("Duplicates")
+public class SearchMovieHandler implements HttpHandler {
+
     @Override
     public void handle(HttpExchange he) throws IOException {
         HttpsExchange hes = (HttpsExchange) he;
         printRequest(hes);
 
         OutputStream os;
+
+        HashMap<String, String> args = null;
+
         try {
+            args = URI.getArgs(hes.getRequestURI());
 
-            HashMap<String, String> args = URI.getArgs(hes.getRequestURI());
 
-            boolean err = validateArgs(hes, args, "username", "token");
+
+            boolean err = validateArgs(hes, args
+                    ,"username", "token"
+            );
             if (err) {
                 return;
             }
@@ -38,40 +44,36 @@ public class UserInfoHandler implements HttpHandler {
             String userName = args.get("username");
             String token = args.get("token");
 
+            /* Get title and type */
+            String id = args.get("id");
+            String title = args.get("title");
+            String type = args.get("type");
+            if (type == null) {
+                type = "Movie";
+            }
+
             boolean validToken = SessionHandler.INSTANCE.validToken(userName, token);
 
             if (validToken) {
-
-                SessionHandler.INSTANCE.userActivity(userName);
-                Document user;
-                try {
-                    user = MongoDB.getUser(userName);
-                } catch (UserNotFoundException e) {
-
+                JSONObject response;
+                if (id != null) {
+                    response = Omdb.getTitle(id);
+                } else if (title != null) {
+                    response = Omdb.search(title, type);
+                } else {
                     hes.getResponseHeaders().add("content-type", "text/plain");
-                    hes.sendResponseHeaders(401, 0);
+                    hes.sendResponseHeaders(200, 0);
                     os = hes.getResponseBody();
-                    os.write(("User '" + userName + "' not found").getBytes());
-                    os.close();
+                    os.write("Missing parameters".getBytes());
                     return;
                 }
 
-                String response = "{\n" +
-                        "\t\"username\": \"" + userName + "\",\n" +
-                        "\t\"display_name\": \"" + user.getString("display_name") + "\",\n" +
-                        "\t\"email\": \"" + user.getString("email") + "\",\n" +
-                        "\t\"role\": \"" + user.getString("role") + "\",\n" +
-                        "\t\"preferred_language\": \"" + user.getString("preferred_language") + "\",\n" +
-                        "\t\"birth_date\": \"" + user.getString("birth_date") + "\",\n" +
-                        "\t\"gender\": \"" + user.getString("gender") + "\"\n" +
-                        "}";
                 hes.getResponseHeaders().add("content-type", "application/json");
                 hes.sendResponseHeaders(200, 0);
                 os = hes.getResponseBody();
-                os.write(response.getBytes());
+                os.write(response.toString().getBytes());
 
             } else {
-
                 hes.getResponseHeaders().add("content-type", "text/plain");
                 hes.sendResponseHeaders(401, 0);
                 os = hes.getResponseBody();
@@ -79,7 +81,6 @@ public class UserInfoHandler implements HttpHandler {
             }
 
         } catch (EmptyArgException | UriUnescapedArgsException e) {
-
             hes.getResponseHeaders().add("content-type", "text/plain");
             hes.sendResponseHeaders(400, 0);
             os = hes.getResponseBody();

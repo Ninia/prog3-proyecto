@@ -159,5 +159,15 @@ public class JSONFormatter {
         LOG.log(Level.SEVERE, "Missing Info"); //TODO Ask for input
         return 0;
     }
+
+    public static String nullConversor(Object object) {
+
+        if (object != null) {
+            return (String) object;
+        }
+
+        LOG.log(Level.SEVERE, "Missing Info"); //TODO Ask for input
+        return "";
+    }
     /* END Formatter Methods */
 }

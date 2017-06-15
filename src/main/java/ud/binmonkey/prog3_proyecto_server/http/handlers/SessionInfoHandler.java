@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 import static ud.binmonkey.prog3_proyecto_server.http.handlers.HandlerUtils.printRequest;
+import static ud.binmonkey.prog3_proyecto_server.http.handlers.HandlerUtils.validateArgs;
 
 /**
  * Returns info about current session
@@ -31,6 +32,12 @@ public class SessionInfoHandler implements HttpHandler {
         OutputStream os;
         try {
             HashMap<String, String> args = URI.getArgs(hes.getRequestURI());
+
+            boolean err = validateArgs(hes, args, "username", "token");
+            if (err) {
+                return;
+            }
+
             String username = args.get("username");
             String token = args.get("token");
             SessionHandler.Session session = SessionHandler.INSTANCE.getSessions().get(username);

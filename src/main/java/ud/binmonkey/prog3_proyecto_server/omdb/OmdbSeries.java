@@ -11,7 +11,6 @@ public class OmdbSeries extends OmdbTitle {
 
     private int seasons;
 
-    private ArrayList language;
     private ArrayList genre;
     private ArrayList producers = new ArrayList();
     private ArrayList country;
@@ -19,16 +18,17 @@ public class OmdbSeries extends OmdbTitle {
     /**
      * Constructor for the class OmdbEpisode that extends from OmdbTitle
      *
-     * @param series - Map with the info of the Episode
+     * @param seriesJSON - JSON with the info of the Episode
      */
-    public OmdbSeries(Map series) {
+    public OmdbSeries(JSONObject seriesJSON) {
 
-        super(series);
+        super(seriesJSON);
+
+        Map series = seriesJSON.toMap();
 
         this.seasons = JSONFormatter.intergerConversor(series.get("totalSeasons"));
-        this.language = JSONFormatter.listFormatter(series.get("Language"));
         this.genre = JSONFormatter.listFormatter(series.get("Genre"));
-        this.producers.add("placeholder"); /* TODO this is a placeholder */
+        this.producers.add(JSONFormatter.nullConversor(series.get("Producer")));
         this.country = JSONFormatter.listFormatter(series.get("Country"));
     }
 
@@ -61,7 +61,6 @@ public class OmdbSeries extends OmdbTitle {
         JSONObject episodeJSON = super.toJSON();
 
         episodeJSON.put("totalSeasons", seasons);
-        episodeJSON.put("Language", language);
         episodeJSON.put("Genre", genre);
         episodeJSON.put("Production", producers);
         episodeJSON.put("Country", country);
@@ -70,27 +69,43 @@ public class OmdbSeries extends OmdbTitle {
     }
     /* END Format Conversion Methods */
 
-    /* Getters */
+    /* Getters & Setters */
 
     public Enum getType() {
         return MediaType.SERIES;
     }
 
-    public ArrayList getLanguage() {
-        return language;
+    public int getSeasons() {
+        return seasons;
+    }
+
+    public void setSeasons(int seasons) {
+        this.seasons = seasons;
     }
 
     public ArrayList getGenre() {
         return genre;
     }
 
+    public void setGenre(ArrayList genre) {
+        this.genre = genre;
+    }
+
     public ArrayList getProducers() {
         return producers;
+    }
+
+    public void setProducers(ArrayList producers) {
+        this.producers = producers;
     }
 
     public ArrayList getCountry() {
         return country;
     }
 
-    /* END Getters */
+    public void setCountry(ArrayList country) {
+        this.country = country;
+    }
+
+/* END Getters & Setters */
 }

@@ -12,6 +12,7 @@ public class OmdbEpisode extends OmdbTitle {
     private String seriesID;
     private int season;
     private int episode;
+    private String language;
 
     private ArrayList actors;
     private ArrayList writer;
@@ -20,12 +21,15 @@ public class OmdbEpisode extends OmdbTitle {
     /**
      * Constructor for the class OmdbSeries that extends from OmdbBTitle
      *
-     * @param episode - Map with the info of the Episode
+     * @param episodeJSON - JSON with the info of the Episode
      */
-    public OmdbEpisode(Map episode) {
+    public OmdbEpisode(JSONObject episodeJSON) {
 
-        super(episode);
+        super(episodeJSON);
 
+        Map episode = episodeJSON.toMap();
+
+        this.language = (String) episode.get("Language"); /* Defaults to OV  */
         this.seriesID = (String) episode.get("seriesID");
         this.season = JSONFormatter.intergerConversor(episode.get("Season"));
         this.episode = JSONFormatter.intergerConversor(episode.get("Episode"));
@@ -64,7 +68,7 @@ public class OmdbEpisode extends OmdbTitle {
         episodeJSON.put("seriesID", seriesID);
         episodeJSON.put("Season", season);
         episodeJSON.put("Episode", episode);
-
+        episodeJSON.put("Language", language);
         episodeJSON.put("Writer", writer);
         episodeJSON.put("Director", director);
         episodeJSON.put("Actors", actors);
@@ -73,34 +77,67 @@ public class OmdbEpisode extends OmdbTitle {
     }
     /* END Format Conversion Methods */
 
-    /* Getters */
+    /* Getters & Setters */
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
 
     public Enum getType() {
         return MediaType.EPISODE;
-    }
-
-    public ArrayList getActors() {
-        return actors;
-    }
-
-    public ArrayList getWriter() {
-        return writer;
-    }
-
-    public ArrayList getDirector() {
-        return director;
     }
 
     public String getSeriesID() {
         return seriesID;
     }
 
+    public void setSeriesID(String seriesID) {
+        this.seriesID = seriesID;
+    }
+
     public int getSeason() {
         return season;
+    }
+
+    public void setSeason(int season) {
+        this.season = season;
     }
 
     public int getEpisode() {
         return episode;
     }
-    /* END Getters */
+
+    public void setEpisode(int episode) {
+        this.episode = episode;
+    }
+
+    public ArrayList getActors() {
+        return actors;
+    }
+
+    public void setActors(ArrayList actors) {
+        this.actors = actors;
+    }
+
+    public ArrayList getWriter() {
+        return writer;
+    }
+
+    public void setWriter(ArrayList writer) {
+        this.writer = writer;
+    }
+
+    public ArrayList getDirector() {
+        return director;
+    }
+
+    public void setDirector(ArrayList director) {
+        this.director = director;
+    }
+
+/* END Getters & Setters */
 }
