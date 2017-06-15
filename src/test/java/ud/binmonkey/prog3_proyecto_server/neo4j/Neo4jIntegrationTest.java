@@ -12,83 +12,83 @@ public class Neo4jIntegrationTest {
 
         /* Generate Titles */
         OmdbMovie trainspotting = new OmdbMovie(Omdb.getTitle("tt0117951"));
-        trainspotting.setFilename(trainspotting.getTitle() + "(" + trainspotting.getYear() + ").mp4");
+        trainspotting.setFilename("movies/" + trainspotting.getTitle() + "(" + trainspotting.getYear() + ").mp4");
         trainspotting.setLanguage("EN");
 
         OmdbMovie daysLater = new OmdbMovie(Omdb.getTitle("tt0289043"));
-        daysLater.setFilename(daysLater.getTitle() + "(" + daysLater.getYear() + ").mp4");
+        daysLater.setFilename("movies/" + daysLater.getTitle() + "(" + daysLater.getYear() + ").mp4");
         daysLater.setLanguage("EN");
 
         OmdbMovie exMachina = new OmdbMovie(Omdb.getTitle("tt0470752"));
-        exMachina.setFilename(exMachina.getTitle() + "(" + exMachina.getYear() + ").mp4");
+        exMachina.setFilename("movies/" + exMachina.getTitle() + "(" + exMachina.getYear() + ").mp4");
         exMachina.setLanguage("EN");
 
         OmdbMovie fightClub = new OmdbMovie(Omdb.getTitle("tt0137523"));
-        fightClub.setFilename(fightClub.getTitle() + "(" + fightClub.getYear() + ").mp4");
+        fightClub.setFilename("movies/" + fightClub.getTitle() + "(" + fightClub.getYear() + ").mp4");
         fightClub.setLanguage("EN");
 
         OmdbMovie goodbyeLenin = new OmdbMovie(Omdb.getTitle("tt0301357"));
-        goodbyeLenin.setFilename(goodbyeLenin.getTitle() + "(" + goodbyeLenin.getYear() + ").mp4");
+        goodbyeLenin.setFilename("movies/" + goodbyeLenin.getTitle() + "(" + goodbyeLenin.getYear() + ").mp4");
         goodbyeLenin.setLanguage("EN");
 
         OmdbMovie lord1 = new OmdbMovie(Omdb.getTitle("tt0120737"));
-        lord1.setFilename(lord1.getTitle() + "(" + lord1.getYear() + ").mp4");
+        lord1.setFilename("movies/" + lord1.getTitle() + "(" + lord1.getYear() + ").mp4");
         lord1.setLanguage("EN");
 
         OmdbMovie lord2 = new OmdbMovie(Omdb.getTitle("tt0167261"));
-        lord2.setFilename(lord2.getTitle() + "(" + lord2.getYear() + ").mp4");
+        lord2.setFilename("movies/" + lord2.getTitle() + "(" + lord2.getYear() + ").mp4");
         lord2.setLanguage("EN");
 
         OmdbMovie lord3 = new OmdbMovie(Omdb.getTitle("tt0167260"));
-        lord3.setFilename(lord3.getTitle() + "(" + lord3.getYear() + ").mp4");
+        lord3.setFilename("movies/" + lord3.getTitle() + "(" + lord3.getYear() + ").mp4");
         lord3.setLanguage("EN");
 
         OmdbMovie star1 = new OmdbMovie(Omdb.getTitle("tt0121765"));
-        star1.setFilename(star1.getTitle() + "(" + star1.getYear() + ").mp4");
+        star1.setFilename("movies/" + star1.getTitle() + "(" + star1.getYear() + ").mp4");
         star1.setLanguage("EN");
 
         OmdbMovie star2 = new OmdbMovie(Omdb.getTitle("tt2488496"));
-        star2.setFilename(star2.getTitle() + "(" + star2.getYear() + ").mp4");
+        star2.setFilename("movies/" + star2.getTitle() + "(" + star2.getYear() + ").mp4");
         star2.setLanguage("EN");
 
         OmdbMovie star3 = new OmdbMovie(Omdb.getTitle("tt0076759"));
-        star3.setFilename(star3.getTitle() + "(" + star3.getYear() + ").mp4");
+        star3.setFilename("movies/" + star3.getTitle() + "(" + star3.getYear() + ").mp4");
         star3.setLanguage("EN");
 
         OmdbMovie star4 = new OmdbMovie(Omdb.getTitle("tt0080684"));
-        star4.setFilename(star4.getTitle() + "(" + star4.getYear() + ").mp4");
+        star4.setFilename("movies/" + star4.getTitle() + "(" + star4.getYear() + ").mp4");
         star4.setLanguage("EN");
 
         OmdbMovie star5 = new OmdbMovie(Omdb.getTitle("tt0086190"));
-        star5.setFilename(star5.getTitle() + "(" + star5.getYear() + ").mp4");
+        star5.setFilename("movies/" + star5.getTitle() + "(" + star5.getYear() + ").mp4");
         star5.setLanguage("EN");
 
         OmdbMovie star6 = new OmdbMovie(Omdb.getTitle("tt0121766"));
-        star6.setFilename(star6.getTitle() + "(" + star6.getYear() + ").mp4");
+        star6.setFilename("movies/" + star6.getTitle() + "(" + star6.getYear() + ").mp4");
         star6.setLanguage("EN");
 
         OmdbMovie star7 = new OmdbMovie(Omdb.getTitle("tt0080684"));
-        star7.setFilename(star7.getTitle() + "(" + star7.getYear() + ").mp4");
+        star7.setFilename("movies/" + star7.getTitle() + "(" + star7.getYear() + ").mp4");
         star7.setLanguage("EN");
 
         OmdbEpisode fargo1 = new OmdbEpisode(Omdb.getTitle("tt3097534"));
-        fargo1.setFilename(fargo1.getTitle() + "(" + fargo1.getYear() + ").mp4");
+        fargo1.setFilename("series/Fargo/" + fargo1.getTitle() + "(" + fargo1.getYear() + ").mp4");
         fargo1.setLanguage("EN");
 
         OmdbEpisode fargo2 = new OmdbEpisode(Omdb.getTitle("tt3296848"));
-        fargo2.setFilename(fargo2.getTitle() + "(" + fargo2.getYear() + ").mp4");
+        fargo2.setFilename("series/Fargo/" + fargo2.getTitle() + "(" + fargo2.getYear() + ").mp4");
         fargo2.setLanguage("EN");
 
         OmdbEpisode fargo3 = new OmdbEpisode(Omdb.getTitle("tt3519062"));
-        fargo3.setFilename(fargo3.getTitle() + "(" + fargo3.getYear() + ").mp4");
+        fargo3.setFilename("series/Fargo/" + fargo3.getTitle() + "(" + fargo3.getYear() + ").mp4");
         fargo3.setLanguage("EN");
 
         OmdbEpisode fargo4 = new OmdbEpisode(Omdb.getTitle("tt3578722"));
-        fargo4.setFilename(fargo4.getTitle() + "(" + fargo4.getYear() + ").mp4");
+        fargo4.setFilename("series/Fargo/" + fargo4.getTitle() + "(" + fargo4.getYear() + ").mp4");
         fargo4.setLanguage("EN");
 
         OmdbEpisode fargo5 = new OmdbEpisode(Omdb.getTitle("tt3514096"));
-        fargo5.setFilename(fargo5.getTitle() + "(" + fargo5.getYear() + ").mp4");
+        fargo5.setFilename("series/Fargo/" + fargo5.getTitle() + "(" + fargo5.getYear() + ").mp4");
         fargo5.setLanguage("EN");
 
         /* Adding Movies */
