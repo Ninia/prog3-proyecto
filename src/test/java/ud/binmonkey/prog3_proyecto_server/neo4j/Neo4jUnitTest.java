@@ -5,6 +5,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.StatementResult;
+import ud.binmonkey.prog3_proyecto_server.omdb.MediaType;
+import ud.binmonkey.prog3_proyecto_server.omdb.Omdb;
+import ud.binmonkey.prog3_proyecto_server.omdb.OmdbEpisode;
+import ud.binmonkey.prog3_proyecto_server.omdb.OmdbMovie;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -35,7 +39,7 @@ public class Neo4jUnitTest {
     @Test
     public void addTest() {
 
-        neo4j.addTitle("tt0117951"); /* Trainspotting */
+        neo4j.addTitle(new OmdbMovie(Omdb.getTitle("tt0117951"))); /* Trainspotting */
 
         StatementResult result = neo4j.getSession().run("MATCH (n:Movie) " +
                 "RETURN n.name AS name, n.title AS title");
@@ -55,11 +59,11 @@ public class Neo4jUnitTest {
     public void addEpisodesTest() {
 
         /* Adding Episodes */
-        neo4j.addTitle("tt2169080");
-        neo4j.addTitle("tt3333824");
-        neo4j.addTitle("tt3333828");
-        neo4j.addTitle("tt3333830");
-        neo4j.addTitle("tt3333832");
+        neo4j.addTitle(new OmdbEpisode(Omdb.getTitle("tt2169080")));
+        neo4j.addTitle(new OmdbEpisode(Omdb.getTitle("tt3333824")));
+        neo4j.addTitle(new OmdbEpisode(Omdb.getTitle("tt3333828")));
+        neo4j.addTitle(new OmdbEpisode(Omdb.getTitle("tt3333830")));
+        neo4j.addTitle(new OmdbEpisode(Omdb.getTitle("tt3333832")));
 
         StatementResult result = neo4j.getSession().run("MATCH (n:Series) " +
                 "RETURN n.name AS name, n.title AS title");
@@ -77,8 +81,10 @@ public class Neo4jUnitTest {
      */
     @Test
     public void addListTest() {
-        neo4j.addList("Lord of The Rings Saga", "tt0120737", "tt0167261");
-        neo4j.addList("Lord of The Rings Saga", "tt0167260", "tt0167261");
+        neo4j.addList("Lord of The Rings Saga", new OmdbMovie(Omdb.getTitle("tt0120737")),
+                new OmdbMovie(Omdb.getTitle("tt0167261")));
+        neo4j.addList("Lord of The Rings Saga", new OmdbMovie(Omdb.getTitle("tt0167260")),
+                new OmdbMovie(Omdb.getTitle("tt0167261")));
 
         StatementResult result = neo4j.getSession().run("MATCH p=(n:List)-[r:CONTAINS]-(m) " +
                 "WHERE m.name='tt0167260' RETURN n.name AS name");
@@ -97,16 +103,18 @@ public class Neo4jUnitTest {
     public void removeTest() {
 
         /* Star Wars Movies */
-        neo4j.addList("Star Wars Saga", "tt0120915", "tt0121765", "tt2488496", "tt0076759", "tt0080684",
-                "tt0086190", "tt0121766");
+        neo4j.addList("Star Wars Saga", new OmdbMovie(Omdb.getTitle("tt0120915")),
+                new OmdbMovie(Omdb.getTitle("tt0121765")), new OmdbMovie(Omdb.getTitle("tt2488496")),
+                new OmdbMovie(Omdb.getTitle("tt0076759")), new OmdbMovie(Omdb.getTitle("tt0080684")),
+                new OmdbMovie(Omdb.getTitle("tt0086190")), new OmdbMovie(Omdb.getTitle("tt0121766")));
 
-        neo4j.removeTitle("tt0120915", "Movie");
-        neo4j.removeTitle("tt0121765", "Movie");
-        neo4j.removeTitle("tt2488496", "Movie");
-        neo4j.removeTitle("tt0076759", "Movie");
-        neo4j.removeTitle("tt0080684", "Movie");
-        neo4j.removeTitle("tt0086190", "Movie");
-        neo4j.removeTitle("tt0121766", "Movie");
+        neo4j.removeTitle("tt0120915", MediaType.MOVIE);
+        neo4j.removeTitle("tt0121765", MediaType.MOVIE);
+        neo4j.removeTitle("tt2488496", MediaType.MOVIE);
+        neo4j.removeTitle("tt0076759", MediaType.MOVIE);
+        neo4j.removeTitle("tt0080684", MediaType.MOVIE);
+        neo4j.removeTitle("tt0086190", MediaType.MOVIE);
+        neo4j.removeTitle("tt0121766", MediaType.MOVIE);
 
         StatementResult result = neo4j.getSession().run("MATCH p=(n:List)-[r:CONTAINS]-(m) " +
                 "WHERE m.name='tt0120915' RETURN n.name AS name");
@@ -125,8 +133,10 @@ public class Neo4jUnitTest {
     public void renameTest() {
 
         /* Star Wars Movies */
-        neo4j.addList("Star Wars Saga", "tt0120915", "tt0121765", "tt2488496", "tt0076759", "tt0080684",
-                "tt0086190", "tt0121766");
+        neo4j.addList("Star Wars Saga", new OmdbMovie(Omdb.getTitle("tt0120915")),
+                new OmdbMovie(Omdb.getTitle("tt0121765")), new OmdbMovie(Omdb.getTitle("tt2488496")),
+                new OmdbMovie(Omdb.getTitle("tt0076759")), new OmdbMovie(Omdb.getTitle("tt0080684")),
+                new OmdbMovie(Omdb.getTitle("tt0086190")), new OmdbMovie(Omdb.getTitle("tt0121766")));
 
         /* Fixes duplicate because of different name */
         neo4j.renameNode("Twentieth Century Fox", "20th Century Fox", "Producer");
